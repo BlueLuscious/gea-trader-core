@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_components',
+    'front',
 ]
 
 MIDDLEWARE = [
@@ -171,6 +172,7 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django Components
+
 COMPONENTS = ComponentsSettings(
     app_dirs=[
         'components',
