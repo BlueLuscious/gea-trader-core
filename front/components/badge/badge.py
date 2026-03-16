@@ -1,6 +1,6 @@
 from typing import NamedTuple
 from django_components import Component, register
-from ..props import BadgeVariant, normalize_enum
+from front.components.props import BadgeVariant, normalize_enum
 
 
 @register("badge")
