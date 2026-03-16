@@ -9,6 +9,9 @@ from .ui import (
     ButtonVariant,
     DotsMode,
     IconStyle,
+    Size,
+    SwitchSize,
+    Radius,
 )
 
 __all__ = [
@@ -27,4 +30,7 @@ __all__ = [
     "ButtonVariant",
     "DotsMode",
     "IconStyle",
+    "Size",
+    "SwitchSize",
+    "Radius",
 ]

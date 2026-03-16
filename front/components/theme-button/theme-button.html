@@ -1,0 +1,47 @@
+{% load component_tags %}
+
+<span
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-theme-button {{ class_name }}"
+  data-theme-button
+  data-theme-button-id="{{ id }}"
+  data-theme-intent="{{ intent }}"
+  data-theme-light-icon="{{ light_icon }}"
+  data-theme-dark-icon="{{ dark_icon }}"
+  data-theme-system-icon="{{ system_icon }}"
+  data-theme-light-label="{{ light_label }}"
+  data-theme-dark-label="{{ dark_label }}"
+  data-theme-system-label="{{ system_label }}"
+>
+  {% component "button"
+    id=button_id
+    variant=variant
+    class_name="gc-theme-button__button"
+    aria_label=aria_label
+    icon_only=icon_only
+  %}
+    {% fill "content" %}
+      <span class="gc-theme-button__content">
+        <span
+          class="gc-theme-button__icon"
+          data-theme-button-icon
+          data-theme-button-icon-name="{{ system_icon }}"
+          aria-hidden="true"
+        >
+          {% component "icon" name=system_icon %}{% endcomponent %}
+        </span>
+        {% if not icon_only %}
+        <span data-theme-button-label>{{ system_label }}</span>
+        {% endif %}
+      </span>
+    {% endfill %}
+  {% endcomponent %}
+</span>
+
+<script>
+  window.GeaThemeButtonQueue = window.GeaThemeButtonQueue || [];
+  window.GeaThemeButtonQueue.push("{{ id|escapejs }}");
+  if (window.GeaThemeButton && typeof window.GeaThemeButton.initById === "function") {
+    window.GeaThemeButton.initById("{{ id|escapejs }}");
+  }
+</script>

@@ -24,15 +24,22 @@ class ButtonVariant(StrEnum):
     GHOST = "ghost"
 
 
-class ButtonSize(StrEnum):
+class Size(StrEnum):
     SM = "sm"
     MD = "md"
     LG = "lg"
     FULL = "full"
 
 
-class ButtonRadius(StrEnum):
+ButtonSize = Size
+SwitchSize = Size
+
+
+class Radius(StrEnum):
     SM = "sm"
     MD = "md"
     LG = "lg"
     FULL = "full"
+
+
+ButtonRadius = Radius
