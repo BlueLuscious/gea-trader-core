@@ -1,0 +1,40 @@
+{% load component_tags %}
+
+
+<{% if href %}a{% else %}button{% endif %}
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-button gc-button--{{ variant }} gc-button--{{ size }} gc-button--radius-{{ radius }} {% if icon_only %}gc-button--icon-only{% endif %} {{ class_name }}"
+  {% if href %}
+    href="{{ href }}"
+  {% else %}
+    type="{{ type }}"
+    {% if disabled %}disabled{% endif %}
+    {% if toggle %}aria-pressed="{{ pressed|yesno:'true,false' }}"{% endif %}
+    {% if toggle %}data-button-toggle="true"{% endif %}
+  {% endif %}
+  {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+  data-button
+  data-button-id="{{ id }}"
+>
+  {% if icon_left_name %}
+  <span class="gc-button__icon gc-button__icon--left" aria-hidden="true">
+    {% component "icon" name=icon_left_name style=icon_left_style size=icon_left_size %}{% endcomponent %}
+  </span>
+  {% endif %}
+
+  {% slot "content" required %}{% endslot %}
+
+  {% if icon_right_name %}
+  <span class="gc-button__icon gc-button__icon--right" aria-hidden="true">
+    {% component "icon" name=icon_right_name style=icon_right_style size=icon_right_size %}{% endcomponent %}
+  </span>
+  {% endif %}
+</{% if href %}a{% else %}button{% endif %}>
+
+<script>
+  window.GeaButtonQueue = window.GeaButtonQueue || [];
+  window.GeaButtonQueue.push("{{ id|escapejs }}");
+  if (window.GeaButton && typeof window.GeaButton.initById === "function") {
+    window.GeaButton.initById("{{ id|escapejs }}");
+  }
+</script>
