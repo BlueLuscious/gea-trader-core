@@ -11,6 +11,18 @@ class BadgeVariant(StrEnum):
     INVERSE = "inverse"
 
 
+class AutoplayMode(StrEnum):
+    STOP = "stop"
+    LOOP = "loop"
+    BOUNCE = "bounce"
+
+
+class DotsMode(StrEnum):
+    AUTO = "auto"
+    ALWAYS = "always"
+    NEVER = "never"
+
+
 class IconStyle(StrEnum):
     SOLID = "solid"
     REGULAR = "regular"
@@ -43,3 +55,10 @@ class Radius(StrEnum):
 
 
 ButtonRadius = Radius
+
+
+class ShadowSize(StrEnum):
+    NONE = "none"
+    SM = "sm"
+    MD = "md"
+    LG = "lg"

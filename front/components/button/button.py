@@ -1,7 +1,15 @@
 from typing import NamedTuple
 from uuid import uuid4
 from django_components import Component, register
-from front.components.props import ButtonRadius, ButtonSize, ButtonVariant, IconStyle, normalize_bool, normalize_enum
+from front.components.props import (
+    ButtonRadius,
+    ButtonSize,
+    ButtonVariant,
+    IconStyle,
+    normalize_bool,
+    normalize_data_attributes,
+    normalize_enum,
+)
 
 
 @register("button")
@@ -29,6 +37,7 @@ class ButtonController(Component):
         icon_only: bool = False
         toggle: bool = False
         pressed: bool = False
+        data_attrs: dict | None = None
 
     def get_template_data(self, args, kwargs: Kwargs, slots, context) -> dict:
         variant = normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.SOLID).value
@@ -55,4 +64,5 @@ class ButtonController(Component):
             icon_only=normalize_bool(kwargs.icon_only),
             toggle=normalize_bool(kwargs.toggle),
             pressed=normalize_bool(kwargs.pressed),
+            data_attrs=normalize_data_attributes(kwargs.data_attrs),
         )

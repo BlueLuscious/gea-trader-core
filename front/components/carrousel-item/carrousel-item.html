@@ -1,0 +1,9 @@
+{% load component_tags %}
+
+<div
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-carrousel-item gc-carrousel__slide {{ class_name }}"
+  {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+>
+  {% slot "content" required %}{% endslot %}
+</div>

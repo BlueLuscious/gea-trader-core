@@ -1,4 +1,4 @@
-from .common import normalize_bool, normalize_enum, normalize_int, normalize_list
+from .common import normalize_bool, normalize_data_attributes, normalize_enum, normalize_int, normalize_list
 from .content import ContentKind, normalize_kind
 from .theme import ThemeIntent, ThemeMode
 from .ui import (
@@ -12,10 +12,12 @@ from .ui import (
     Size,
     SwitchSize,
     Radius,
+    ShadowSize,
 )
 
 __all__ = [
     "normalize_bool",
+    "normalize_data_attributes",
     "normalize_enum",
     "normalize_int",
     "normalize_list",
@@ -33,4 +35,5 @@ __all__ = [
     "Size",
     "SwitchSize",
     "Radius",
+    "ShadowSize",
 ]

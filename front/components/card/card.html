@@ -3,7 +3,7 @@
 
 <{% if href %}a{% else %}article{% endif %}
   {% if id %}id="{{ id }}"{% endif %}
-  class="gc-card {% if elevated %}is-elevated{% endif %} {% if clickable %}is-clickable{% endif %} {{ class_name }}"
+  class="gc-card gc-card--shadow-{{ shadow }} {% if elevated %}is-elevated{% endif %} {% if clickable %}is-clickable{% endif %} {{ class_name }}"
   {% if href %}href="{{ href }}"{% endif %}
   {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
 >

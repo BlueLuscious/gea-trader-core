@@ -13,7 +13,23 @@
   box-shadow: var(--shadow-sm);
 }
 
-.gc-card.is-elevated {
+.gc-card--shadow-none {
+  box-shadow: none;
+}
+
+.gc-card--shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.gc-card--shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.gc-card--shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.gc-card.is-elevated.gc-card--shadow-sm {
   box-shadow: var(--shadow-md);
 }
 
@@ -26,6 +42,11 @@
   transform: translateY(-2px);
   border-color: var(--color-border-strong);
   box-shadow: var(--shadow-md);
+}
+
+.gc-card.is-clickable.gc-card--shadow-md:hover,
+.gc-card.is-clickable.gc-card--shadow-md:focus-visible {
+  box-shadow: var(--shadow-lg);
 }
 
 .gc-card__badge {

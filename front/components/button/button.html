@@ -15,6 +15,9 @@
   {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
   data-button
   data-button-id="{{ id }}"
+  {% for attr_name, attr_value in data_attrs %}
+    {{ attr_name }}="{{ attr_value }}"
+  {% endfor %}
 >
   {% if icon_left_name %}
   <span class="gc-button__icon gc-button__icon--left" aria-hidden="true">
