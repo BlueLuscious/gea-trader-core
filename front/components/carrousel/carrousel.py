@@ -34,8 +34,8 @@ class CarrouselController(Component):
         autoplay_mode: str = AutoplayMode.STOP.value
         pause_on_hover: bool = True
         aria_label: str = "Carousel"
-        prev_label: str = "Prev"
-        next_label: str = "Next"
+        prev_label: str = "Anterior"
+        next_label: str = "Siguiente"
         prev_aria_label: str = "Previous page"
         next_aria_label: str = "Next page"
 

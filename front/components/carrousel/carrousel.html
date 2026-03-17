@@ -52,12 +52,12 @@
       {% component "button" aria_label="{{ prev_aria_label }}"
         class_name="gc-carrousel__button" data_attrs=carrousel_prev_attrs
       %}
-        {% fill "content" %}{% endfill %}
+        {% fill "content" %}{{ prev_label }}{% endfill %}
       {% endcomponent %}
       {% component "button" aria_label="{{ next_aria_label }}"
           class_name="gc-carrousel__button" data_attrs=carrousel_next_attrs
       %}
-        {% fill "content" %}{% endfill %}
+        {% fill "content" %}{{ next_label }}{% endfill %}
       {% endcomponent %}
     </div>
     {% endif %}

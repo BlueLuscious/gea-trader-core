@@ -65,8 +65,25 @@
       return Math.max(1, Math.ceil(this.slides.length / this.getSlidesPerView()));
     }
 
+    getMaxStartIndex() {
+      return Math.max(0, this.slides.length - this.getSlidesPerView());
+    }
+
     getPageStartIndex(page) {
-      return Math.min(page * this.getSlidesPerView(), Math.max(this.slides.length - 1, 0));
+      return Math.min(page * this.getSlidesPerView(), this.getMaxStartIndex());
+    }
+
+    getPageOffsets() {
+      const pageCount = this.getPageCount();
+      const offsets = [];
+
+      for (let page = 0; page < pageCount; page += 1) {
+        const startIndex = this.getPageStartIndex(page);
+        const slide = this.slides[startIndex];
+        offsets.push(slide ? slide.offsetLeft : 0);
+      }
+
+      return offsets;
     }
 
     getDotsEnabled() {
@@ -248,19 +265,19 @@
       }
 
       const currentLeft = this.viewport.scrollLeft;
-      let nearestIndex = 0;
+      const pageOffsets = this.getPageOffsets();
+      let nearestPage = 0;
       let smallestDistance = Number.POSITIVE_INFINITY;
 
-      this.slides.forEach((slide, index) => {
-        const distance = Math.abs(slide.offsetLeft - currentLeft);
+      pageOffsets.forEach((offsetLeft, page) => {
+        const distance = Math.abs(offsetLeft - currentLeft);
         if (distance < smallestDistance) {
           smallestDistance = distance;
-          nearestIndex = index;
+          nearestPage = page;
         }
       });
 
-      const slidesPerView = this.getSlidesPerView();
-      this.currentPage = Math.floor(nearestIndex / slidesPerView);
+      this.currentPage = nearestPage;
       this.updateControls();
       this.updateDots();
       this.updateStatus();
