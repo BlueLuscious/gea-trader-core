@@ -40,18 +40,15 @@ class ButtonController(Component):
         data_attrs: dict | None = None
 
     def get_template_data(self, args, kwargs: Kwargs, slots, context) -> dict:
-        variant = normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.SOLID).value
-        size = normalize_enum(kwargs.size, ButtonSize, ButtonSize.MD).value
-        radius = normalize_enum(kwargs.radius, ButtonRadius, ButtonRadius.FULL).value
         component_id = kwargs.id or f"gc-button-{uuid4().hex[:8]}"
 
         return dict(
             id=component_id,
             type=kwargs.type if kwargs.type in {"button", "submit", "reset"} else "button",
             href=kwargs.href,
-            variant=variant,
-            size=size,
-            radius=radius,
+            variant=normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.SOLID).value,
+            size=normalize_enum(kwargs.size, ButtonSize, ButtonSize.MD).value,
+            radius=normalize_enum(kwargs.radius, ButtonRadius, ButtonRadius.FULL).value,
             class_name=kwargs.class_name,
             disabled=normalize_bool(kwargs.disabled),
             aria_label=kwargs.aria_label,

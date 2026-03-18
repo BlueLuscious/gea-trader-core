@@ -1,0 +1,36 @@
+{% load component_tags %}
+
+<details
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-collapsible gc-collapsible--{{ size }} gc-collapsible--panel-{{ panel_width }} {{ class_name }}"
+  data-collapsible
+  data-collapsible-id="{{ id }}"
+  data-close-on-outside="{{ close_on_outside|yesno:'true,false' }}"
+  data-close-on-escape="{{ close_on_escape|yesno:'true,false' }}"
+  data-close-on-link-click="{{ close_on_link_click|yesno:'true,false' }}"
+  {% if open %}open{% endif %}
+>
+  <summary
+    class="gc-collapsible__summary {{ summary_class_name }}"
+    data-collapsible-summary
+    aria-controls="{{ panel_id }}"
+    {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+  >
+    {% slot "trigger" required %}{% endslot %}
+  </summary>
+  <div
+    id="{{ panel_id }}"
+    class="gc-collapsible__panel {{ panel_class_name }}"
+    data-collapsible-panel
+  >
+    {% slot "content" required %}{% endslot %}
+  </div>
+</details>
+
+<script>
+  window.GeaCollapsibleQueue = window.GeaCollapsibleQueue || [];
+  window.GeaCollapsibleQueue.push("{{ id|escapejs }}");
+  if (window.GeaCollapsible && typeof window.GeaCollapsible.initById === "function") {
+    window.GeaCollapsible.initById("{{ id|escapejs }}");
+  }
+</script>

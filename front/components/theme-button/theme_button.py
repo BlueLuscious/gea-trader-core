@@ -1,7 +1,14 @@
 from typing import NamedTuple
 from uuid import uuid4
 from django_components import Component, register
-from front.components.props import ButtonVariant, ThemeIntent, normalize_bool, normalize_enum
+from front.components.props import (
+    ButtonRadius,
+    ButtonSize,
+    ButtonVariant,
+    ThemeIntent,
+    normalize_bool,
+    normalize_enum
+)
 
 
 @register("theme_button")
@@ -14,6 +21,8 @@ class ThemeButtonController(Component):
         id: str = ""
         class_name: str = ""
         variant: str = ButtonVariant.OUTLINE.value
+        size: str = ButtonSize.MD.value
+        radius: str = ButtonRadius.FULL.value
         intent: str = ThemeIntent.TOGGLE.value
         aria_label: str = "Cambiar tema"
         light_icon: str = "sun"
@@ -33,6 +42,8 @@ class ThemeButtonController(Component):
             button_id=button_id,
             class_name=kwargs.class_name,
             variant=normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.OUTLINE).value,
+            size=normalize_enum(kwargs.size, ButtonSize, ButtonSize.MD).value,
+            radius=normalize_enum(kwargs.radius, ButtonRadius, ButtonRadius.FULL).value,
             intent=normalize_enum(kwargs.intent, ThemeIntent, ThemeIntent.TOGGLE).value,
             aria_label=kwargs.aria_label,
             light_icon=kwargs.light_icon.removeprefix("fa-").strip().lower(),
