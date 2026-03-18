@@ -1,7 +1,7 @@
 from typing import NamedTuple
 from uuid import uuid4
 from django_components import Component, register
-from front.components.props import Size, normalize_bool, normalize_enum
+from front.components.props import PanelWidth, Size, normalize_bool, normalize_enum
 
 
 @register("collapsible")
@@ -16,7 +16,7 @@ class CollapsibleController(Component):
         summary_class_name: str = ""
         panel_class_name: str = ""
         size: str = Size.MD.value
-        panel_width: str = "md"
+        panel_width: str = PanelWidth.MD.value
         open: bool = False
         aria_label: str = ""
         close_on_outside: bool = False
@@ -34,7 +34,7 @@ class CollapsibleController(Component):
             summary_class_name=kwargs.summary_class_name,
             panel_class_name=kwargs.panel_class_name,
             size=normalize_enum(kwargs.size, Size, Size.MD).value,
-            panel_width=kwargs.panel_width if kwargs.panel_width in {"auto", "sm", "md", "lg", "xl", "full"} else "md",
+            panel_width=normalize_enum(kwargs.panel_width, PanelWidth, PanelWidth.MD).value,
             open=normalize_bool(kwargs.open),
             aria_label=kwargs.aria_label,
             close_on_outside=normalize_bool(kwargs.close_on_outside),

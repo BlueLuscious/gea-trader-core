@@ -1,0 +1,67 @@
+{% load component_tags %}
+
+<div
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-sidebar gc-sidebar--{{ side }} gc-sidebar--width-{{ width }} {{ class_name }}"
+  data-sidebar
+  data-sidebar-id="{{ id }}"
+  data-sidebar-open="{{ open|yesno:'true,false' }}"
+  data-close-on-backdrop="{{ close_on_backdrop|yesno:'true,false' }}"
+  data-close-on-escape="{{ close_on_escape|yesno:'true,false' }}"
+>
+  <div class="gc-sidebar__backdrop" data-sidebar-backdrop></div>
+
+  <aside
+    class="gc-sidebar__panel"
+    data-sidebar-panel
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="{{ open|yesno:'false,true' }}"
+    {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+  >
+    {% if slots.header or show_close_button %}
+    <header class="gc-sidebar__header">
+      {% if slots.header %}
+      <div class="gc-sidebar__header-content">
+        {% slot "header" %}{% endslot %}
+      </div>
+      {% else %}
+      <div class="gc-sidebar__header-spacer"></div>
+      {% endif %}
+
+      {% if show_close_button %}
+      {% component "button"
+        variant="ghost"
+        size="md"
+        radius="full"
+        icon_only=True
+        aria_label="Cerrar panel"
+        icon_left_name="xmark"
+        class_name="gc-sidebar__close"
+        data_attrs=close_button_attrs
+      %}
+        {% fill "content" %}{% endfill %}
+      {% endcomponent %}
+      {% endif %}
+    </header>
+    {% endif %}
+
+    <div class="gc-sidebar__content">
+      {% slot "content" required %}{% endslot %}
+    </div>
+
+    {% if slots.footer %}
+    <footer class="gc-sidebar__footer">
+      {% slot "footer" %}{% endslot %}
+    </footer>
+    {% endif %}
+  </aside>
+</div>
+
+<script>
+  window.GeaSidebarQueue = window.GeaSidebarQueue || [];
+  window.GeaSidebarQueue.push("{{ id|escapejs }}");
+  if (window.GeaSidebar && typeof window.GeaSidebar.initById === "function") {
+    window.GeaSidebar.initById("{{ id|escapejs }}");
+  }
+</script>

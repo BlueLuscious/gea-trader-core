@@ -71,3 +71,12 @@ class FontSize(StrEnum):
     LG = "lg"
     XL = "xl"
     XXL = "2xl"
+
+
+class PanelWidth(StrEnum):
+    AUTO = "auto"
+    SM = "sm"
+    MD = "md"
+    LG = "lg"
+    XL = "xl"
+    FULL = "full"
