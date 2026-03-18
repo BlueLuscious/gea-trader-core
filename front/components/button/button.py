@@ -5,6 +5,7 @@ from front.components.props import (
     ButtonRadius,
     ButtonSize,
     ButtonVariant,
+    FontSize,
     IconStyle,
     normalize_bool,
     normalize_data_attributes,
@@ -24,6 +25,7 @@ class ButtonController(Component):
         href: str = ""
         variant: str = ButtonVariant.SOLID.value
         size: str = ButtonSize.MD.value
+        font_size: str = ""
         radius: str = ButtonRadius.FULL.value
         class_name: str = ""
         disabled: bool = False
@@ -41,13 +43,21 @@ class ButtonController(Component):
 
     def get_template_data(self, args, kwargs: Kwargs, slots, context) -> dict:
         component_id = kwargs.id or f"gc-button-{uuid4().hex[:8]}"
+        size = normalize_enum(kwargs.size, ButtonSize, ButtonSize.MD).value
+        derived_font_size = kwargs.font_size or {
+            ButtonSize.SM.value: FontSize.SM.value,
+            ButtonSize.MD.value: FontSize.MD.value,
+            ButtonSize.LG.value: FontSize.LG.value,
+            ButtonSize.FULL.value: FontSize.MD.value,
+        }.get(size, FontSize.MD.value)
 
         return dict(
             id=component_id,
             type=kwargs.type if kwargs.type in {"button", "submit", "reset"} else "button",
             href=kwargs.href,
             variant=normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.SOLID).value,
-            size=normalize_enum(kwargs.size, ButtonSize, ButtonSize.MD).value,
+            size=size,
+            font_size=normalize_enum(derived_font_size, FontSize, FontSize.MD).value,
             radius=normalize_enum(kwargs.radius, ButtonRadius, ButtonRadius.FULL).value,
             class_name=kwargs.class_name,
             disabled=normalize_bool(kwargs.disabled),

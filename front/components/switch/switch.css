@@ -92,12 +92,6 @@
 
 .gc-switch--sm .gc-switch__pane {
   padding-inline: 0.45rem;
-  font-size: 0.72rem;
-}
-
-.gc-switch--lg .gc-switch__pane {
-  padding-inline: 0.7rem;
-  font-size: 0.86rem;
 }
 
 .gc-switch__pane > * {
@@ -110,6 +104,58 @@
 .gc-switch__peer {
   color: var(--color-text-muted);
   font-size: 0.95rem;
+}
+
+.gc-switch--lg .gc-switch__pane {
+  padding-inline: 0.7rem;
+}
+
+.gc-switch--font-xs .gc-switch__pane {
+  font-size: 0.68rem;
+}
+
+.gc-switch--font-sm .gc-switch__pane {
+  font-size: 0.72rem;
+}
+
+.gc-switch--font-md .gc-switch__pane {
+  font-size: 0.8rem;
+}
+
+.gc-switch--font-lg .gc-switch__pane {
+  font-size: 0.86rem;
+}
+
+.gc-switch--font-xl .gc-switch__pane {
+  font-size: 0.95rem;
+}
+
+.gc-switch--font-2xl .gc-switch__pane {
+  font-size: 1.05rem;
+}
+
+.gc-switch--font-xs .gc-switch__peer {
+  font-size: 0.8rem;
+}
+
+.gc-switch--font-sm .gc-switch__peer {
+  font-size: 0.86rem;
+}
+
+.gc-switch--font-md .gc-switch__peer {
+  font-size: 0.95rem;
+}
+
+.gc-switch--font-lg .gc-switch__peer {
+  font-size: 1rem;
+}
+
+.gc-switch--font-xl .gc-switch__peer {
+  font-size: 1.05rem;
+}
+
+.gc-switch--font-2xl .gc-switch__peer {
+  font-size: 1.15rem;
 }
 
 .gc-switch__thumb {

@@ -39,25 +39,46 @@
 .gc-button--sm {
   min-height: 2rem;
   padding: 0.45rem 0.8rem;
-  font-size: 0.85rem;
 }
 
 .gc-button--md {
   min-height: 2.5rem;
   padding: 0.65rem 1rem;
-  font-size: 0.95rem;
 }
 
 .gc-button--lg {
   min-height: 3rem;
   padding: 0.85rem 1.2rem;
-  font-size: 1rem;
 }
 
 .gc-button--full {
   display: flex;
   width: 100%;
   min-height: 2.75rem;
+}
+
+.gc-button--font-xs {
+  font-size: 0.75rem;
+}
+
+.gc-button--font-sm {
+  font-size: 0.85rem;
+}
+
+.gc-button--font-md {
+  font-size: 0.95rem;
+}
+
+.gc-button--font-lg {
+  font-size: 1rem;
+}
+
+.gc-button--font-xl {
+  font-size: 1.1rem;
+}
+
+.gc-button--font-2xl {
+  font-size: 1.25rem;
 }
 
 .gc-button__icon {

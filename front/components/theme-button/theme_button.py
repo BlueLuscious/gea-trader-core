@@ -5,6 +5,7 @@ from front.components.props import (
     ButtonRadius,
     ButtonSize,
     ButtonVariant,
+    FontSize,
     ThemeIntent,
     normalize_bool,
     normalize_enum
@@ -22,6 +23,7 @@ class ThemeButtonController(Component):
         class_name: str = ""
         variant: str = ButtonVariant.OUTLINE.value
         size: str = ButtonSize.MD.value
+        font_size: str = ""
         radius: str = ButtonRadius.FULL.value
         intent: str = ThemeIntent.TOGGLE.value
         aria_label: str = "Cambiar tema"
@@ -43,6 +45,7 @@ class ThemeButtonController(Component):
             class_name=kwargs.class_name,
             variant=normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.OUTLINE).value,
             size=normalize_enum(kwargs.size, ButtonSize, ButtonSize.MD).value,
+            font_size=normalize_enum(kwargs.font_size or kwargs.size or FontSize.MD.value, FontSize, FontSize.MD).value,
             radius=normalize_enum(kwargs.radius, ButtonRadius, ButtonRadius.FULL).value,
             intent=normalize_enum(kwargs.intent, ThemeIntent, ThemeIntent.TOGGLE).value,
             aria_label=kwargs.aria_label,

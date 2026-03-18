@@ -1,7 +1,7 @@
 from typing import NamedTuple
 from uuid import uuid4
 from django_components import Component, register
-from front.components.props import SwitchSize, normalize_bool, normalize_enum
+from front.components.props import FontSize, SwitchSize, normalize_bool, normalize_enum
 
 
 @register("theme_switch")
@@ -14,6 +14,7 @@ class ThemeSwitchController(Component):
         id: str = ""
         class_name: str = ""
         size: str = SwitchSize.MD.value
+        font_size: str = ""
         aria_label: str = "Cambiar tema"
         light_icon: str = "sun"
         dark_icon: str = "moon"
@@ -31,6 +32,7 @@ class ThemeSwitchController(Component):
             switch_id=switch_id,
             class_name=kwargs.class_name,
             size=normalize_enum(kwargs.size, SwitchSize, SwitchSize.MD).value,
+            font_size=normalize_enum(kwargs.font_size or kwargs.size or FontSize.MD.value, FontSize, FontSize.MD).value,
             aria_label=kwargs.aria_label,
             light_icon=kwargs.light_icon.removeprefix("fa-").strip().lower(),
             dark_icon=kwargs.dark_icon.removeprefix("fa-").strip().lower(),

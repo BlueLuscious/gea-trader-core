@@ -1,6 +1,6 @@
 {% load component_tags %}
 
-<label class="gc-switch gc-switch--{{ size }} {% if icon_only %}gc-switch--icon-only{% endif %} {{ class_name }}" data-switch data-switch-id="{{ id }}">
+<label class="gc-switch gc-switch--{{ size }} gc-switch--font-{{ font_size }} {% if icon_only %}gc-switch--icon-only{% endif %} {{ class_name }}" data-switch data-switch-id="{{ id }}">
   <input
     {% if id %}id="{{ id }}"{% endif %}
     class="gc-switch__input"

@@ -62,3 +62,12 @@ class ShadowSize(StrEnum):
     SM = "sm"
     MD = "md"
     LG = "lg"
+
+
+class FontSize(StrEnum):
+    XS = "xs"
+    SM = "sm"
+    MD = "md"
+    LG = "lg"
+    XL = "xl"
+    XXL = "2xl"
