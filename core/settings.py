@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_components',
     'accounts',
+    'front',
 ]
 
 MIDDLEWARE = [
@@ -175,6 +176,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.UserModel'
 
 # Django Components
+
 COMPONENTS = ComponentsSettings(
     app_dirs=[
         'components',

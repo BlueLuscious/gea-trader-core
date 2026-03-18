@@ -1,0 +1,71 @@
+.gc-topbar {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(14px);
+}
+
+.gc-topbar.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.gc-topbar.is-bordered {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+}
+
+.gc-topbar--shadow-none {
+  box-shadow: none;
+}
+
+.gc-topbar--shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.gc-topbar--shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.gc-topbar--shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.gc-topbar__inner {
+  min-height: 4.25rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding-block: 0.75rem;
+}
+
+.gc-topbar__inner--container {
+  width: min(var(--site-max-width), calc(100% - (var(--site-gutter) * 2)));
+  margin-inline: auto;
+}
+
+.gc-topbar__section {
+  min-width: 0;
+}
+
+.gc-topbar__section--start {
+  justify-self: start;
+}
+
+.gc-topbar__section--center {
+  justify-self: stretch;
+}
+
+.gc-topbar__section--end {
+  justify-self: end;
+}
+
+.gc-topbar--appbar .gc-topbar__inner {
+  min-height: 3.75rem;
+}
+
+@media (width >= 64rem) {
+  .gc-topbar__inner {
+    min-height: 4.5rem;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,78 @@
+{% load component_tags %}
+
+<section
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-carrousel gc-carrousel--{{ kind }} {{ class_name }}"
+  data-carousel
+  data-carousel-id="{{ id }}"
+  data-loop="{{ loop|yesno:'true,false' }}"
+  data-show-dots="{{ show_dots|yesno:'true,false' }}"
+  data-dots-mode="{{ dots_mode }}"
+  data-autoplay-ms="{{ autoplay_ms }}"
+  data-autoplay-mode="{{ autoplay_mode }}"
+  data-pause-on-hover="{{ pause_on_hover|yesno:'true,false' }}"
+  style="--slides-per-view-desktop: {{ slides_per_view }}; --slides-per-view-tablet: {{ slides_per_view_tablet }}; --slides-per-view-mobile: {{ slides_per_view_mobile }}; --carrousel-gap: {{ gap }}px;"
+  aria-label="{{ aria_label }}"
+  tabindex="0"
+>
+  {% if slots.header or slots.actions %}
+  <div class="gc-carrousel__header">
+    {% if slots.header %}
+    <div class="gc-carrousel__heading">
+      {% slot "header" %}{% endslot %}
+    </div>
+    {% endif %}
+
+    {% if slots.actions %}
+    <div class="gc-carrousel__header-actions">
+      {% slot "actions" %}{% endslot %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="gc-carrousel__viewport" data-carousel-viewport>
+    <div class="gc-carrousel__track" data-carousel-track>
+      {% slot "items" required %}{% endslot %}
+    </div>
+  </div>
+
+  {% if show_controls or show_dots %}
+  <div class="gc-carrousel__footer">
+    {% if show_dots %}
+    <div class="gc-carrousel__dots" data-carousel-dots></div>
+    {% endif %}
+
+    {% if slots.controls %}
+    <div class="gc-carrousel__controls">
+      {% slot "controls" %}{% endslot %}
+    </div>
+    {% elif show_controls %}
+    <div class="gc-carrousel__controls">
+      {% component "button" aria_label="{{ prev_aria_label }}"
+        class_name="gc-carrousel__button" data_attrs=carrousel_prev_attrs
+      %}
+        {% fill "content" %}{{ prev_label }}{% endfill %}
+      {% endcomponent %}
+      {% component "button" aria_label="{{ next_aria_label }}"
+          class_name="gc-carrousel__button" data_attrs=carrousel_next_attrs
+      %}
+        {% fill "content" %}{{ next_label }}{% endfill %}
+      {% endcomponent %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <p class="gc-carrousel__status" data-carousel-status aria-live="polite" aria-atomic="true">
+    {{ status_label }}
+  </p>
+</section>
+
+<script>
+  window.GeaCarrouselQueue = window.GeaCarrouselQueue || [];
+  window.GeaCarrouselQueue.push("{{ id|escapejs }}");
+  if (window.GeaCarrousel && typeof window.GeaCarrousel.initById === "function") {
+    window.GeaCarrousel.initById("{{ id|escapejs }}");
+  }
+</script>

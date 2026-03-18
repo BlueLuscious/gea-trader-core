@@ -1,0 +1,7 @@
+{% load component_tags %}
+
+<i
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-icon fa-{{ style }} fa-{{ icon_name }} {% if size %}fa-{{ size }}{% endif %} {% if fixed_width %}fa-fw{% endif %} {{ class_name }}"
+  {% if decorative %}aria-hidden="true"{% else %}role="img" aria-label="{{ aria_label|default:icon_name }}"{% endif %}
+></i>

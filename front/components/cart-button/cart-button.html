@@ -1,0 +1,43 @@
+{% load component_tags %}
+
+<span
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-cart-button {{ class_name }}"
+  data-cart-button
+  data-cart-button-id="{{ id }}"
+  data-cart-count="{{ initial_count }}"
+>
+  {% component "button"
+    id=button_id
+    variant=variant
+    size=size
+    radius=radius
+    class_name="gc-cart-button__button"
+    aria_label=aria_label
+    icon_only=icon_only
+  %}
+    {% fill "content" %}
+      <span class="gc-cart-button__content">
+        <span class="gc-cart-button__icon" aria-hidden="true">
+          {% component "icon" name="cart-shopping" %}{% endcomponent %}
+        </span>
+        {% if not icon_only %}
+        <span data-cart-button-label>{{ label }}</span>
+        {% endif %}
+      </span>
+      <span
+        class="gc-cart-button__count {% if not has_items %}is-hidden{% endif %}"
+        data-cart-button-count
+        aria-hidden="{% if has_items %}false{% else %}true{% endif %}"
+      >{{ initial_count }}</span>
+    {% endfill %}
+  {% endcomponent %}
+</span>
+
+<script>
+  window.GeaCartButtonQueue = window.GeaCartButtonQueue || [];
+  window.GeaCartButtonQueue.push("{{ id|escapejs }}");
+  if (window.GeaCartButton && typeof window.GeaCartButton.initById === "function") {
+    window.GeaCartButton.initById("{{ id|escapejs }}");
+  }
+</script>

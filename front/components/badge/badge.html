@@ -1,0 +1,13 @@
+{% load component_tags %}
+
+<span
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-badge gc-badge--{{ variant }} {{ class_name }}"
+  {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+>
+  {% if label %}
+    {{ label }}
+  {% else %}
+    {% slot "content" required %}{% endslot %}
+  {% endif %}
+</span>

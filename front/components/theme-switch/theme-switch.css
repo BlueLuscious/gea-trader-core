@@ -1,0 +1,49 @@
+.gc-theme-switch {
+  display: inline-flex;
+  align-items: center;
+}
+
+.gc-theme-switch .gc-switch {
+  gap: 0.75rem;
+}
+
+.gc-theme-switch .gc-switch__track {
+  border-width: 2px;
+  background: color-mix(in srgb, var(--color-surface) 82%, var(--color-border) 18%);
+}
+
+.gc-theme-switch .gc-switch__thumb {
+  background: #f5f5f5;
+}
+
+.gc-theme-switch .gc-switch__input:checked + .gc-switch__track .gc-switch__thumb {
+  background: #4b4b4b;
+}
+
+.gc-theme-switch__track-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  min-width: 0;
+  color: var(--color-text-muted);
+  overflow: hidden;
+}
+
+.gc-theme-switch__track-content--left {
+  justify-content: flex-start;
+}
+
+.gc-theme-switch__track-content--right {
+  justify-content: flex-end;
+}
+
+.gc-theme-switch__track-content > span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.gc-theme-switch .gc-switch[data-switch-checked="true"] .gc-switch__pane--left,
+.gc-theme-switch .gc-switch[data-switch-checked="false"] .gc-switch__pane--right {
+  opacity: 0.18;
+}

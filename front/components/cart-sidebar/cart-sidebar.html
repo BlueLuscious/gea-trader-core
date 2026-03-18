@@ -1,0 +1,72 @@
+{% load component_tags %}
+
+<div
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-cart-sidebar {{ class_name }}"
+  data-cart-sidebar
+  data-cart-sidebar-id="{{ id }}"
+  data-cart-sidebar-title="{{ title }}"
+  data-cart-sidebar-empty-title="{{ empty_title }}"
+  data-cart-sidebar-empty-copy="{{ empty_copy }}"
+>
+  {% component "sidebar"
+    id=sidebar_id
+    class_name="gc-cart-sidebar__shell"
+    side=side
+    width=width
+    aria_label=aria_label
+    open=open
+  %}
+    {% fill "header" %}
+      <div class="gc-cart-sidebar__heading">
+        <div class="gc-cart-sidebar__heading-copy">
+          <h2 class="gc-cart-sidebar__title">{{ title }}</h2>
+          <p class="gc-cart-sidebar__subtitle">
+            <span data-cart-sidebar-count>0</span> items cargados
+          </p>
+        </div>
+        {% component "badge" label="Cotizacion" variant="info" %}{% endcomponent %}
+      </div>
+    {% endfill %}
+
+    {% fill "content" %}
+      <div class="gc-cart-sidebar__body">
+        <div class="gc-cart-sidebar__empty" data-cart-sidebar-empty>
+          <h3>{{ empty_title }}</h3>
+          <p>{{ empty_copy }}</p>
+        </div>
+        <div class="gc-cart-sidebar__items is-hidden" data-cart-sidebar-items></div>
+      </div>
+    {% endfill %}
+
+    {% fill "footer" %}
+      <div class="gc-cart-sidebar__footer-actions">
+        {% component "button"
+          variant="ghost"
+          size="md"
+          data_attrs=clear_button_attrs
+          class_name="gc-cart-sidebar__clear"
+        %}
+          {% fill "content" %}{{ clear_label }}{% endfill %}
+        {% endcomponent %}
+
+        {% component "button"
+          variant="solid"
+          size="md"
+          data_attrs=quote_button_attrs
+          class_name="gc-cart-sidebar__quote"
+        %}
+          {% fill "content" %}{{ quote_label }}{% endfill %}
+        {% endcomponent %}
+      </div>
+    {% endfill %}
+  {% endcomponent %}
+</div>
+
+<script>
+  window.GeaCartSidebarQueue = window.GeaCartSidebarQueue || [];
+  window.GeaCartSidebarQueue.push("{{ id|escapejs }}");
+  if (window.GeaCartSidebar && typeof window.GeaCartSidebar.initById === "function") {
+    window.GeaCartSidebar.initById("{{ id|escapejs }}");
+  }
+</script>

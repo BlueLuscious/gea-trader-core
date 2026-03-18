@@ -1,0 +1,116 @@
+.gc-navbar {
+  position: relative;
+}
+
+.gc-navbar__brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.gc-navbar__end {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.gc-navbar__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gc-navbar__links {
+  min-width: 0;
+}
+
+.gc-navbar__links--desktop {
+  display: none;
+}
+
+.gc-navbar__links--desktop,
+.gc-navbar__links--mobile {
+  color: var(--color-text-muted);
+}
+
+.gc-navbar__link {
+  font-size: 1rem;
+}
+
+.gc-navbar__links--desktop .gc-button,
+.gc-navbar__links--mobile .gc-button {
+  color: inherit;
+}
+
+.gc-navbar__links--mobile {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.gc-navbar__links--mobile .gc-button {
+  justify-content: flex-start;
+  width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.gc-navbar__links--mobile .gc-button:hover {
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+}
+
+.gc-navbar__links--end {
+  margin-right: 0.25rem;
+}
+
+.gc-navbar__menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  width: 2.5rem;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-muted);
+}
+
+.gc-navbar__menu-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 12rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-glass-strong);
+  box-shadow: var(--shadow-md);
+}
+
+@media (width >= 48rem) {
+  .gc-navbar__links--desktop {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .gc-navbar--links-center .gc-navbar__links--desktop {
+    justify-content: center;
+  }
+
+  .gc-navbar--links-end .gc-navbar__links--desktop {
+    justify-content: flex-end;
+  }
+
+  .gc-navbar__links--desktop .gc-button:hover {
+    color: var(--color-text);
+  }
+
+  .gc-navbar__menu {
+    display: none;
+  }
+}
