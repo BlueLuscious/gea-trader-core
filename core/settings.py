@@ -51,6 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_components',
     'accounts',
+    'masterdata',
+    'catalog',
+    'cart',
+    'quotation',
 ]
 INSTALLED_APPS += list(dict.fromkeys(MEDIA_STORAGE_CONFIG.extra_apps + STATIC_STORAGE_CONFIG.extra_apps))
 
