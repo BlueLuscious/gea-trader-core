@@ -13,7 +13,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-gea_trader}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-my_db}"]
       interval: 5s
       timeout: 5s
       retries: 10
