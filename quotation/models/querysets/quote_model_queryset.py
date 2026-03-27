@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from django.db import models
+from quotation.choices import QuoteStatus
 
 if TYPE_CHECKING:
     from quotation.models.quote_model import QuoteModel
@@ -14,7 +15,7 @@ class QuoteModelQuerySet(models.QuerySet["QuoteModel"]):
         Returns:
             QuoteModelQuerySet: Draft quotes queryset.
         """
-        return self.filter(status="draft")
+        return self.filter(status=QuoteStatus.DRAFT)
 
     def requested(self) -> "QuoteModelQuerySet":
         """ Return requested quotes.
@@ -22,7 +23,7 @@ class QuoteModelQuerySet(models.QuerySet["QuoteModel"]):
         Returns:
             QuoteModelQuerySet: Requested quotes queryset.
         """
-        return self.filter(status="requested")
+        return self.filter(status=QuoteStatus.REQUESTED)
 
     def active(self) -> "QuoteModelQuerySet":
         """ Return quotes that are still in active business flow.
@@ -30,4 +31,4 @@ class QuoteModelQuerySet(models.QuerySet["QuoteModel"]):
         Returns:
             QuoteModelQuerySet: Active quotes queryset.
         """
-        return self.exclude(status__in=["rejected", "expired"])
+        return self.exclude(status__in=[QuoteStatus.REJECTED, QuoteStatus.EXPIRED])

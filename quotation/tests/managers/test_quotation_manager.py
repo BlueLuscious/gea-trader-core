@@ -1,5 +1,6 @@
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductModel, ProductVariantModel
+from quotation.choices import QuoteStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
@@ -8,10 +9,10 @@ class TestQuotationManager(LoggedTestCase):
 
     def test_quote_manager_filters_statuses(self) -> None:
         """ Verify quote manager helpers expose lifecycle subsets. """
-        draft = QuoteModel.objects.create(customer_email='draft@example.com', status=QuoteModel.Status.DRAFT)
-        requested = QuoteModel.objects.create(customer_email='requested@example.com', status=QuoteModel.Status.REQUESTED)
-        active_sent = QuoteModel.objects.create(customer_email='sent@example.com', status=QuoteModel.Status.SENT)
-        QuoteModel.objects.create(customer_email='expired@example.com', status=QuoteModel.Status.EXPIRED)
+        draft = QuoteModel.objects.create(customer_email='draft@example.com', status=QuoteStatus.DRAFT)
+        requested = QuoteModel.objects.create(customer_email='requested@example.com', status=QuoteStatus.REQUESTED)
+        active_sent = QuoteModel.objects.create(customer_email='sent@example.com', status=QuoteStatus.SENT)
+        QuoteModel.objects.create(customer_email='expired@example.com', status=QuoteStatus.EXPIRED)
 
         self.assertQuerySetEqual(QuoteModel.objects.drafts(), [draft], transform=lambda instance: instance)
         self.assertQuerySetEqual(QuoteModel.objects.requested(), [requested], transform=lambda instance: instance)

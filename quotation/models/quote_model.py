@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 from django.conf import settings
 from django.db import models
+from quotation.choices import QuoteStatus
 from quotation.models.managers.quote_model_manager import QuoteModelManager
 
 if TYPE_CHECKING:
@@ -10,16 +11,6 @@ if TYPE_CHECKING:
 
 class QuoteModel(models.Model):
     """ Formal quotation request generated from a cart or direct input. """
-
-    class Status(models.TextChoices):
-        """ Supported quote lifecycle states. """
-
-        DRAFT = "draft", "Draft"
-        REQUESTED = "requested", "Requested"
-        SENT = "sent", "Sent"
-        APPROVED = "approved", "Approved"
-        REJECTED = "rejected", "Rejected"
-        EXPIRED = "expired", "Expired"
 
     cart: "CartModel | None" = models.ForeignKey(
         "cart.CartModel",
@@ -35,7 +26,7 @@ class QuoteModel(models.Model):
         blank=True,
         related_name="quotes",
     )
-    status = models.CharField(max_length=16, choices=Status.choices, default=Status.DRAFT)
+    status = models.CharField(max_length=16, choices=QuoteStatus.choices, default=QuoteStatus.DRAFT)
     customer_name = models.CharField(max_length=255, blank=True, default="")
     customer_email = models.EmailField(blank=True, default="")
     customer_phone = models.CharField(max_length=64, blank=True, default="")

@@ -1,5 +1,6 @@
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductModel, ProductVariantModel
+from quotation.choices import QuoteStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
@@ -8,9 +9,9 @@ class TestQuotationQuerySet(LoggedTestCase):
 
     def test_quote_queryset_filters_active_business_flow(self) -> None:
         """ Verify QuoteModelQuerySet.active excludes rejected and expired rows. """
-        draft = QuoteModel.objects.create(customer_email='draft@example.com', status=QuoteModel.Status.DRAFT)
-        requested = QuoteModel.objects.create(customer_email='requested@example.com', status=QuoteModel.Status.REQUESTED)
-        QuoteModel.objects.create(customer_email='rejected@example.com', status=QuoteModel.Status.REJECTED)
+        draft = QuoteModel.objects.create(customer_email='draft@example.com', status=QuoteStatus.DRAFT)
+        requested = QuoteModel.objects.create(customer_email='requested@example.com', status=QuoteStatus.REQUESTED)
+        QuoteModel.objects.create(customer_email='rejected@example.com', status=QuoteStatus.REJECTED)
 
         queryset = QuoteModel.objects.get_queryset().active()
 
