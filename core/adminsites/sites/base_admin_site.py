@@ -86,20 +86,7 @@ class BaseAdminSite(UnfoldAdminSite):
         """
         return cls.show_sidebar_search
 
-    @classmethod
-    def get_dashboard_callback(cls, request: HttpRequest) -> str | None:
-        """ Return the dashboard callback for the current request.
-
-        Args:
-            request: Current admin request.
-
-        Returns:
-            str | None: Dashboard callback path when configured.
-        """
-        return cls.dashboard_callback
-
-    @classmethod
-    def get_sidebar_navigation(cls, request: HttpRequest) -> list[dict[str, Any]]:
+    def get_sidebar_navigation(self, request: HttpRequest) -> list[dict[str, Any]]:
         """ Return sidebar navigation items for the current request.
 
         Args:
@@ -110,8 +97,7 @@ class BaseAdminSite(UnfoldAdminSite):
         """
         return []
 
-    @classmethod
-    def get_scripts(cls, request: HttpRequest) -> list[str]:
+    def get_scripts(self, request: HttpRequest) -> list[str]:
         """ Return additional Unfold script paths for the current request.
 
         Args:
@@ -122,8 +108,7 @@ class BaseAdminSite(UnfoldAdminSite):
         """
         return []
 
-    @classmethod
-    def get_styles(cls, request: HttpRequest) -> list[str]:
+    def get_styles(self, request: HttpRequest) -> list[str]:
         """ Return additional Unfold style paths for the current request.
 
         Args:

@@ -38,7 +38,9 @@ Current namespaces:
 
 ### `registry.py`
 
-Maps each admin namespace to its corresponding admin site class.
+Maps each admin namespace to its corresponding admin site class and site instance.
+
+Use this registry for namespace-based site resolution instead of hardcoding imports inside the Unfold adapter.
 
 This registry is project admin infrastructure. It should not contain Unfold-specific behavior.
 
@@ -66,12 +68,17 @@ Rules:
 - keep one principal class per file
 - keep shared default behavior in the base site
 - let concrete sites override hooks rather than duplicating wiring
+- keep metadata getters at class level when they only expose site identity
+- prefer instance methods for hooks that depend on the real admin site runtime state such as app registry, app list, or per-instance navigation
 
 ### `unfold/`
 
 Contains the adapter layer between the custom admin sites and Unfold settings.
 
-This package should translate site metadata and hooks into the settings format expected by Unfold.
+This package should keep two responsibilities clearly separated:
+
+- `AdminSiteUnfoldSettings`: builds the static settings dictionary for one namespace
+- `AdminSiteUnfoldCallbacks`: resolves the current site instance from the request and serves runtime callbacks
 
 It should not become a second source of truth for site identity.
 
@@ -88,6 +95,11 @@ Examples:
 - per-site sidebar hooks
 
 The Unfold layer should adapt those values, not redefine them independently.
+
+Bootstrap and runtime should stay separated:
+
+- bootstrap: build the Unfold settings dictionary for each namespace
+- runtime: resolve the current site instance from the request and delegate request-aware hooks
 
 ## Relationship With App Admins
 

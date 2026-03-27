@@ -2,8 +2,10 @@
 
 from django.test import RequestFactory
 from core.adminsites.admin_namespace import AdminNamespace
+from core.adminsites.site_instances import owner_admin_site
+from core.adminsites.site_instances import master_admin_site
 from core.adminsites.sites.master_admin_site import MasterAdminSite
-from core.adminsites.sites.owner_admin_site import OwnerAdminSite
+from core.adminsites.unfold import AdminSiteUnfoldCallbacks
 from core.adminsites.unfold import AdminSiteUnfoldSettings
 from core.testing.base import LoggedSimpleTestCase
 
@@ -14,21 +16,6 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
     def setUp(self) -> None:
         """ Create the request factory used by the tests. """
         self.request_factory = RequestFactory()
-
-    def test_resolve_admin_namespace_returns_none_without_resolver_match(self) -> None:
-        """ Verify namespace resolution returns none when the request has no resolver match. """
-        request = self.request_factory.get("/admin/")
-
-        self.assertIsNone(AdminSiteUnfoldSettings.resolve_admin_namespace(request))
-
-    def test_resolve_admin_site_class_dispatches_to_owner_namespace(self) -> None:
-        """ Verify the request resolver namespace selects the owner admin site class. """
-        request = self.request_factory.get("/owner-admin/")
-        request.resolver_match = type("ResolverMatch", (), {"namespace": AdminNamespace.OWNER.value})()
-
-        site_class = AdminSiteUnfoldSettings.resolve_admin_site_class(request)
-
-        self.assertIs(site_class, OwnerAdminSite)
 
     def test_build_admin_site_unfold_settings_uses_site_metadata_for_static_values(self) -> None:
         """ Verify the generated settings dictionary reuses static metadata from the site class. """
@@ -44,17 +31,68 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
         """ Verify the generated settings dictionary keeps request-aware hooks only where needed. """
         settings_dict = AdminSiteUnfoldSettings.for_namespace(AdminNamespace.MASTER).build()
 
-        self.assertEqual(settings_dict["SIDEBAR"]["navigation"].__name__, "build_sidebar_navigation")
+        self.assertEqual(settings_dict["SITE_TITLE"].__name__, "site_title")
+        self.assertEqual(settings_dict["SITE_HEADER"].__name__, "site_header")
+        self.assertEqual(settings_dict["SITE_SYMBOL"].__name__, "site_symbol")
+        self.assertEqual(settings_dict["SITE_URL"].__name__, "site_url")
+        self.assertEqual(settings_dict["SIDEBAR"]["navigation"].__name__, "sidebar_navigation")
         self.assertEqual(settings_dict["SCRIPTS"].__name__, "scripts")
         self.assertEqual(settings_dict["STYLES"].__name__, "styles")
         self.assertTrue(settings_dict["SIDEBAR"]["show_all_applications"](self.request_factory.get("/admin/")))
 
+    def test_dynamic_callbacks_dispatch_to_owner_site_instance(self) -> None:
+        """ Verify dynamic callbacks resolve the owner admin site instance from the request namespace. """
+        request = self.request_factory.get("/owner-admin/")
+        request.user = type(
+            "OwnerUser",
+            (),
+            {
+                "is_active": True,
+                "is_superuser": False,
+                "is_staff": True,
+                "has_module_perms": lambda self, app_label: True,
+                "has_perm": lambda self, perm: True,
+            },
+        )()
+        request.resolver_match = type("ResolverMatch", (), {"namespace": owner_admin_site.name})()
+
+        self.assertEqual(AdminSiteUnfoldCallbacks.site_title(request), owner_admin_site.get_site_title(request))
+        self.assertEqual(AdminSiteUnfoldCallbacks.site_header(request), owner_admin_site.get_site_header(request))
+        self.assertEqual(AdminSiteUnfoldCallbacks.site_symbol(request), owner_admin_site.get_site_symbol(request))
+        self.assertEqual(AdminSiteUnfoldCallbacks.site_url(request), owner_admin_site.get_site_url(request))
+        self.assertEqual(AdminSiteUnfoldCallbacks.show_search(request), owner_admin_site.get_show_sidebar_search(request))
+        self.assertEqual(
+            AdminSiteUnfoldCallbacks.show_all_applications(request),
+            owner_admin_site.get_show_all_applications(request),
+        )
+        self.assertEqual(
+            AdminSiteUnfoldCallbacks.sidebar_navigation(request),
+            owner_admin_site.get_sidebar_navigation(request),
+        )
+        self.assertEqual(AdminSiteUnfoldCallbacks.scripts(request), owner_admin_site.get_scripts(request))
+        self.assertEqual(AdminSiteUnfoldCallbacks.styles(request), owner_admin_site.get_styles(request))
+
     def test_master_admin_sidebar_navigation_includes_users_and_groups(self) -> None:
         """ Verify the master admin sidebar includes account management links. """
         request = self.request_factory.get("/admin/")
-        navigation = MasterAdminSite.get_sidebar_navigation(request)
+        request.user = type(
+            "SuperUser",
+            (),
+            {
+                "is_active": True,
+                "is_superuser": True,
+                "is_staff": True,
+                "has_module_perms": lambda self, app_label: True,
+                "has_perm": lambda self, perm: True,
+            },
+        )()
+        navigation = master_admin_site.get_sidebar_navigation(request)
 
-        self.assertEqual(len(navigation), 1)
-        self.assertEqual(navigation[0]["title"], "Accounts")
-        self.assertEqual(navigation[0]["items"][0]["title"], "Users")
-        self.assertEqual(navigation[0]["items"][1]["title"], "Groups")
+        item_links = {
+            item["link"]
+            for group in navigation
+            for item in group["items"]
+        }
+
+        self.assertIn("/admin/accounts/usermodel/", item_links)
+        self.assertIn("/admin/auth/group/", item_links)
