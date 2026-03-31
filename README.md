@@ -9,7 +9,7 @@ logic and a translation workflow for managing products and related data.
 ## Requirements
 
 - Python 3.11+ (run in a virtual environment)
-- Docker (used to run the PostgreSQL development database)
+- Docker (used to run the local PostgreSQL and MinIO services)
 - gettext tools for message catalog management (see [Translations](#translations) below)
 
 ## Development setup
@@ -40,10 +40,17 @@ Follow these steps to get a development copy running locally:
    ```
 4. **Run Docker**
 
-   The PostgreSQL server used for development is provided by Docker; the
-   Django application runs on your host but connects to the container.
-   Bring up the database service before running any migration or the
-   server
+   Local infrastructure is provided by Docker. The Django application
+   runs on your host but connects to containerized services.
+
+   By default, `docker compose up -d` starts:
+
+   - PostgreSQL for the development database
+   - MinIO for local S3-compatible storage testing
+   - MinIO Client bootstrap logic to create the configured bucket automatically
+
+   Bring up the local services before running migrations or the
+   development server.
 
    ```bash
    docker compose up -d
@@ -60,6 +67,21 @@ Follow these steps to get a development copy running locally:
    ```
 
    Done!
+
+## Configuration Notes
+
+- The main environment example is:
+  - `.env.example`
+- Storage configuration documentation lives at:
+  - `docs/core/config/storage/storage.md`
+- Admin site infrastructure documentation lives at:
+  - `docs/core/adminsites/adminsites.md`
+- Accounts app documentation lives at:
+  - `docs/accounts/accounts.md`
+- Ready-to-copy environment examples live under:
+  - `docs/env-examples/`
+
+If you are using local S3-compatible storage during development, make sure your `.env` is aligned with the MinIO credentials and bucket configured in `docker-compose.yml`.
 
 ## Translations
 
