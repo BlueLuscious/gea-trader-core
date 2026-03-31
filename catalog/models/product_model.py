@@ -29,7 +29,7 @@ class ProductModel(models.Model):
     )
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    short_description = models.TextField(blank=True, default="")
+    short_description = models.CharField(max_length=255, blank=True, default="")
     description = models.TextField(blank=True, default="")
     sku_base = models.CharField(max_length=64, blank=True, default="")
     is_active = models.BooleanField(default=True)

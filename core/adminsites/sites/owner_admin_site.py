@@ -1,6 +1,8 @@
 """ Owner admin site definition. """
 
+from typing import Any
 from django.http import HttpRequest
+from django.urls import reverse_lazy
 from core.adminsites.sites.base_admin_site import BaseAdminSite
 
 
@@ -12,6 +14,28 @@ class OwnerAdminSite(BaseAdminSite):
     site_title = "GEA Owner Admin"
     site_symbol = "storefront"
     index_title = "Business operations"
+
+    def get_sidebar_navigation(self, request: HttpRequest) -> list[dict[str, Any]]:
+        """ Return curated owner sidebar navigation.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            list[dict[str, Any]]: Curated owner navigation groups.
+        """
+        return [
+            {
+                "title": "Catalog",
+                "items": [
+                    {
+                        "title": "Products",
+                        "icon": "inventory_2",
+                        "link": reverse_lazy(f"{self.name}:catalog_productmodel_changelist"),
+                    },
+                ],
+            },
+        ]
 
     def has_permission(self, request: HttpRequest) -> bool:
         """ Return whether the request user can access the owner admin site.
