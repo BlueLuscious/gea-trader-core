@@ -1,0 +1,73 @@
+""" Formset used by the owner quote item inline. """
+
+from typing import TYPE_CHECKING
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
+from quotation.admin.owner.quote_item_model_inline_form import QuoteItemModelInlineForm
+from quotation.models import QuoteItemModel
+
+if TYPE_CHECKING:
+    from quotation.models import QuoteModel
+
+
+class QuoteItemModelInlineFormSet(BaseInlineFormSet):
+    """ Build quote item snapshots from owner-entered product and variant selections. """
+
+    instance: "QuoteModel"
+
+    def _get_valid_bound_forms(self) -> list[QuoteItemModelInlineForm]:
+        """ Return bound inline forms that already passed validation.
+
+        Returns:
+            list[QuoteItemModelInlineForm]: Valid bound quote item inline forms.
+        """
+        return [
+            form
+            for form in self.forms
+            if isinstance(form, QuoteItemModelInlineForm) and form.is_bound and form.is_valid()
+        ]
+
+    def clean(self) -> None:
+        """ Ensure manual quotes contain at least one non-deleted item.
+
+        Raises:
+            ValidationError: When the owner tries to save a quote without items.
+        """
+        super().clean()
+
+        has_item = any(
+            form.has_selected_product()
+            for form in self._get_valid_bound_forms()
+            if not form.is_marked_for_deletion()
+        )
+
+        if not has_item and self.instance.pk is None:
+            raise ValidationError("Add at least one quote item before saving the quote.")
+
+    def save_new(self, form: QuoteItemModelInlineForm, commit: bool = True) -> QuoteItemModel:
+        """ Populate snapshot fields for a newly created quote item.
+
+        Args:
+            form: Inline form containing product and optional variant selections.
+            commit: Whether to persist the instance immediately.
+
+        Returns:
+            QuoteItemModel: Newly created quote item with snapshot fields populated.
+        """
+        instance: QuoteItemModel = super().save_new(form, commit=False)
+        product = form.get_selected_product()
+        variant = form.get_selected_variant()
+
+        if product is None:
+            raise ValidationError("Quote items require a selected product.")
+
+        instance.product_name_snapshot = product.name
+        instance.sku_snapshot = variant.sku if variant is not None else product.sku_base
+        instance.attributes_snapshot = dict(variant.attributes_json or {}) if variant is not None else {}
+        instance.unit_price_snapshot = variant.price if variant is not None else None
+
+        if commit:
+            instance.save()
+            form.save_m2m()
+
+        return instance

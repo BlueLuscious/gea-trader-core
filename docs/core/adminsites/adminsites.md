@@ -153,7 +153,9 @@ Characteristics:
 
 Current example:
 
-- the first curated owner flow lives in `catalog/admin/owner/`
+- curated owner flows currently live in:
+  - `catalog/admin/owner/`
+  - `quotation/admin/owner/`
 
 See:
 

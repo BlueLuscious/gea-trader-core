@@ -72,8 +72,8 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
         self.assertEqual(AdminSiteUnfoldCallbacks.scripts(request), owner_admin_site.get_scripts(request))
         self.assertEqual(AdminSiteUnfoldCallbacks.styles(request), owner_admin_site.get_styles(request))
 
-    def test_owner_admin_sidebar_navigation_includes_products_link(self) -> None:
-        """ Verify the owner admin sidebar exposes the curated products entry. """
+    def test_owner_admin_sidebar_navigation_includes_curated_links(self) -> None:
+        """ Verify the owner admin sidebar exposes the curated products and quotes entries. """
         request = self.request_factory.get("/owner-admin/")
         request.user = type(
             "OwnerUser",
@@ -94,7 +94,13 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
             for item in group["items"]
         }
 
-        self.assertEqual({"/owner-admin/catalog/productmodel/"}, item_links)
+        self.assertEqual(
+            {
+                "/owner-admin/catalog/productmodel/",
+                "/owner-admin/quotation/quotemodel/",
+            },
+            item_links,
+        )
 
     def test_master_admin_sidebar_navigation_includes_users_and_groups(self) -> None:
         """ Verify the master admin sidebar includes account management links. """

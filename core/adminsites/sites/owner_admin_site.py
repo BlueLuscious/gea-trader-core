@@ -35,6 +35,16 @@ class OwnerAdminSite(BaseAdminSite):
                     },
                 ],
             },
+            {
+                "title": "Sales",
+                "items": [
+                    {
+                        "title": "Quotes",
+                        "icon": "request_quote",
+                        "link": reverse_lazy(f"{self.name}:quotation_quotemodel_changelist"),
+                    },
+                ],
+            },
         ]
 
     def has_permission(self, request: HttpRequest) -> bool:

@@ -80,6 +80,8 @@ Follow these steps to get a development copy running locally:
   - `docs/accounts/accounts.md`
 - Catalog app documentation lives at:
   - `docs/catalog/catalog.md`
+- Quotation app documentation lives at:
+  - `docs/quotation/quotation.md`
 - Ready-to-copy environment examples live under:
   - `docs/env-examples/`
 
