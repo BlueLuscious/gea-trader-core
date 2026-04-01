@@ -73,7 +73,7 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
         self.assertEqual(AdminSiteUnfoldCallbacks.styles(request), owner_admin_site.get_styles(request))
 
     def test_owner_admin_sidebar_navigation_includes_curated_links(self) -> None:
-        """ Verify the owner admin sidebar exposes the curated products and quotes entries. """
+        """ Verify the owner admin sidebar exposes the curated users, products, and quotes entries. """
         request = self.request_factory.get("/owner-admin/")
         request.user = type(
             "OwnerUser",
@@ -96,6 +96,7 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
 
         self.assertEqual(
             {
+                "/owner-admin/accounts/usermodel/",
                 "/owner-admin/catalog/productmodel/",
                 "/owner-admin/quotation/quotemodel/",
             },

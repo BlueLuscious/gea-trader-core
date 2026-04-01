@@ -3,6 +3,8 @@
 from decimal import Decimal
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
+from accounts.admin.owner.user_model_admin import OwnerUserModelAdmin
+from accounts.models import UserModel
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin import ProductModelAdmin
 from catalog.admin.owner.product_variant_model_inline import ProductVariantModelInline
@@ -24,6 +26,19 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
     def setUp(self) -> None:
         """ Create the request factory and authenticated owner used by the tests. """
         self.request_factory = RequestFactory()
+        self.owner_account = UserModel.objects.create(
+            username="owner-admin",
+            email="owner@example.com",
+            is_active=True,
+            is_staff=True,
+        )
+        self.master_account = UserModel.objects.create(
+            username="master-admin",
+            email="master@example.com",
+            is_active=True,
+            is_staff=True,
+            is_superuser=True,
+        )
         self.owner_user = type(
             "OwnerUser",
             (),
@@ -31,18 +46,20 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
                 "is_active": True,
                 "is_superuser": False,
                 "is_staff": True,
+                "pk": self.owner_account.pk,
                 "has_module_perms": lambda self, app_label: True,
                 "has_perm": lambda self, perm: True,
             },
         )()
 
     def test_owner_admin_registers_curated_models(self) -> None:
-        """ Verify the owner admin site currently registers the curated product and quote models. """
+        """ Verify the owner admin site currently registers the curated user, product, and quote models. """
+        self.assertIn(UserModel, owner_admin_site._registry)
         self.assertIn(ProductModel, owner_admin_site._registry)
         self.assertIn(QuoteModel, owner_admin_site._registry)
 
     def test_owner_admin_sidebar_navigation_includes_registered_links(self) -> None:
-        """ Verify the owner sidebar exposes the registered product and quote changelist links. """
+        """ Verify the owner sidebar exposes the registered user, product, and quote changelist links. """
         request = self.request_factory.get("/owner-admin/")
         request.user = self.owner_user
         navigation = owner_admin_site.get_sidebar_navigation(request)
@@ -53,8 +70,68 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
             for item in group["items"]
         }
 
+        self.assertIn("/owner-admin/accounts/usermodel/", item_links)
         self.assertIn("/owner-admin/catalog/productmodel/", item_links)
         self.assertIn("/owner-admin/quotation/quotemodel/", item_links)
+
+    def test_owner_users_flow_requires_expected_django_permissions(self) -> None:
+        """ Verify the owner users flow is backed by the expected Django model permissions. """
+        expected_permissions = {
+            "add_usermodel",
+            "change_usermodel",
+            "view_usermodel",
+        }
+
+        found_permissions = set(
+            Permission.objects.filter(
+                codename__in=expected_permissions,
+                content_type__app_label="accounts",
+            ).values_list("codename", flat=True)
+        )
+
+        self.assertEqual(expected_permissions, found_permissions)
+
+    def test_owner_user_admin_hides_superusers_and_disables_delete(self) -> None:
+        """ Verify the owner user admin excludes superusers and avoids hard delete. """
+        user_admin = OwnerUserModelAdmin(UserModel, owner_admin_site)
+        request = self.request_factory.get("/owner-admin/accounts/usermodel/")
+        request.user = self.owner_user
+
+        queryset = user_admin.get_queryset(request)
+
+        self.assertIn(self.owner_account, queryset)
+        self.assertNotIn(self.master_account, queryset)
+        self.assertFalse(user_admin.has_delete_permission(request))
+
+    def test_owner_user_admin_protects_the_current_owner_from_self_demoting(self) -> None:
+        """ Verify owners cannot remove their own admin access from the edit screen. """
+        user_admin = OwnerUserModelAdmin(UserModel, owner_admin_site)
+        request = self.request_factory.get(f"/owner-admin/accounts/usermodel/{self.owner_account.pk}/change/")
+        request.user = self.owner_user
+
+        readonly_fields = user_admin.get_readonly_fields(request, obj=self.owner_account)
+
+        self.assertIn("is_active", readonly_fields)
+        self.assertIn("is_staff", readonly_fields)
+
+    def test_owner_user_admin_uses_tabs_for_sections(self) -> None:
+        """ Verify the owner user admin uses Unfold tabs for guided account editing. """
+        user_admin = OwnerUserModelAdmin(UserModel, owner_admin_site)
+
+        change_fieldset_classes = [fieldset[1].get("classes", ()) for fieldset in user_admin.fieldsets]
+        add_fieldset_classes = [fieldset[1].get("classes", ()) for fieldset in user_admin.add_fieldsets]
+
+        self.assertEqual(3, change_fieldset_classes.count(("tab",)))
+        self.assertEqual(2, add_fieldset_classes.count(("tab",)))
+
+    def test_owner_user_admin_loads_custom_css_for_fieldset_description_spacing(self) -> None:
+        """ Verify the owner user admin loads the CSS tweak for fieldset descriptions. """
+        user_admin = OwnerUserModelAdmin(UserModel, owner_admin_site)
+
+        self.assertIn(
+            "accounts/admin/owner/user_model_admin.css",
+            str(user_admin.media),
+        )
 
     def test_owner_products_flow_requires_expected_django_permissions(self) -> None:
         """ Verify the owner products flow is backed by the expected Django model permissions. """

@@ -26,6 +26,16 @@ class OwnerAdminSite(BaseAdminSite):
         """
         return [
             {
+                "title": "Accounts",
+                "items": [
+                    {
+                        "title": "Users",
+                        "icon": "manage_accounts",
+                        "link": reverse_lazy(f"{self.name}:accounts_usermodel_changelist"),
+                    },
+                ],
+            },
+            {
                 "title": "Catalog",
                 "items": [
                     {

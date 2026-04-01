@@ -67,6 +67,7 @@ The app already integrates with the custom project admin site structure.
 Current registrations live in:
 
 - `accounts/admin/master/`
+- `accounts/admin/owner/`
 
 Current master registrations:
 
@@ -74,6 +75,20 @@ Current master registrations:
 - `GroupAdmin`
 
 These admins are registered against the shared `master_admin_site`.
+
+Current owner registrations:
+
+- `OwnerUserModelAdmin`
+
+The owner admin currently exposes a curated `Accounts > Users` flow.
+
+Current owner behavior:
+
+- users are managed as support or operator accounts
+- superusers are hidden from the owner queryset
+- hard delete is disabled in favor of deactivation
+- owners cannot remove their own owner-admin access accidentally from the edit screen
+- direct group management is intentionally postponed until group ownership and visibility rules are defined
 
 This keeps the authentication admin visible inside the master admin site while following the project rule of keeping domain admin logic inside each app.
 
