@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from catalog.access.catalog_access_policy import CatalogAccessPolicy
+from quotation.access.quotation_access_policy import QuotationAccessPolicy
 from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
 from tenancy.access.tenant_access_policy import TenantAccessPolicy
 
@@ -102,10 +103,7 @@ class OwnerTenantSidebarNavigationBuilder:
                         "title": _("Quotes"),
                         "icon": "request_quote",
                         "link": reverse("owner_admin:quotation_quotemodel_changelist"),
-                        "permission": lambda req: (
-                            TenantAccessPolicy.can_access_tenant(req.user, getattr(req, "tenant", None))
-                            and req.user.has_perm("quotation.view_quotemodel")
-                        ),
+                        "permission": lambda req: QuotationAccessPolicy.can_access_quotation(req),
                     },
                 ],
             },
