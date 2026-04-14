@@ -230,7 +230,6 @@ class BaseAdminSite(UnfoldAdminSite):
             list[dict[str, Any]]: Dropdown items rendered by Unfold in the site header.
         """
         return []
-
     def get_scripts(self, request: HttpRequest) -> list[str]:
         """ Return additional Unfold script paths for the current request.
 

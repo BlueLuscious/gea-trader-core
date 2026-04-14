@@ -221,7 +221,14 @@ class AdminSiteUnfoldCallbacks:
 
     @classmethod
     def languages_action(cls, request: HttpRequest) -> str:
-        """ Return the URL used by the admin language switcher form. """
+        """ Return the URL used by the admin language switcher form.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            str: Language switcher endpoint.
+        """
         site_instance = cls._resolve_admin_site_instance(request)
         return site_instance.get_languages_action(request)
 

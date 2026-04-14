@@ -187,6 +187,31 @@ Characteristics:
 - custom language switching endpoint from `core/i18n/` used by the Unfold language selector to keep the default language unprefixed
 - owner sidebar entries are curated instead of mirroring the full Django app list
 - the current `Accounts` navigation is intentionally owner-only even inside the owner admin site
+- curated navigation instead of raw app exposure
+- model access should rely on standard Django permissions and groups
+- hard delete should be avoided where the model already exposes an active/inactive state
+- owner flows should stay app-specific and can use app-local forms, inlines, formsets, and CSS when that improves the guided experience
+- app-specific visual fixes should stay local to the app instead of patching Unfold globally
+
+Current example:
+
+- curated owner flows currently live in:
+  - `catalog/admin/owner/`
+  - `quotation/admin/owner/`
+
+See:
+
+- `docs/catalog/catalog.md`
+
+### Owner Group Convention
+
+The current recommended convention is to create an `OwnerAdmins` group from the Django admin and assign the permissions required by the owner flows manually while those flows are still evolving.
+
+The exact permissions should be documented by the app that owns each owner flow.
+
+Current example:
+
+- `docs/catalog/catalog.md`
 
 ## Maintenance Rule
 

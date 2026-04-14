@@ -1,11 +1,11 @@
 """ Tests for admin site Unfold configuration resolution. """
 
-from django.test import RequestFactory
 from django.templatetags.static import static
+from django.test import RequestFactory
 from tenancy.models import TenantModel
 from core.adminsites.admin_namespace import AdminNamespace
-from core.adminsites.site_instances import owner_admin_site
 from core.adminsites.site_instances import master_admin_site
+from core.adminsites.site_instances import owner_admin_site
 from core.adminsites.sites.master_admin_site import MasterAdminSite
 from core.adminsites.unfold import AdminSiteUnfoldCallbacks
 from core.adminsites.unfold import AdminSiteUnfoldSettings
@@ -210,6 +210,8 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
                 "is_active": False,
                 "is_staff": False,
                 "is_authenticated": False,
+                "has_module_perms": lambda self, app_label: False,
+                "has_perm": lambda self, perm: False,
             },
         )()
         request.resolver_match = type("ResolverMatch", (), {"namespace": owner_admin_site.name})()
@@ -243,6 +245,33 @@ class TestAdminSitesUnfold(LoggedSimpleTestCase):
         request.user = type("OwnerUser", (), {"tenant_memberships": tenant_memberships})()
 
         self.assertEqual(["Owner", "primary"], owner_admin_site.get_environment(request))
+
+    def test_owner_admin_sidebar_navigation_includes_curated_links(self) -> None:
+        """ Verify the owner admin sidebar exposes the curated users, products, and quotes entries. """
+        request = self.request_factory.get("/owner-admin/")
+        request.user = type(
+            "OwnerUser",
+            (),
+            {
+                "is_active": True,
+                "is_superuser": False,
+                "is_staff": True,
+                "has_module_perms": lambda self, app_label: True,
+                "has_perm": lambda self, perm: True,
+            },
+        )()
+        request.tenant = TenantModel(name="GEA Lubricantes", slug="gea-lubricantes")
+        navigation = owner_admin_site.get_sidebar_navigation(request)
+
+        item_links = {
+            item["link"]
+            for group in navigation
+            for item in group["items"]
+        }
+
+        self.assertIn("/owner-admin/accounts/usermodel/", item_links)
+        self.assertIn("/owner-admin/catalog/productmodel/", item_links)
+        self.assertIn("/owner-admin/quotation/quotemodel/", item_links)
 
     def test_master_admin_sidebar_navigation_includes_users_groups_and_tenancy(self) -> None:
         """ Verify the master admin sidebar includes account and tenancy management links. """

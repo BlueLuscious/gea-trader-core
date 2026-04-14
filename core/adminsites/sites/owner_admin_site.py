@@ -116,6 +116,17 @@ class OwnerAdminSite(BaseAdminSite):
 
         return [membership.get_role_display(), "primary"]
 
+    def get_sidebar_navigation(self, request: HttpRequest) -> list[dict[str, Any]]:
+        """ Return owner sidebar navigation for account administration.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            list[dict[str, Any]]: Sidebar navigation groups for the owner site.
+        """
+        return OwnerTenantSidebarNavigationBuilder.build(request)
+
     def has_permission(self, request: HttpRequest) -> bool:
         """ Return whether the request user can access the owner admin site.
 
@@ -138,17 +149,6 @@ class OwnerAdminSite(BaseAdminSite):
             list[dict[str, Any]]: Dropdown items for active tenant memberships.
         """
         return OwnerTenantDropdownBuilder.build(request)
-
-    def get_sidebar_navigation(self, request: HttpRequest) -> list[dict[str, Any]]:
-        """ Return owner sidebar navigation for account administration.
-
-        Args:
-            request: Current admin request.
-
-        Returns:
-            list[dict[str, Any]]: Sidebar navigation groups for the owner site.
-        """
-        return OwnerTenantSidebarNavigationBuilder.build(request)
 
     def get_scripts(self, request: HttpRequest) -> list[str]:
         """ Return owner-admin scripts including favicon post-processing.

@@ -21,7 +21,7 @@ class OwnerUserModelAdminCreationForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
         help_text=_("Type the same password again to confirm it."),
     )
-    
+
     class Meta(UserCreationForm.Meta):
         """ Declarative field presentation for owner user creation. """
 
@@ -51,6 +51,5 @@ class OwnerUserModelAdminCreationForm(UserCreationForm):
             **kwargs: Keyword form arguments.
         """
         super().__init__(*args, **kwargs)
-        
         self.fields["is_active"].initial = True
         self.fields["is_staff"].initial = True

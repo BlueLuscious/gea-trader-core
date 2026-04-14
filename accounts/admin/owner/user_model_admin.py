@@ -4,6 +4,7 @@ import logging
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
+from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
@@ -13,8 +14,8 @@ from accounts.admin.owner.user_model_admin_creation_form import OwnerUserModelAd
 from accounts.admin.owner.user_model_admin_form import OwnerUserModelAdminForm
 from accounts.models import UserModel
 from core.adminsites.site_instances import owner_admin_site
-from tenancy.choices import TenantRole
 from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
+from tenancy.choices import TenantRole
 
 logger = logging.getLogger(__name__)
 
@@ -93,8 +94,8 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         ),
     )
 
-    def get_queryset(self, request: HttpRequest):
-        """ Hide superusers from the owner admin user list.
+    def get_queryset(self, request: HttpRequest) -> QuerySet[UserModel]:
+        """ Hide superusers and scope owner-visible users to the active tenant.
 
         Args:
             request: Current admin request.

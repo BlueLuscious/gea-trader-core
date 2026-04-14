@@ -47,6 +47,10 @@ PROJECT_APPS = [
     'core',
     'accounts',
     'tenancy',
+    'masterdata',
+    'catalog',
+    'cart',
+    'quotation',
 ]
 
 PROJECT_EXTRA_APPS = list(dict.fromkeys(MEDIA_STORAGE_CONFIG.extra_apps + STATIC_STORAGE_CONFIG.extra_apps))

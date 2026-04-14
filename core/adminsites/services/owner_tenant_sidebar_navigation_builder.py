@@ -83,4 +83,32 @@ class OwnerTenantSidebarNavigationBuilder:
                     },
                 ],
             },
+            {
+                "title": _("Catalog"),
+                "items": [
+                    {
+                        "title": _("Products"),
+                        "icon": "inventory_2",
+                        "link": reverse("owner_admin:catalog_productmodel_changelist"),
+                        "permission": lambda req: (
+                            TenantAccessPolicy.can_access_tenant(req.user, getattr(req, "tenant", None))
+                            and req.user.has_perm("catalog.view_productmodel")
+                        ),
+                    },
+                ],
+            },
+            {
+                "title": _("Sales"),
+                "items": [
+                    {
+                        "title": _("Quotes"),
+                        "icon": "request_quote",
+                        "link": reverse("owner_admin:quotation_quotemodel_changelist"),
+                        "permission": lambda req: (
+                            TenantAccessPolicy.can_access_tenant(req.user, getattr(req, "tenant", None))
+                            and req.user.has_perm("quotation.view_quotemodel")
+                        ),
+                    },
+                ],
+            },
         ]
