@@ -4,6 +4,7 @@ from quotation.models.querysets.quote_model_queryset import QuoteModelQuerySet
 
 if TYPE_CHECKING:
     from quotation.models.quote_model import QuoteModel
+    from tenancy.models import TenantModel
 
 
 class QuoteModelManager(models.Manager["QuoteModel"]):
@@ -24,6 +25,17 @@ class QuoteModelManager(models.Manager["QuoteModel"]):
             QuoteModelQuerySet: Draft quotes queryset.
         """
         return self.get_queryset().drafts()
+
+    def for_tenant(self, tenant: "TenantModel") -> "QuoteModelQuerySet":
+        """ Return quotes owned by one tenant.
+
+        Args:
+            tenant: Tenant that owns the quotes.
+
+        Returns:
+            QuoteModelQuerySet: Tenant-scoped quotes queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
 
     def requested(self) -> "QuoteModelQuerySet":
         """ Return requested quotes.

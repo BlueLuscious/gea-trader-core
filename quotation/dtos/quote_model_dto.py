@@ -7,6 +7,7 @@ class QuoteModelDTO:
     """ Public DTO for quote data. """
 
     id: int
+    tenant_id: str
     cart_id: int | None
     user_id: int | None
     status: str

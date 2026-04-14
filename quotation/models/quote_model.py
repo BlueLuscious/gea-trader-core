@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from uuid import UUID
 from django.conf import settings
 from django.db import models
 from quotation.choices import QuoteStatus
@@ -7,11 +8,17 @@ from quotation.models.managers.quote_model_manager import QuoteModelManager
 if TYPE_CHECKING:
     from accounts.models.user_model import UserModel
     from cart.models import CartModel
+    from tenancy.models import TenantModel
 
 
 class QuoteModel(models.Model):
     """ Formal quotation request generated from a cart or direct input. """
 
+    tenant: "TenantModel" = models.ForeignKey(
+        "tenancy.TenantModel",
+        on_delete=models.CASCADE,
+        related_name="quotes",
+    )
     cart: "CartModel | None" = models.ForeignKey(
         "cart.CartModel",
         on_delete=models.SET_NULL,
@@ -42,6 +49,7 @@ class QuoteModel(models.Model):
     objects: QuoteModelManager = QuoteModelManager()
 
     id: int
+    tenant_id: UUID
     cart_id: int | None
     user_id: int | None
 

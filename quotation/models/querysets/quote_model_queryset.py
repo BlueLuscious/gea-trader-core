@@ -4,10 +4,22 @@ from quotation.choices import QuoteStatus
 
 if TYPE_CHECKING:
     from quotation.models.quote_model import QuoteModel
+    from tenancy.models import TenantModel
 
 
 class QuoteModelQuerySet(models.QuerySet["QuoteModel"]):
     """ QuerySet for reusable quote filters. """
+
+    def for_tenant(self, tenant: "TenantModel") -> "QuoteModelQuerySet":
+        """ Return quotes owned by one tenant.
+
+        Args:
+            tenant: Tenant that owns the quotes.
+
+        Returns:
+            QuoteModelQuerySet: Tenant-scoped quotes queryset.
+        """
+        return self.filter(tenant=tenant)
 
     def drafts(self) -> "QuoteModelQuerySet":
         """ Return draft quotes.

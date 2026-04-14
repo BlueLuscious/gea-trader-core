@@ -4,6 +4,7 @@ from quotation.models.querysets.quote_item_model_queryset import QuoteItemModelQ
 
 if TYPE_CHECKING:
     from quotation.models import QuoteItemModel, QuoteModel
+    from tenancy.models import TenantModel
 
 
 class QuoteItemModelManager(models.Manager["QuoteItemModel"]):
@@ -35,3 +36,14 @@ class QuoteItemModelManager(models.Manager["QuoteItemModel"]):
             QuoteItemModelQuerySet: Quote items queryset.
         """
         return self.get_queryset().for_quote(quote)
+
+    def for_tenant(self, tenant: "TenantModel") -> "QuoteItemModelQuerySet":
+        """ Return quote items that belong to one tenant through their parent quote.
+
+        Args:
+            tenant: Tenant that owns the parent quotes.
+
+        Returns:
+            QuoteItemModelQuerySet: Tenant-scoped quote items queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)

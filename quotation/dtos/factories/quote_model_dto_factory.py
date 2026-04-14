@@ -18,6 +18,7 @@ class QuoteModelDTOFactory:
         """
         return QuoteModelDTO(
             id=instance.id,
+            tenant_id=str(instance.tenant_id),
             cart_id=instance.cart_id,
             user_id=instance.user_id,
             status=instance.status,

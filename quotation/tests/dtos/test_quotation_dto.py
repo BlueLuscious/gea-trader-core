@@ -12,6 +12,7 @@ class TestQuotationDTO(LoggedSimpleTestCase):
         """ Verify QuoteModelDTO behaves as an immutable dataclass. """
         dto = QuoteModelDTO(
             id=1,
+            tenant_id="tenant-1",
             cart_id=None,
             user_id=None,
             status='draft',

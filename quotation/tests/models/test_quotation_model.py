@@ -25,7 +25,7 @@ class TestQuotationModel(LoggedTestCase):
         tenant = self._create_tenant("quotation-model")
         product = ProductModel.objects.create(tenant=tenant, name='Bomba', slug='bomba')
         variant = ProductVariantModel.objects.create(product=product, sku='BOM-001')
-        quote = QuoteModel.objects.create(cart=cart, customer_email='cliente@example.com')
+        quote = QuoteModel.objects.create(tenant=tenant, cart=cart, customer_email='cliente@example.com')
         item = QuoteItemModel.objects.create(
             quote=quote,
             product=product,
@@ -36,13 +36,15 @@ class TestQuotationModel(LoggedTestCase):
             quantity=3
         )
 
+        self.assertEqual(quote.tenant, tenant)
         self.assertEqual(item.quote, quote)
         self.assertEqual(item.product, product)
         self.assertEqual(item.variant, variant)
 
     def test_string_representations_are_admin_friendly(self) -> None:
         """ Verify quote models expose admin-friendly labels. """
-        quote = QuoteModel.objects.create(customer_email='cliente@example.com')
+        tenant = self._create_tenant("quotation-strings")
+        quote = QuoteModel.objects.create(tenant=tenant, customer_email='cliente@example.com')
         item = QuoteItemModel.objects.create(quote=quote, product_name_snapshot='Bomba', quantity=1)
 
         self.assertEqual(str(quote), f'Quote {quote.pk}')

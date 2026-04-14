@@ -3,6 +3,7 @@ from django.db import models
 
 if TYPE_CHECKING:
     from quotation.models import QuoteItemModel, QuoteModel
+    from tenancy.models import TenantModel
 
 
 class QuoteItemModelQuerySet(models.QuerySet["QuoteItemModel"]):
@@ -26,3 +27,14 @@ class QuoteItemModelQuerySet(models.QuerySet["QuoteItemModel"]):
             QuoteItemModelQuerySet: Quote items queryset.
         """
         return self.filter(quote=quote)
+
+    def for_tenant(self, tenant: "TenantModel") -> "QuoteItemModelQuerySet":
+        """ Return quote items that belong to one tenant through their parent quote.
+
+        Args:
+            tenant: Tenant that owns the parent quotes.
+
+        Returns:
+            QuoteItemModelQuerySet: Tenant-scoped quote items queryset.
+        """
+        return self.filter(quote__tenant=tenant)
