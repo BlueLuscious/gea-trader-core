@@ -1,8 +1,10 @@
 """ Owner admin tests for tenant-scoped catalog flows. """
 
+from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
 from accounts.models import UserModel
+from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin import ProductModelAdmin
 from catalog.models import ProductModel
 from core.adminsites.site_instances import owner_admin_site
@@ -81,9 +83,11 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
         """ Verify the owner product queryset only returns products from the active tenant. """
         request = self.build_request(self.operator, self.tenant)
 
-        queryset = self.admin.get_queryset(request)
+        with patch("catalog.admin.owner.product_model_admin.logger.info") as logger_info_mock:
+            queryset = self.admin.get_queryset(request)
 
         self.assertEqual([self.in_scope_product], list(queryset))
+        logger_info_mock.assert_called_once()
 
     def test_save_model_assigns_the_active_tenant_on_create(self) -> None:
         """ Verify owner-created products inherit the active tenant automatically. """
@@ -96,9 +100,11 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
         )
         form = ProductModelAdmin.form(instance=product)
 
-        self.admin.save_model(request, product, form, change=False)
+        with patch("catalog.admin.owner.product_model_admin.logger.info") as logger_info_mock:
+            self.admin.save_model(request, product, form, change=False)
 
         self.assertEqual(self.tenant, product.tenant)
+        logger_info_mock.assert_called_once()
 
     def test_view_and_change_permissions_reject_products_from_other_tenants(self) -> None:
         """ Verify object permissions stay scoped to products owned by the active tenant. """
@@ -118,3 +124,15 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
         self.assertTrue(self.admin.has_add_permission(member_request))
         self.assertFalse(self.admin.has_module_permission(outsider_request))
         self.assertFalse(self.admin.has_add_permission(outsider_request))
+
+    def test_image_inline_logs_variant_queryset_construction_for_the_current_product(self) -> None:
+        """ Verify the owner image inline logs variant choices scoped to the current product. """
+        inline = ProductImageModelInline(ProductModel, owner_admin_site)
+        request = self.build_request(self.operator, self.tenant)
+
+        with patch("catalog.admin.owner.product_image_model_inline_formset.logger.info") as logger_info_mock:
+            formset_class = inline.get_formset(request, obj=self.in_scope_product)
+            formset = formset_class(instance=self.in_scope_product)
+            formset.empty_form.fields["variant"].queryset.count()
+
+        logger_info_mock.assert_called_once()

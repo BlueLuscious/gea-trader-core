@@ -1,5 +1,6 @@
 """ Product admin registration for the owner admin site. """
 
+import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
@@ -14,6 +15,8 @@ from core.adminsites.site_instances import owner_admin_site
 if TYPE_CHECKING:
     from catalog.models.querysets import ProductModelQuerySet
     from tenancy.models.tenant_model import TenantModel
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(ProductModel, site=owner_admin_site)
@@ -92,9 +95,16 @@ class ProductModelAdmin(ModelAdmin):
         """
         tenant: "TenantModel | None" = getattr(request, "tenant", None)
         if tenant is None:
+            logger.info("Returned no owner-visible products because no active tenant is bound to the request")
             return ProductModel.objects.none()
 
-        return super().get_queryset(request).for_tenant(tenant).with_related()
+        tenant_queryset = super().get_queryset(request).for_tenant(tenant).with_related()
+        logger.info(
+            "Scoped owner product queryset tenant_id=%s product_count=%s",
+            tenant.pk,
+            tenant_queryset.count(),
+        )
+        return tenant_queryset
 
     def save_model(
         self,
@@ -115,6 +125,12 @@ class ProductModelAdmin(ModelAdmin):
             obj.tenant = getattr(request, "tenant", None)
 
         super().save_model(request, obj, form, change)
+        logger.info(
+            "Saved owner product tenant_id=%s product_id=%s change=%s",
+            getattr(obj.tenant, "pk", None),
+            obj.pk,
+            change,
+        )
 
     def has_module_permission(self, request: HttpRequest) -> bool:
         """ Return whether the catalog module should appear in owner admin.
