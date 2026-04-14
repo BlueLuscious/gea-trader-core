@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 18:18-0300\n"
+"POT-Creation-Date: 2026-04-14 20:06-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -263,7 +263,8 @@ msgstr "Detalles del producto"
 #: .\catalog\admin\owner\product_model_admin.py:48
 msgid ""
 "Start with the basic information customers and your team will recognize."
-msgstr "Comienza con la información básica que reconocerán tus clientes y tu equipo."
+msgstr ""
+"Comienza con la información básica que reconocerán tus clientes y tu equipo."
 
 #: .\catalog\admin\owner\product_model_admin.py:56
 msgid "Customer-facing content"
@@ -271,7 +272,9 @@ msgstr "Contenido visible para clientes"
 
 #: .\catalog\admin\owner\product_model_admin.py:59
 msgid "Write the short and full descriptions your customers will read."
-msgstr "Escribe la descripción breve y la descripción completa que leerán tus clientes."
+msgstr ""
+"Escribe la descripción breve y la descripción completa que leerán tus "
+"clientes."
 
 #: .\catalog\admin\owner\product_model_admin.py:67
 msgid "Visibility and sales"
@@ -281,7 +284,9 @@ msgstr "Visibilidad y ventas"
 msgid ""
 "Control how this product appears and whether it should go through the quote "
 "flow."
-msgstr "Controla cómo se muestra este producto y si debe gestionarse mediante cotización."
+msgstr ""
+"Controla cómo se muestra este producto y si debe gestionarse mediante "
+"cotización."
 
 #: .\catalog\admin\owner\product_model_admin.py:78
 msgid "Advanced details"
@@ -295,7 +300,9 @@ msgstr "Información que se usa con menos frecuencia."
 msgid ""
 "Usually created from the product name. Adjust it only when you need a custom "
 "URL."
-msgstr "Normalmente se crea a partir del nombre del producto. Ajústalo solo si necesitas una URL personalizada."
+msgstr ""
+"Normalmente se crea a partir del nombre del producto. Ajústalo solo si "
+"necesitas una URL personalizada."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:18
 #: .\catalog\models\product_model.py:59
@@ -305,20 +312,26 @@ msgstr "Resumen breve para tarjetas compactas y listados de productos."
 #: .\catalog\admin\owner\product_model_admin_form.py:19
 #: .\catalog\models\product_model.py:65
 msgid "Full product description with the details customers should read."
-msgstr "Descripción completa del producto con los detalles que deberían leer tus clientes."
+msgstr ""
+"Descripción completa del producto con los detalles que deberían leer tus "
+"clientes."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:20
 #: .\catalog\models\product_model.py:72
 msgid ""
 "Internal base reference used to identify this product family and its "
 "variants."
-msgstr "Referencia base interna que se usa para identificar esta familia de productos y sus variantes."
+msgstr ""
+"Referencia base interna que se usa para identificar esta familia de "
+"productos y sus variantes."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:21
 #: .\catalog\models\product_model.py:87
 msgid ""
 "Enable this when customers should request a quote instead of buying directly."
-msgstr "Activa esto cuando los clientes deban solicitar una cotización en lugar de comprar directamente."
+msgstr ""
+"Activa esto cuando los clientes deban solicitar una cotización en lugar de "
+"comprar directamente."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:24
 #: .\catalog\models\product_model.py:46
@@ -379,6 +392,11 @@ msgstr "Variante"
 msgid "Variants"
 msgstr "Variantes"
 
+#: .\catalog\apps.py:9
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:88
+msgid "Catalog"
+msgstr "Catálogo"
+
 #: .\catalog\models\product_image_model.py:17
 #: .\catalog\models\product_model.py:116
 #: .\catalog\models\product_variant_model.py:18
@@ -393,7 +411,9 @@ msgstr "Producto al que pertenece esta imagen."
 msgid ""
 "Optional variant shown by this image when it is not shared across the whole "
 "product."
-msgstr "Variante opcional que muestra esta imagen cuando no se comparte con todo el producto."
+msgstr ""
+"Variante opcional que muestra esta imagen cuando no se comparte con todo el "
+"producto."
 
 #: .\catalog\models\product_image_model.py:31
 msgid "Image file"
@@ -401,7 +421,8 @@ msgstr "Archivo de imagen"
 
 #: .\catalog\models\product_image_model.py:32
 msgid "Upload the product image shown in the catalog and admin."
-msgstr "Sube la imagen del producto que se mostrará en el catálogo y en el admin."
+msgstr ""
+"Sube la imagen del producto que se mostrará en el catálogo y en el admin."
 
 #: .\catalog\models\product_image_model.py:38
 msgid "Alt text"
@@ -452,7 +473,9 @@ msgstr "Negocio"
 
 #: .\catalog\models\product_model.py:24
 msgid "Tenant that owns this product and its related catalog data."
-msgstr "Negocio al que pertenece este producto y los datos relacionados de su catálogo."
+msgstr ""
+"Negocio al que pertenece este producto y los datos relacionados de su "
+"catálogo."
 
 #: .\catalog\models\product_model.py:33
 msgid "Optional brand shown with this product."
@@ -468,7 +491,9 @@ msgstr "Nombre visible para clientes que se muestra en todo el catálogo."
 
 #: .\catalog\models\product_model.py:52
 msgid "Short URL-friendly identifier used in product links."
-msgstr "Identificador corto y amigable para URLs que se usa en los enlaces del producto."
+msgstr ""
+"Identificador corto y amigable para URLs que se usa en los enlaces del "
+"producto."
 
 #: .\catalog\models\product_model.py:77
 msgid "Turn this off to hide the product without deleting it."
@@ -554,7 +579,9 @@ msgstr "Desactiva esto para conservar la variante sin ofrecerla."
 
 #: .\catalog\models\product_variant_model.py:61
 msgid "Lower values appear first in admin and customer-facing variant lists."
-msgstr "Los valores más bajos aparecen primero en el admin y en las listas de variantes visibles para clientes."
+msgstr ""
+"Los valores más bajos aparecen primero en el admin y en las listas de "
+"variantes visibles para clientes."
 
 #: .\catalog\models\product_variant_model.py:66
 msgid "When this variant was created."
@@ -590,10 +617,6 @@ msgstr "Negocio"
 #: .\core\tests\adminsites\test_adminsites.py:77
 msgid "Settings"
 msgstr "Configuración"
-
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:88
-msgid "Catalog"
-msgstr "Catálogo"
 
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:99
 msgid "Sales"
@@ -891,6 +914,10 @@ msgstr "Seleccionar acción"
 #: .\core\i18n\translation_anchors.py:69
 msgid "Run"
 msgstr "Ejecutar"
+
+#: .\core\i18n\translation_anchors.py:70
+msgid "Select value"
+msgstr "Seleccionar valor"
 
 #: .\core\settings.py:164
 msgid "Spanish"
