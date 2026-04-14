@@ -1,5 +1,6 @@
 """ Owner inline admin for product variants. """
 
+from django.utils.translation import gettext_lazy as _
 from unfold.admin import TabularInline
 from catalog.models import ProductVariantModel
 
@@ -14,5 +15,5 @@ class ProductVariantModelInline(TabularInline):
     can_delete = False
     fields = ("name", "sku", "price", "is_default", "is_active", "sort_order")
     ordering = ("sort_order", "name", "id")
-    verbose_name = "Variant"
-    verbose_name_plural = "Variants"
+    verbose_name = _("Variant")
+    verbose_name_plural = _("Variants")

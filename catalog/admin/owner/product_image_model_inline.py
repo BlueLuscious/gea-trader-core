@@ -1,5 +1,6 @@
 """ Owner inline admin for product images. """
 
+from django.utils.translation import gettext_lazy as _
 from unfold.admin import StackedInline
 from catalog.admin.owner.product_image_model_inline_formset import ProductImageModelInlineFormSet
 from catalog.models import ProductImageModel
@@ -15,7 +16,7 @@ class ProductImageModelInline(StackedInline):
     extra = 0
     fieldsets = (
         (
-            "Image details",
+            _("Image details"),
             {
                 "fields": (
                     ("image", "variant"),
@@ -26,5 +27,5 @@ class ProductImageModelInline(StackedInline):
         ),
     )
     ordering = ("sort_order", "id")
-    verbose_name = "Image"
-    verbose_name_plural = "Images"
+    verbose_name = _("Image")
+    verbose_name_plural = _("Images")

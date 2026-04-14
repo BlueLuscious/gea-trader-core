@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
 from catalog.access import CatalogAccessPolicy
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
@@ -41,10 +42,10 @@ class ProductModelAdmin(ModelAdmin):
     save_on_top = True
     fieldsets = (
         (
-            "Product details",
+            _("Product details"),
             {
                 "classes": ("tab",),
-                "description": "Start with the basic information customers and your team will recognize.",
+                "description": _("Start with the basic information customers and your team will recognize."),
                 "fields": (
                     ("name", "slug"),
                     ("brand", "category"),
@@ -52,10 +53,10 @@ class ProductModelAdmin(ModelAdmin):
             },
         ),
         (
-            "Customer-facing content",
+            _("Customer-facing content"),
             {
                 "classes": ("tab",),
-                "description": "Write the short and full descriptions your customers will read.",
+                "description": _("Write the short and full descriptions your customers will read."),
                 "fields": (
                     "short_description",
                     "description",
@@ -63,10 +64,10 @@ class ProductModelAdmin(ModelAdmin):
             },
         ),
         (
-            "Visibility and sales",
+            _("Visibility and sales"),
             {
                 "classes": ("tab",),
-                "description": "Control how this product appears and whether it should go through the quote flow.",
+                "description": _("Control how this product appears and whether it should go through the quote flow."),
                 "fields": (
                     "sku_base",
                     ("is_active", "is_featured", "requires_quote"),
@@ -74,10 +75,10 @@ class ProductModelAdmin(ModelAdmin):
             },
         ),
         (
-            "Advanced details",
+            _("Advanced details"),
             {
                 "classes": ("tab",),
-                "description": "Less frequently used information.",
+                "description": _("Less frequently used information."),
                 "fields": ("created_at", "updated_at"),
             },
         ),

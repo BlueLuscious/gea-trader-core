@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 19:32-0300\n"
+"POT-Creation-Date: 2026-04-14 18:18-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,39 +12,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\accounts\admin\owner\group_admin.py:38
+#: .\accounts\admin\owner\group_admin.py:41
 msgid "Team group"
 msgstr "Grupo del equipo"
 
-#: .\accounts\admin\owner\group_admin.py:41
+#: .\accounts\admin\owner\group_admin.py:44
 msgid "Create permission groups for people working in this business."
 msgstr ""
 "Crea grupos de permisos para las personas que trabajan en este negocio."
 
-#: .\accounts\admin\owner\group_admin.py:46
+#: .\accounts\admin\owner\group_admin.py:49
 msgid "Access permissions"
 msgstr "Permisos de acceso"
 
-#: .\accounts\admin\owner\group_admin.py:49
+#: .\accounts\admin\owner\group_admin.py:52
 msgid "This group can include any permissions you already have."
 msgstr "Este grupo puede incluir cualquiera de los permisos que ya tienes."
 
-#: .\accounts\admin\owner\group_admin.py:136
+#: .\accounts\admin\owner\group_admin.py:151
 #, python-format
 msgid "Can add %(name)s"
 msgstr "Puede agregar %(name)s"
 
-#: .\accounts\admin\owner\group_admin.py:137
+#: .\accounts\admin\owner\group_admin.py:152
 #, python-format
 msgid "Can change %(name)s"
 msgstr "Puede cambiar %(name)s"
 
-#: .\accounts\admin\owner\group_admin.py:138
+#: .\accounts\admin\owner\group_admin.py:153
 #, python-format
 msgid "Can delete %(name)s"
 msgstr "Puede eliminar %(name)s"
 
-#: .\accounts\admin\owner\group_admin.py:139
+#: .\accounts\admin\owner\group_admin.py:154
 #, python-format
 msgid "Can view %(name)s"
 msgstr "Puede ver %(name)s"
@@ -90,47 +90,47 @@ msgstr "Elige si esta persona administra este negocio o trabaja en el equipo."
 msgid "Turn off access to this business without deleting the user."
 msgstr "Desactiva el acceso a este negocio sin eliminar el usuario."
 
-#: .\accounts\admin\owner\tenant_membership_inline_formset.py:63
+#: .\accounts\admin\owner\tenant_membership_inline_formset.py:66
 msgid "This screen requires an active business in context."
 msgstr "Esta pantalla requiere un negocio activo en contexto."
 
-#: .\accounts\admin\owner\tenant_membership_inline_formset.py:72
+#: .\accounts\admin\owner\tenant_membership_inline_formset.py:75
 msgid "Add one business access entry before saving this user."
 msgstr "Agrega un acceso al negocio antes de guardar este usuario."
 
-#: .\accounts\admin\owner\tenant_membership_inline_formset.py:87
+#: .\accounts\admin\owner\tenant_membership_inline_formset.py:90
 msgid "Each business must keep at least one active owner account."
 msgstr "Cada negocio debe conservar al menos una cuenta propietaria activa."
 
-#: .\accounts\admin\owner\user_model_admin.py:43
-#: .\accounts\admin\owner\user_model_admin.py:65
+#: .\accounts\admin\owner\user_model_admin.py:47
+#: .\accounts\admin\owner\user_model_admin.py:69
 msgid "Profile"
 msgstr "Perfil"
 
-#: .\accounts\admin\owner\user_model_admin.py:46
+#: .\accounts\admin\owner\user_model_admin.py:50
 msgid "Create a team account your staff can recognize easily."
 msgstr "Crea una cuenta de equipo que tu personal pueda reconocer fácilmente."
 
-#: .\accounts\admin\owner\user_model_admin.py:55
-#: .\accounts\admin\owner\user_model_admin.py:76
+#: .\accounts\admin\owner\user_model_admin.py:59
+#: .\accounts\admin\owner\user_model_admin.py:80
 msgid "Access"
 msgstr "Acceso"
 
-#: .\accounts\admin\owner\user_model_admin.py:58
-#: .\accounts\admin\owner\user_model_admin.py:79
+#: .\accounts\admin\owner\user_model_admin.py:62
+#: .\accounts\admin\owner\user_model_admin.py:83
 msgid "Control whether this account can sign in and open the business admin."
 msgstr ""
 "Controla si esta cuenta puede iniciar sesión y abrir el admin del negocio."
 
-#: .\accounts\admin\owner\user_model_admin.py:68
+#: .\accounts\admin\owner\user_model_admin.py:72
 msgid "Keep this team member's profile and contact details up to date."
 msgstr "Mantén actualizados el perfil y los datos de contacto de esta persona."
 
-#: .\accounts\admin\owner\user_model_admin.py:84
+#: .\accounts\admin\owner\user_model_admin.py:88
 msgid "Activity"
 msgstr "Actividad"
 
-#: .\accounts\admin\owner\user_model_admin.py:87
+#: .\accounts\admin\owner\user_model_admin.py:91
 msgid "Recent sign-in details for support and auditing."
 msgstr "Detalles recientes de acceso para soporte y auditoría."
 
@@ -182,8 +182,8 @@ msgstr "Puede abrir el admin del negocio"
 
 #: .\accounts\admin\owner\user_model_admin_creation_form.py:37
 #: .\accounts\admin\owner\user_model_admin_form.py:23
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:76
-#: .\core\tests\adminsites\test_adminsites.py:72
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:77
+#: .\core\tests\adminsites\test_adminsites.py:77
 msgid "Groups"
 msgstr "Grupos"
 
@@ -210,7 +210,7 @@ msgid "Only permission groups for the current business can be assigned here."
 msgstr "Aquí solo se pueden asignar grupos de permisos del negocio actual."
 
 #: .\accounts\apps.py:12
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:64
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:65
 msgid "Accounts"
 msgstr "Cuentas"
 
@@ -229,28 +229,356 @@ msgid "User"
 msgstr "Usuario"
 
 #: .\accounts\models\user_model.py:33
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:67
-#: .\core\tests\adminsites\test_adminsites.py:72
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:68
+#: .\core\tests\adminsites\test_adminsites.py:77
 msgid "Users"
 msgstr "Usuarios"
 
-#: .\accounts\tests\admin\test_owner_accounts_admin.py:218
+#: .\accounts\tests\admin\test_owner_accounts_admin.py:232
 #: .\tenancy\choices\tenant_role.py:11
 msgid "Owner"
 msgstr "Propietario"
 
-#: .\accounts\tests\admin\test_owner_accounts_admin.py:218
+#: .\accounts\tests\admin\test_owner_accounts_admin.py:232
 #: .\tenancy\choices\tenant_role.py:12
 msgid "Operator"
 msgstr "Operador"
 
-#: .\core\adminsites\services\owner_tenant_dropdown_builder.py:54
-#: .\core\tests\adminsites\test_owner_admin_site_dropdown.py:47
+#: .\catalog\admin\owner\product_image_model_inline.py:19
+msgid "Image details"
+msgstr "Detalles de la imagen"
+
+#: .\catalog\admin\owner\product_image_model_inline.py:30
+msgid "Image"
+msgstr "Imagen"
+
+#: .\catalog\admin\owner\product_image_model_inline.py:31
+msgid "Images"
+msgstr "Imágenes"
+
+#: .\catalog\admin\owner\product_model_admin.py:45
+msgid "Product details"
+msgstr "Detalles del producto"
+
+#: .\catalog\admin\owner\product_model_admin.py:48
+msgid ""
+"Start with the basic information customers and your team will recognize."
+msgstr "Comienza con la información básica que reconocerán tus clientes y tu equipo."
+
+#: .\catalog\admin\owner\product_model_admin.py:56
+msgid "Customer-facing content"
+msgstr "Contenido visible para clientes"
+
+#: .\catalog\admin\owner\product_model_admin.py:59
+msgid "Write the short and full descriptions your customers will read."
+msgstr "Escribe la descripción breve y la descripción completa que leerán tus clientes."
+
+#: .\catalog\admin\owner\product_model_admin.py:67
+msgid "Visibility and sales"
+msgstr "Visibilidad y ventas"
+
+#: .\catalog\admin\owner\product_model_admin.py:70
+msgid ""
+"Control how this product appears and whether it should go through the quote "
+"flow."
+msgstr "Controla cómo se muestra este producto y si debe gestionarse mediante cotización."
+
+#: .\catalog\admin\owner\product_model_admin.py:78
+msgid "Advanced details"
+msgstr "Detalles avanzados"
+
+#: .\catalog\admin\owner\product_model_admin.py:81
+msgid "Less frequently used information."
+msgstr "Información que se usa con menos frecuencia."
+
+#: .\catalog\admin\owner\product_model_admin_form.py:17
+msgid ""
+"Usually created from the product name. Adjust it only when you need a custom "
+"URL."
+msgstr "Normalmente se crea a partir del nombre del producto. Ajústalo solo si necesitas una URL personalizada."
+
+#: .\catalog\admin\owner\product_model_admin_form.py:18
+#: .\catalog\models\product_model.py:59
+msgid "Short summary for compact cards and product lists."
+msgstr "Resumen breve para tarjetas compactas y listados de productos."
+
+#: .\catalog\admin\owner\product_model_admin_form.py:19
+#: .\catalog\models\product_model.py:65
+msgid "Full product description with the details customers should read."
+msgstr "Descripción completa del producto con los detalles que deberían leer tus clientes."
+
+#: .\catalog\admin\owner\product_model_admin_form.py:20
+#: .\catalog\models\product_model.py:72
+msgid ""
+"Internal base reference used to identify this product family and its "
+"variants."
+msgstr "Referencia base interna que se usa para identificar esta familia de productos y sus variantes."
+
+#: .\catalog\admin\owner\product_model_admin_form.py:21
+#: .\catalog\models\product_model.py:87
+msgid ""
+"Enable this when customers should request a quote instead of buying directly."
+msgstr "Activa esto cuando los clientes deban solicitar una cotización en lugar de comprar directamente."
+
+#: .\catalog\admin\owner\product_model_admin_form.py:24
+#: .\catalog\models\product_model.py:46
+msgid "Product name"
+msgstr "Nombre del producto"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:25
+#: .\catalog\models\product_model.py:51
+msgid "URL slug"
+msgstr "Slug de la URL"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:26
+#: .\catalog\models\product_model.py:32
+msgid "Brand"
+msgstr "Marca"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:27
+#: .\catalog\models\product_model.py:41
+msgid "Category"
+msgstr "Categoría"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:28
+#: .\catalog\models\product_model.py:58
+msgid "Short description"
+msgstr "Descripción breve"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:29
+#: .\catalog\models\product_model.py:64
+msgid "Full description"
+msgstr "Descripción completa"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:30
+#: .\catalog\models\product_model.py:71
+msgid "Base SKU"
+msgstr "SKU base"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:31
+#: .\catalog\models\product_model.py:76
+msgid "Visible to customers"
+msgstr "Visible para clientes"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:32
+#: .\catalog\models\product_model.py:81
+msgid "Featured product"
+msgstr "Producto destacado"
+
+#: .\catalog\admin\owner\product_model_admin_form.py:33
+#: .\catalog\models\product_model.py:86
+msgid "Request through quote"
+msgstr "Solicitar mediante cotización"
+
+#: .\catalog\admin\owner\product_variant_model_inline.py:18
+#: .\catalog\models\product_image_model.py:26
+msgid "Variant"
+msgstr "Variante"
+
+#: .\catalog\admin\owner\product_variant_model_inline.py:19
+msgid "Variants"
+msgstr "Variantes"
+
+#: .\catalog\models\product_image_model.py:17
+#: .\catalog\models\product_model.py:116
+#: .\catalog\models\product_variant_model.py:18
+msgid "Product"
+msgstr "Producto"
+
+#: .\catalog\models\product_image_model.py:18
+msgid "Product this image belongs to."
+msgstr "Producto al que pertenece esta imagen."
+
+#: .\catalog\models\product_image_model.py:27
+msgid ""
+"Optional variant shown by this image when it is not shared across the whole "
+"product."
+msgstr "Variante opcional que muestra esta imagen cuando no se comparte con todo el producto."
+
+#: .\catalog\models\product_image_model.py:31
+msgid "Image file"
+msgstr "Archivo de imagen"
+
+#: .\catalog\models\product_image_model.py:32
+msgid "Upload the product image shown in the catalog and admin."
+msgstr "Sube la imagen del producto que se mostrará en el catálogo y en el admin."
+
+#: .\catalog\models\product_image_model.py:38
+msgid "Alt text"
+msgstr "Texto alternativo"
+
+#: .\catalog\models\product_image_model.py:39
+msgid "Short accessibility description of what appears in the image."
+msgstr "Descripción breve y accesible de lo que aparece en la imagen."
+
+#: .\catalog\models\product_image_model.py:43
+#: .\catalog\models\product_variant_model.py:60
+msgid "Display order"
+msgstr "Orden de visualización"
+
+#: .\catalog\models\product_image_model.py:44
+msgid "Lower values appear first in product galleries."
+msgstr "Los valores más bajos aparecen primero en las galerías del producto."
+
+#: .\catalog\models\product_image_model.py:48
+msgid "Primary image"
+msgstr "Imagen principal"
+
+#: .\catalog\models\product_image_model.py:49
+msgid "Use this image as the main visual for the product or variant."
+msgstr "Usa esta imagen como imagen principal del producto o de la variante."
+
+#: .\catalog\models\product_image_model.py:53
+#: .\catalog\models\product_model.py:91
+#: .\catalog\models\product_variant_model.py:65
+msgid "Created at"
+msgstr "Creado el"
+
+#: .\catalog\models\product_image_model.py:54
+msgid "When this image was created."
+msgstr "Cuándo se creó esta imagen."
+
+#: .\catalog\models\product_image_model.py:65
+msgid "Product image"
+msgstr "Imagen del producto"
+
+#: .\catalog\models\product_image_model.py:66
+msgid "Product images"
+msgstr "Imágenes del producto"
+
+#: .\catalog\models\product_model.py:23
+msgid "Tenant"
+msgstr "Negocio"
+
+#: .\catalog\models\product_model.py:24
+msgid "Tenant that owns this product and its related catalog data."
+msgstr "Negocio al que pertenece este producto y los datos relacionados de su catálogo."
+
+#: .\catalog\models\product_model.py:33
+msgid "Optional brand shown with this product."
+msgstr "Marca opcional que se muestra junto con este producto."
+
+#: .\catalog\models\product_model.py:42
+msgid "Optional category used to organize this product."
+msgstr "Categoría opcional usada para organizar este producto."
+
+#: .\catalog\models\product_model.py:47
+msgid "Customer-facing name shown across the catalog."
+msgstr "Nombre visible para clientes que se muestra en todo el catálogo."
+
+#: .\catalog\models\product_model.py:52
+msgid "Short URL-friendly identifier used in product links."
+msgstr "Identificador corto y amigable para URLs que se usa en los enlaces del producto."
+
+#: .\catalog\models\product_model.py:77
+msgid "Turn this off to hide the product without deleting it."
+msgstr "Desactiva esto para ocultar el producto sin eliminarlo."
+
+#: .\catalog\models\product_model.py:82
+msgid "Highlight this product in featured catalog sections."
+msgstr "Destaca este producto en las secciones destacadas del catálogo."
+
+#: .\catalog\models\product_model.py:92
+msgid "When this product was created."
+msgstr "Cuándo se creó este producto."
+
+#: .\catalog\models\product_model.py:96
+#: .\catalog\models\product_variant_model.py:70
+msgid "Updated at"
+msgstr "Actualizado el"
+
+#: .\catalog\models\product_model.py:97
+msgid "When this product was last updated."
+msgstr "Cuándo se actualizó por última vez este producto."
+
+#: .\catalog\models\product_model.py:117
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:91
+#: .\core\tests\adminsites\test_adminsites.py:77
+msgid "Products"
+msgstr "Productos"
+
+#: .\catalog\models\product_variant_model.py:19
+msgid "Product this variant belongs to."
+msgstr "Producto al que pertenece esta variante."
+
+#: .\catalog\models\product_variant_model.py:25
+msgid "Variant name"
+msgstr "Nombre de la variante"
+
+#: .\catalog\models\product_variant_model.py:26
+msgid "Optional customer-facing name for this specific variant."
+msgstr "Nombre opcional visible para clientes para esta variante específica."
+
+#: .\catalog\models\product_variant_model.py:31
+msgid "Variant SKU"
+msgstr "SKU de la variante"
+
+#: .\catalog\models\product_variant_model.py:32
+msgid "Unique internal reference for this variant."
+msgstr "Referencia interna única para esta variante."
+
+#: .\catalog\models\product_variant_model.py:37
+msgid "Variant attributes"
+msgstr "Atributos de la variante"
+
+#: .\catalog\models\product_variant_model.py:38
+msgid "Structured attributes such as size, color, or packaging."
+msgstr "Atributos estructurados como tamaño, color o presentación."
+
+#: .\catalog\models\product_variant_model.py:45
+msgid "Price"
+msgstr "Precio"
+
+#: .\catalog\models\product_variant_model.py:46
+msgid ""
+"Optional direct price for this variant when it does not rely only on quotes."
+msgstr ""
+"Precio directo opcional para esta variante cuando no depende solo de "
+"cotizaciones."
+
+#: .\catalog\models\product_variant_model.py:50
+msgid "Default variant"
+msgstr "Variante predeterminada"
+
+#: .\catalog\models\product_variant_model.py:51
+msgid "Use this as the preselected variant for the product."
+msgstr "Usa esta como la variante preseleccionada del producto."
+
+#: .\catalog\models\product_variant_model.py:55
+msgid "Available for selection"
+msgstr "Disponible para seleccionar"
+
+#: .\catalog\models\product_variant_model.py:56
+msgid "Turn this off to keep the variant without offering it."
+msgstr "Desactiva esto para conservar la variante sin ofrecerla."
+
+#: .\catalog\models\product_variant_model.py:61
+msgid "Lower values appear first in admin and customer-facing variant lists."
+msgstr "Los valores más bajos aparecen primero en el admin y en las listas de variantes visibles para clientes."
+
+#: .\catalog\models\product_variant_model.py:66
+msgid "When this variant was created."
+msgstr "Cuándo se creó esta variante."
+
+#: .\catalog\models\product_variant_model.py:71
+msgid "When this variant was last updated."
+msgstr "Cuándo se actualizó por última vez esta variante."
+
+#: .\catalog\models\product_variant_model.py:88
+msgid "Product variant"
+msgstr "Variante del producto"
+
+#: .\catalog\models\product_variant_model.py:89
+msgid "Product variants"
+msgstr "Variantes del producto"
+
+#: .\core\adminsites\services\owner_tenant_dropdown_builder.py:58
+#: .\core\tests\adminsites\test_owner_admin_site_dropdown.py:49
 msgid "Current"
 msgstr "Actual"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:51
-#: .\tenancy\admin\owner\owner_tenant_settings_admin.py:34
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:52
+#: .\tenancy\admin\owner\owner_tenant_settings_admin.py:37
 #: .\tenancy\models\tenant_branding_model.py:19
 #: .\tenancy\models\tenant_group_model.py:20
 #: .\tenancy\models\tenant_membership_model.py:24
@@ -258,10 +586,23 @@ msgstr "Actual"
 msgid "Business"
 msgstr "Negocio"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:54
-#: .\core\tests\adminsites\test_adminsites.py:72
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:55
+#: .\core\tests\adminsites\test_adminsites.py:77
 msgid "Settings"
 msgstr "Configuración"
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:88
+msgid "Catalog"
+msgstr "Catálogo"
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:99
+msgid "Sales"
+msgstr ""
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:102
+#: .\core\tests\adminsites\test_adminsites.py:77
+msgid "Quotes"
+msgstr ""
 
 #: .\core\adminsites\sites\owner_admin_site.py:20
 msgid "Business Administration"
@@ -551,31 +892,35 @@ msgstr "Seleccionar acción"
 msgid "Run"
 msgstr "Ejecutar"
 
-#: .\core\settings.py:153
+#: .\core\settings.py:164
 msgid "Spanish"
 msgstr "Español"
 
-#: .\core\settings.py:154
+#: .\core\settings.py:165
 msgid "English"
 msgstr "Inglés"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:22
 #: .\tenancy\models\tenant_model.py:33
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:60
 msgid "Business email"
 msgstr "Correo del negocio"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:23
 #: .\tenancy\models\tenant_model.py:38
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:61
 msgid "Support email"
 msgstr "Correo de soporte"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:24
 #: .\tenancy\models\tenant_model.py:44
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:62
 msgid "Phone number"
 msgstr "Teléfono"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:25
 #: .\tenancy\models\tenant_model.py:49
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:63
 msgid "Website"
 msgstr "Sitio web"
 
@@ -759,6 +1104,6 @@ msgstr ""
 "Desmarca esta opción para ocultar el negocio de la selección activa y del "
 "uso diario."
 
-#: .\tenancy\switching\active_tenant_switcher.py:35
+#: .\tenancy\switching\active_tenant_switcher.py:43
 msgid "You do not have access to the requested business."
 msgstr "No tienes acceso al negocio solicitado."

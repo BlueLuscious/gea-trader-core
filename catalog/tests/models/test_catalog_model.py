@@ -1,4 +1,5 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.translation import override
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductImageModel, ProductModel, ProductVariantModel
 from masterdata.models import BrandModel, CategoryModel
@@ -53,3 +54,51 @@ class TestCatalogModel(LoggedTestCase):
         second_product = ProductModel.objects.create(tenant=second_tenant, name="Bomba", slug="bomba")
 
         self.assertEqual(first_product.slug, second_product.slug)
+
+    def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
+        """ Verify catalog model fields expose user-friendly labels and help texts. """
+        product_field_expectations = {
+            "tenant": ("Tenant", "Tenant that owns this product and its related catalog data."),
+            "name": ("Product name", "Customer-facing name shown across the catalog."),
+            "slug": ("URL slug", "Short URL-friendly identifier used in product links."),
+            "short_description": ("Short description", "Short summary for compact cards and product lists."),
+            "requires_quote": ("Request through quote", "Enable this when customers should request a quote instead of buying directly."),
+        }
+        variant_field_expectations = {
+            "sku": ("Variant SKU", "Unique internal reference for this variant."),
+            "price": ("Price", "Optional direct price for this variant when it does not rely only on quotes."),
+            "is_active": ("Available for selection", "Turn this off to keep the variant without offering it."),
+        }
+        image_field_expectations = {
+            "image": ("Image file", "Upload the product image shown in the catalog and admin."),
+            "alt_text": ("Alt text", "Short accessibility description of what appears in the image."),
+            "is_primary": ("Primary image", "Use this image as the main visual for the product or variant."),
+        }
+
+        with override("en"):
+            for field_name, expected_values in product_field_expectations.items():
+                field = ProductModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))
+
+            for field_name, expected_values in variant_field_expectations.items():
+                field = ProductVariantModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))
+
+            for field_name, expected_values in image_field_expectations.items():
+                field = ProductImageModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))
+
+        with override("es"):
+            self.assertEqual("Negocio", str(ProductModel._meta.get_field("tenant").verbose_name))
+            self.assertEqual(
+                "Negocio al que pertenece este producto y los datos relacionados de su catálogo.",
+                str(ProductModel._meta.get_field("tenant").help_text),
+            )
+            self.assertEqual("Imagen principal", str(ProductImageModel._meta.get_field("is_primary").verbose_name))
+            self.assertEqual(
+                "Usa esta imagen como imagen principal del producto o de la variante.",
+                str(ProductImageModel._meta.get_field("is_primary").help_text),
+            )

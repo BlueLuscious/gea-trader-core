@@ -67,6 +67,11 @@ Current tenant-aware rules:
 - slug uniqueness is scoped per tenant instead of globally
 - owner-admin catalog query boundaries start from the product tenant
 
+Current admin-facing metadata direction:
+
+- product fields expose user-friendly `verbose_name` and `help_text` metadata
+- those labels and help texts are translation-ready for owner-admin usage
+
 Related files:
 
 - `catalog/models/product_model.py`
@@ -93,6 +98,7 @@ Current behavior:
 - only one default variant is allowed per product
 - variants are the current place where price lives
 - variants are used as the more concrete commercial layer for quoting or selling
+- variant fields expose user-friendly labels and help texts for admin translation flows
 
 Related files:
 
@@ -113,6 +119,10 @@ Current fields cover:
 - primary-image flag
 - manual ordering
 - creation timestamp
+
+Current metadata direction:
+
+- image fields expose user-friendly labels and help texts for owner-admin usage
 
 Related files:
 

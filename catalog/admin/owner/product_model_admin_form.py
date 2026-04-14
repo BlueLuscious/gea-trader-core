@@ -1,6 +1,7 @@
 """ Owner-oriented product admin form. """
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from catalog.models import ProductModel
 
 
@@ -13,21 +14,21 @@ class ProductModelAdminForm(forms.ModelForm):
         model = ProductModel
         fields = "__all__"
         help_texts = {
-            "slug": "Created automatically from the product name. Adjust it only if you need a custom URL.",
-            "short_description": "Short summary shown in compact product views.",
-            "description": "Full product description with the details your customer should read.",
-            "sku_base": "Internal base reference used to help identify this product and its variants.",
-            "requires_quote": "Keep this enabled when the product should be requested through a quote instead of a direct sale.",
+            "slug": _("Usually created from the product name. Adjust it only when you need a custom URL."),
+            "short_description": _("Short summary for compact cards and product lists."),
+            "description": _("Full product description with the details customers should read."),
+            "sku_base": _("Internal base reference used to identify this product family and its variants."),
+            "requires_quote": _("Enable this when customers should request a quote instead of buying directly."),
         }
         labels = {
-            "name": "Product name",
-            "slug": "URL slug",
-            "brand": "Brand",
-            "category": "Category",
-            "short_description": "Short description",
-            "description": "Full description",
-            "sku_base": "Base SKU",
-            "is_active": "Visible to customers",
-            "is_featured": "Highlight this product",
-            "requires_quote": "Request through quote",
+            "name": _("Product name"),
+            "slug": _("URL slug"),
+            "brand": _("Brand"),
+            "category": _("Category"),
+            "short_description": _("Short description"),
+            "description": _("Full description"),
+            "sku_base": _("Base SKU"),
+            "is_active": _("Visible to customers"),
+            "is_featured": _("Featured product"),
+            "requires_quote": _("Request through quote"),
         }
