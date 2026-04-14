@@ -2,10 +2,22 @@ from core.testing.base import LoggedTestCase
 from cart.dtos.factories import CartItemModelDTOFactory, CartModelDTOFactory
 from cart.models import CartItemModel, CartModel
 from catalog.models import ProductModel, ProductVariantModel
+from tenancy.models import TenantModel
 
 
 class TestCartDTOFactory(LoggedTestCase):
     """ Cover cart DTO factories. """
+
+    def _create_tenant(self, slug: str) -> TenantModel:
+        """ Create a tenant for catalog-linked cart fixtures.
+
+        Args:
+            slug: Stable tenant slug.
+
+        Returns:
+            TenantModel: Persisted tenant instance.
+        """
+        return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_cart_model_dto_factory_build_maps_fields(self) -> None:
         """ Verify CartModelDTOFactory.build maps cart fields. """
@@ -20,7 +32,8 @@ class TestCartDTOFactory(LoggedTestCase):
     def test_cart_item_model_dto_factory_build_many_returns_all_items(self) -> None:
         """ Verify CartItemModelDTOFactory.build_many returns DTOs for each item. """
         cart = CartModel.objects.create(session_key='session-2')
-        product = ProductModel.objects.create(name='Bomba', slug='bomba')
+        tenant = self._create_tenant("cart-dto")
+        product = ProductModel.objects.create(tenant=tenant, name='Bomba', slug='bomba')
         variant = ProductVariantModel.objects.create(product=product, sku='BOM-001')
         first = CartItemModel.objects.create(cart=cart, product=product, variant=variant, quantity=1)
         second = CartItemModel.objects.create(cart=cart, product=product, quantity=2)

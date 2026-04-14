@@ -4,6 +4,7 @@ from catalog.models.querysets.product_image_model_queryset import ProductImageMo
 
 if TYPE_CHECKING:
     from catalog.models.product_image_model import ProductImageModel
+    from tenancy.models import TenantModel
 
 
 class ProductImageModelManager(models.Manager["ProductImageModel"]):
@@ -24,6 +25,17 @@ class ProductImageModelManager(models.Manager["ProductImageModel"]):
             ProductImageModelQuerySet: Primary images queryset.
         """
         return self.get_queryset().primary()
+
+    def for_tenant(self, tenant: "TenantModel") -> "ProductImageModelQuerySet":
+        """ Return images scoped through their product tenant.
+
+        Args:
+            tenant: Tenant that owns the parent products.
+
+        Returns:
+            ProductImageModelQuerySet: Tenant-scoped images queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
 
     def ordered(self) -> "ProductImageModelQuerySet":
         """ Return ordered images.

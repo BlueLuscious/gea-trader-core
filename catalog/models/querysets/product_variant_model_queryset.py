@@ -3,10 +3,22 @@ from django.db import models
 
 if TYPE_CHECKING:
     from catalog.models import ProductModel, ProductVariantModel
+    from tenancy.models import TenantModel
 
 
 class ProductVariantModelQuerySet(models.QuerySet["ProductVariantModel"]):
     """ QuerySet for reusable product variant filters. """
+
+    def for_tenant(self, tenant: "TenantModel") -> "ProductVariantModelQuerySet":
+        """ Return variants scoped through their product tenant.
+
+        Args:
+            tenant: Tenant that owns the parent products.
+
+        Returns:
+            ProductVariantModelQuerySet: Tenant-scoped variants queryset.
+        """
+        return self.filter(product__tenant=tenant)
 
     def active(self) -> "ProductVariantModelQuerySet":
         """ Return only active variants.

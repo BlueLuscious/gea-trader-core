@@ -3,10 +3,22 @@ from django.db import models
 
 if TYPE_CHECKING:
     from catalog.models.product_model import ProductModel
+    from tenancy.models import TenantModel
 
 
 class ProductModelQuerySet(models.QuerySet["ProductModel"]):
     """ QuerySet for reusable product filters and eager loading. """
+
+    def for_tenant(self, tenant: "TenantModel") -> "ProductModelQuerySet":
+        """ Return products scoped to one tenant.
+
+        Args:
+            tenant: Tenant that owns the products.
+
+        Returns:
+            ProductModelQuerySet: Tenant-scoped products queryset.
+        """
+        return self.filter(tenant=tenant)
 
     def active(self) -> "ProductModelQuerySet":
         """ Return only active products.

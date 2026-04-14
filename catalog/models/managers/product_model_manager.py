@@ -4,6 +4,7 @@ from catalog.models.querysets.product_model_queryset import ProductModelQuerySet
 
 if TYPE_CHECKING:
     from catalog.models.product_model import ProductModel
+    from tenancy.models import TenantModel
 
 
 class ProductModelManager(models.Manager["ProductModel"]):
@@ -24,6 +25,17 @@ class ProductModelManager(models.Manager["ProductModel"]):
             ProductModelQuerySet: Active products queryset.
         """
         return self.get_queryset().active()
+
+    def for_tenant(self, tenant: "TenantModel") -> "ProductModelQuerySet":
+        """ Return products scoped to one tenant.
+
+        Args:
+            tenant: Tenant that owns the products.
+
+        Returns:
+            ProductModelQuerySet: Tenant-scoped products queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
 
     def featured(self) -> "ProductModelQuerySet":
         """ Return featured products.

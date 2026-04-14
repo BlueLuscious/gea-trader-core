@@ -1,11 +1,23 @@
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductModel, ProductVariantModel
+from tenancy.models import TenantModel
 from quotation.choices import QuoteStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
 class TestQuotationManager(LoggedTestCase):
     """ Cover quotation manager helpers. """
+
+    def _create_tenant(self, slug: str) -> TenantModel:
+        """ Create a tenant for catalog-linked quotation fixtures.
+
+        Args:
+            slug: Stable tenant slug.
+
+        Returns:
+            TenantModel: Persisted tenant instance.
+        """
+        return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_quote_manager_filters_statuses(self) -> None:
         """ Verify quote manager helpers expose lifecycle subsets. """
@@ -22,7 +34,8 @@ class TestQuotationManager(LoggedTestCase):
         """ Verify quote item manager helpers filter by quote and eager load catalog relations. """
         quote = QuoteModel.objects.create(customer_email='cliente@example.com')
         other_quote = QuoteModel.objects.create(customer_email='otro@example.com')
-        product = ProductModel.objects.create(name='Bomba', slug='bomba')
+        tenant = self._create_tenant("quotation-manager")
+        product = ProductModel.objects.create(tenant=tenant, name='Bomba', slug='bomba')
         variant = ProductVariantModel.objects.create(product=product, sku='BOM-001')
         matching_item = QuoteItemModel.objects.create(quote=quote, product=product, variant=variant, product_name_snapshot='Bomba', quantity=1)
         QuoteItemModel.objects.create(quote=other_quote, product=product, variant=variant, product_name_snapshot='Bomba', quantity=2)

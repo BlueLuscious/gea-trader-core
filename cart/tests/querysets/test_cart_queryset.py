@@ -3,10 +3,22 @@ from core.testing.base import LoggedTestCase
 from cart.choices import CartStatus
 from cart.models import CartItemModel, CartModel
 from catalog.models import ProductModel, ProductVariantModel
+from tenancy.models import TenantModel
 
 
 class TestCartQuerySet(LoggedTestCase):
     """ Cover cart queryset helpers. """
+
+    def _create_tenant(self, slug: str) -> TenantModel:
+        """ Create a tenant for catalog-linked cart fixtures.
+
+        Args:
+            slug: Stable tenant slug.
+
+        Returns:
+            TenantModel: Persisted tenant instance.
+        """
+        return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_cart_queryset_filters_status_session_and_user(self) -> None:
         """ Verify CartModelQuerySet filters by lifecycle status and owner. """
@@ -23,7 +35,8 @@ class TestCartQuerySet(LoggedTestCase):
     def test_cart_item_queryset_filters_by_cart_and_selects_catalog(self) -> None:
         """ Verify CartItemModelQuerySet filters by cart and eager loads catalog relations. """
         cart = CartModel.objects.create(session_key='session-3')
-        product = ProductModel.objects.create(name='Cartucho', slug='cartucho')
+        tenant = self._create_tenant("cart-queryset")
+        product = ProductModel.objects.create(tenant=tenant, name='Cartucho', slug='cartucho')
         variant = ProductVariantModel.objects.create(product=product, sku='CAR-001')
         item = CartItemModel.objects.create(cart=cart, product=product, variant=variant, quantity=1)
 

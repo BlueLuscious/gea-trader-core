@@ -1,11 +1,23 @@
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductModel, ProductVariantModel
+from tenancy.models import TenantModel
 from quotation.choices import QuoteStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
 class TestQuotationQuerySet(LoggedTestCase):
     """ Cover quotation queryset helpers. """
+
+    def _create_tenant(self, slug: str) -> TenantModel:
+        """ Create a tenant for catalog-linked quotation fixtures.
+
+        Args:
+            slug: Stable tenant slug.
+
+        Returns:
+            TenantModel: Persisted tenant instance.
+        """
+        return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_quote_queryset_filters_active_business_flow(self) -> None:
         """ Verify QuoteModelQuerySet.active excludes rejected and expired rows. """
@@ -20,7 +32,8 @@ class TestQuotationQuerySet(LoggedTestCase):
     def test_quote_item_queryset_filters_by_quote_and_selects_catalog(self) -> None:
         """ Verify QuoteItemModelQuerySet filters by quote and eager loads catalog relations. """
         quote = QuoteModel.objects.create(customer_email='cliente@example.com')
-        product = ProductModel.objects.create(name='Filtro', slug='filtro')
+        tenant = self._create_tenant("quotation-queryset")
+        product = ProductModel.objects.create(tenant=tenant, name='Filtro', slug='filtro')
         variant = ProductVariantModel.objects.create(product=product, sku='FIL-001')
         item = QuoteItemModel.objects.create(quote=quote, product=product, variant=variant, product_name_snapshot='Filtro', quantity=1)
 

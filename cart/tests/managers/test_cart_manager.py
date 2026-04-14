@@ -3,10 +3,22 @@ from core.testing.base import LoggedTestCase
 from cart.choices import CartStatus
 from cart.models import CartItemModel, CartModel
 from catalog.models import ProductModel, ProductVariantModel
+from tenancy.models import TenantModel
 
 
 class TestCartManager(LoggedTestCase):
     """ Cover cart manager helpers. """
+
+    def _create_tenant(self, slug: str) -> TenantModel:
+        """ Create a tenant for catalog-linked cart fixtures.
+
+        Args:
+            slug: Stable tenant slug.
+
+        Returns:
+            TenantModel: Persisted tenant instance.
+        """
+        return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_cart_manager_filters_by_status_session_and_user(self) -> None:
         """ Verify cart manager helpers return the expected cart subsets. """
@@ -25,7 +37,8 @@ class TestCartManager(LoggedTestCase):
         """ Verify cart item manager helpers return cart subsets with catalog data. """
         cart = CartModel.objects.create(session_key='session-3')
         other_cart = CartModel.objects.create(session_key='session-4')
-        product = ProductModel.objects.create(name='Valvula', slug='valvula')
+        tenant = self._create_tenant("cart-manager")
+        product = ProductModel.objects.create(tenant=tenant, name='Valvula', slug='valvula')
         variant = ProductVariantModel.objects.create(product=product, sku='VAL-001')
         matching_item = CartItemModel.objects.create(cart=cart, product=product, variant=variant, quantity=2)
         CartItemModel.objects.create(cart=other_cart, product=product, variant=variant, quantity=1)

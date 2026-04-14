@@ -4,6 +4,7 @@ from catalog.models.querysets.product_variant_model_queryset import ProductVaria
 
 if TYPE_CHECKING:
     from catalog.models import ProductModel, ProductVariantModel
+    from tenancy.models import TenantModel
 
 
 class ProductVariantModelManager(models.Manager["ProductVariantModel"]):
@@ -24,6 +25,17 @@ class ProductVariantModelManager(models.Manager["ProductVariantModel"]):
             ProductVariantModelQuerySet: Active variants queryset.
         """
         return self.get_queryset().active()
+
+    def for_tenant(self, tenant: "TenantModel") -> "ProductVariantModelQuerySet":
+        """ Return variants scoped through their product tenant.
+
+        Args:
+            tenant: Tenant that owns the parent products.
+
+        Returns:
+            ProductVariantModelQuerySet: Tenant-scoped variants queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
 
     def defaults(self) -> "ProductVariantModelQuerySet":
         """ Return default variants.

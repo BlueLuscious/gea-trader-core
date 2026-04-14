@@ -54,6 +54,17 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
             },
         )()
 
+    def _create_tenant(self, slug: str) -> TenantModel:
+        """ Create a tenant for owner-admin catalog fixtures.
+
+        Args:
+            slug: Stable tenant slug.
+
+        Returns:
+            TenantModel: Persisted tenant instance.
+        """
+        return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
+
     def test_owner_admin_registers_curated_models(self) -> None:
         """ Verify the owner admin site currently registers the curated user, product, and quote models. """
         self.assertIn(UserModel, owner_admin_site._registry)
@@ -170,10 +181,11 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
 
     def test_owner_product_image_inline_limits_variant_choices_to_current_product(self) -> None:
         """ Verify the image inline only exposes variants belonging to the current product. """
+        tenant = self._create_tenant("owner-products")
         brand = BrandModel.objects.create(name="Brand", slug="brand")
         category = CategoryModel.objects.create(name="Category", slug="category")
-        first_product = ProductModel.objects.create(name="First", slug="first", brand=brand, category=category)
-        second_product = ProductModel.objects.create(name="Second", slug="second", brand=brand, category=category)
+        first_product = ProductModel.objects.create(tenant=tenant, name="First", slug="first", brand=brand, category=category)
+        second_product = ProductModel.objects.create(tenant=tenant, name="Second", slug="second", brand=brand, category=category)
         first_variant = ProductVariantModel.objects.create(product=first_product, sku="FIRST-1")
         ProductVariantModel.objects.create(product=second_product, sku="SECOND-1")
 
@@ -290,9 +302,10 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
 
     def test_owner_quote_item_formset_populates_snapshot_fields_from_selected_catalog_data(self) -> None:
         """ Verify add-time quote items snapshot the chosen product and variant data automatically. """
+        tenant = self._create_tenant("owner-quote-items")
         brand = BrandModel.objects.create(name="Brand", slug="brand-inline")
         category = CategoryModel.objects.create(name="Category", slug="category-inline")
-        product = ProductModel.objects.create(name="Pump", slug="pump", sku_base="PUMP", brand=brand, category=category)
+        product = ProductModel.objects.create(tenant=tenant, name="Pump", slug="pump", sku_base="PUMP", brand=brand, category=category)
         variant = ProductVariantModel.objects.create(
             product=product,
             sku="PUMP-001",
