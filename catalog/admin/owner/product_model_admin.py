@@ -1,13 +1,19 @@
 """ Product admin registration for the owner admin site. """
 
+from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
 from unfold.admin import ModelAdmin
+from catalog.access import CatalogAccessPolicy
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin_form import ProductModelAdminForm
 from catalog.admin.owner.product_variant_model_inline import ProductVariantModelInline
 from catalog.models import ProductModel
 from core.adminsites.site_instances import owner_admin_site
+
+if TYPE_CHECKING:
+    from catalog.models.querysets import ProductModelQuerySet
+    from tenancy.models.tenant_model import TenantModel
 
 
 @admin.register(ProductModel, site=owner_admin_site)
@@ -74,6 +80,93 @@ class ProductModelAdmin(ModelAdmin):
         ),
     )
     inlines = (ProductVariantModelInline, ProductImageModelInline)
+
+    def get_queryset(self, request: HttpRequest) -> "ProductModelQuerySet":
+        """ Return only products that belong to the active tenant.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            QuerySet[ProductModel]: Tenant-scoped product queryset.
+        """
+        tenant: "TenantModel | None" = getattr(request, "tenant", None)
+        if tenant is None:
+            return ProductModel.objects.none()
+
+        return super().get_queryset(request).for_tenant(tenant).with_related()
+
+    def save_model(
+        self,
+        request: HttpRequest,
+        obj: ProductModel,
+        form: ProductModelAdminForm,
+        change: bool,
+    ) -> None:
+        """ Persist products under the active tenant in owner admin.
+
+        Args:
+            request: Current admin request.
+            obj: Product being saved.
+            form: Bound admin form.
+            change: Whether the object already exists.
+        """
+        if not change:
+            obj.tenant = getattr(request, "tenant", None)
+
+        super().save_model(request, obj, form, change)
+
+    def has_module_permission(self, request: HttpRequest) -> bool:
+        """ Return whether the catalog module should appear in owner admin.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            bool: ``True`` when the actor may access catalog flows.
+        """
+        return CatalogAccessPolicy.can_access_catalog(request)
+
+    def has_view_permission(self, request: HttpRequest, obj: ProductModel | None = None) -> bool:
+        """ Return whether the current request may view products in owner admin.
+
+        Args:
+            request: Current admin request.
+            obj: Product instance when available.
+
+        Returns:
+            bool: ``True`` when the actor may view the catalog module or one in-scope product.
+        """
+        if obj is None:
+            return CatalogAccessPolicy.can_access_catalog(request)
+
+        return CatalogAccessPolicy.can_view_product(request, obj)
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        """ Return whether the current request may create products.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            bool: ``True`` when the actor may add products in the active tenant.
+        """
+        return CatalogAccessPolicy.can_add_product(request)
+
+    def has_change_permission(self, request: HttpRequest, obj: ProductModel | None = None) -> bool:
+        """ Return whether the current request may edit products in owner admin.
+
+        Args:
+            request: Current admin request.
+            obj: Product instance when available.
+
+        Returns:
+            bool: ``True`` when the actor may change the catalog module or one in-scope product.
+        """
+        if obj is None:
+            return CatalogAccessPolicy.can_access_catalog(request)
+
+        return CatalogAccessPolicy.can_change_product(request, obj)
 
     def has_delete_permission(self, request: HttpRequest, obj: ProductModel | None = None) -> bool:
         """ Disable hard delete for products in owner admin.
