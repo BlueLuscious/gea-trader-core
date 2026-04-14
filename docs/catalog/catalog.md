@@ -11,6 +11,7 @@ It currently defines:
 - the core catalog models
 - typed query infrastructure for those models
 - DTOs and DTO factories for decoupled consumption
+- a catalog-specific tenant-aware access policy
 - master admin registrations for technical administration
 - an owner-focused products flow inside the curated owner admin
 
@@ -34,6 +35,8 @@ The `catalog/` app is responsible for:
 
 - defining catalog persistence models
 - exposing reusable catalog query helpers through querysets and managers
+- keeping catalog ownership tenant-aware from the product root
+- exposing catalog-specific access rules for owner-managed catalog flows
 - exposing DTOs for higher layers that should not depend directly on ORM objects
 - registering catalog admin flows in both `master` and `owner` admin surfaces
 
@@ -45,6 +48,7 @@ The `catalog/` app is responsible for:
 
 Current fields cover:
 
+- tenant ownership
 - brand and category relations
 - customer-facing naming and description
 - catalog visibility flags
@@ -54,7 +58,14 @@ Current fields cover:
 Current intent:
 
 - the product is the main catalog entity shown to users
+- the product is the tenant-owned root of the catalog aggregate
 - product variants represent concrete sellable or quotable options attached to that product
+
+Current tenant-aware rules:
+
+- every product belongs to one `TenantModel`
+- slug uniqueness is scoped per tenant instead of globally
+- owner-admin catalog query boundaries start from the product tenant
 
 Related files:
 
@@ -124,7 +135,19 @@ Current variant helpers:
 
 - `active()`
 - `defaults()`
+- `for_tenant(tenant)`
 - `for_product(product)`
+
+Current image helpers:
+
+- `primary()`
+- `ordered()`
+- `for_tenant(tenant)`
+
+Current tenant-aware query direction:
+
+- products expose `for_tenant(tenant)` directly
+- variants and images stay tenant-scoped through `product__tenant`
 
 This keeps common catalog queries out of views, templates, and admin code.
 
@@ -180,12 +203,15 @@ The owner admin exposes a curated `Catalog > Products` flow.
 Current behavior:
 
 - the owner works from `ProductModel` as the main entrypoint
+- the flow is tenant-scoped to the active tenant
+- the flow is operator-capable rather than owner-only
 - variants and images are edited inline from the same screen
 - the form is grouped with Unfold tabs for a more guided layout
 - destructive delete is avoided where the model already exposes state through `is_active`
 
 Current owner-specific pieces:
 
+- `CatalogAccessPolicy`
 - `ProductModelAdmin`
 - `ProductModelAdminForm`
 - `ProductVariantModelInline`
@@ -199,6 +225,20 @@ Current UX decisions:
 - `ProductImageModelInline` is stacked because images benefit from a more card-like layout
 - image inline variant choices are restricted to variants of the current product
 - fieldsets are grouped into business-friendly sections instead of exposing a raw model form
+
+Current access direction:
+
+- the owner sidebar and the owner product admin both rely on `CatalogAccessPolicy`
+- the base gate is active-tenant membership through `TenantAccessPolicy.can_access_tenant(...)`
+- Django permissions such as `catalog.view_productmodel` and `catalog.change_productmodel` stay as the operation-specific layer
+- product objects outside the active tenant are intentionally hidden from the owner flow
+
+Current runtime logging direction:
+
+- the owner product admin logs tenant-scoped queryset resolution
+- the owner product admin logs product saves
+- the image inline formset logs variant choice construction for the current product
+- models and query helpers stay quiet
 
 ## Current Domain Direction
 
@@ -243,6 +283,7 @@ Good candidates:
 
 - catalog persistence rules
 - catalog query helpers
+- catalog access policy rules
 - catalog DTOs and DTO factories
 - catalog-specific admin implementations
 - future catalog services or presentation mappers

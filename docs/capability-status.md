@@ -113,8 +113,10 @@ Check:
 
 - persisted product, variant, and image models
 - typed managers and querysets
+- tenant-owned product root with tenant-scoped slug uniqueness
+- catalog-specific access policy for owner-managed catalog flows
 - DTOs and DTO factories
-- master and owner admin flows
+- master and tenant-scoped owner admin flows
 
 Check:
 
