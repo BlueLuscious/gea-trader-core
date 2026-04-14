@@ -4,6 +4,7 @@ from typing import Any, TYPE_CHECKING
 from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from catalog.access.catalog_access_policy import CatalogAccessPolicy
 from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
 from tenancy.access.tenant_access_policy import TenantAccessPolicy
 
@@ -90,10 +91,7 @@ class OwnerTenantSidebarNavigationBuilder:
                         "title": _("Products"),
                         "icon": "inventory_2",
                         "link": reverse("owner_admin:catalog_productmodel_changelist"),
-                        "permission": lambda req: (
-                            TenantAccessPolicy.can_access_tenant(req.user, getattr(req, "tenant", None))
-                            and req.user.has_perm("catalog.view_productmodel")
-                        ),
+                        "permission": lambda req: CatalogAccessPolicy.can_access_catalog(req),
                     },
                 ],
             },
