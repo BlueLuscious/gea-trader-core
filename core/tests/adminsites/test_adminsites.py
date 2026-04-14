@@ -48,8 +48,8 @@ class TestAdminSites(LoggedSimpleTestCase):
         self.assertTrue(self.owner_admin_site.has_permission(superuser_request))
         self.assertFalse(self.owner_admin_site.has_permission(customer_request))
 
-    def test_owner_admin_sidebar_navigation_includes_business_and_accounts_items_when_permissions_exist(self) -> None:
-        """ Verify the owner admin sidebar exposes Business settings together with Users and Groups. """
+    def test_owner_admin_sidebar_navigation_includes_curated_items_when_permissions_exist(self) -> None:
+        """ Verify the owner admin sidebar exposes the current curated business, accounts, catalog, and sales items. """
         owner = type(
             "OwnerUser",
             (),
@@ -58,7 +58,12 @@ class TestAdminSites(LoggedSimpleTestCase):
                 "is_superuser": True,
                 "is_staff": True,
                 "is_authenticated": True,
-                "has_perm": lambda self, perm: perm in {"accounts.view_usermodel", "auth.view_group"},
+                "has_perm": lambda self, perm: perm in {
+                    "accounts.view_usermodel",
+                    "auth.view_group",
+                    "catalog.view_productmodel",
+                    "quotation.view_quotemodel",
+                },
             },
         )()
 
@@ -69,7 +74,7 @@ class TestAdminSites(LoggedSimpleTestCase):
         navigation = self.owner_admin_site.get_sidebar_navigation(request)
         item_titles = [item["title"] for group in navigation for item in group["items"]]
 
-        self.assertEqual([_("Settings"), _("Users"), _("Groups")], item_titles)
+        self.assertEqual([_("Settings"), _("Users"), _("Groups"), _("Products"), _("Quotes")], item_titles)
 
     def test_admin_sites_reject_anonymous_and_inactive_users(self) -> None:
         """ Verify both admin sites reject anonymous or inactive users. """

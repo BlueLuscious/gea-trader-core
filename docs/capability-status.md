@@ -109,6 +109,29 @@ Check:
 - `docs/core/adminsites/adminsites.md`
 - `docs/tenancy/tenancy.md`
 
+### Catalog Domain
+
+- persisted product, variant, and image models
+- typed managers and querysets
+- DTOs and DTO factories
+- master and owner admin flows
+
+Check:
+
+- `docs/catalog/catalog.md`
+
+### Quotation Domain
+
+- persisted quote and quote-item snapshot models
+- quote status choice enum
+- typed managers and querysets
+- DTOs and DTO factories
+- master and owner admin flows
+
+Check:
+
+- `docs/quotation/quotation.md`
+
 ## Implemented As Extension Point
 
 ### Project-Wide Async Task Runtime
@@ -177,14 +200,11 @@ Check:
 - `docs/front/front.md`
 - `docs/tenancy/resolution.md`
 
-### New Domain Apps
+### Cart And Masterdata As Active Runtime Apps
 
-- `catalog/`
-- `cart/`
-- `masterdata/`
-- `quotation/`
-
-These app folders exist in the repository, but they are not yet the primary documented runtime scope of this branch.
+- `cart/` and `masterdata/` are part of the current runtime app scope wired by `core/settings.py`
+- they are present in the repository as active domain packages
+- their fuller user-facing and admin-facing ownership docs should be refined as those surfaces stabilize
 
 Check:
 

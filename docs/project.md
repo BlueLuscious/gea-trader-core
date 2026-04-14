@@ -8,17 +8,20 @@ Use this file first to understand where each topic is documented and which docum
 
 The runtime code currently documented here is centered on:
 
+- `masterdata/`
+- `catalog/`
+- `cart/`
+- `quotation/`
 - `accounts/`
 - `tenancy/`
 - `core/`
 - `front/` as a future-facing integration surface
 
-Other domain apps may exist as future work or on other branches, but they are not the primary documented runtime scope here.
-
 Current status of the other app folders:
 
 - `front/` exists as the intended UI surface for future reusable components and tenant-aware routes, but it is not part of the current runtime app scope wired by `core/settings.py`
-- `catalog/`, `cart/`, `masterdata/`, and `quotation/` are present as placeholders for future domain work and do not yet define the main documented runtime scope
+- `catalog/` and `quotation/` already define documented domain and owner-admin flows in this branch
+- `masterdata/` and `cart/` are now part of the runtime app scope wired by `core/settings.py`, but they still need fuller owner documentation once their user-facing role stabilizes
 
 ## Project Entry Docs
 
@@ -45,7 +48,9 @@ Current status of the other app folders:
 ## App Docs
 
 - Accounts app: `docs/accounts/accounts.md`
+- Catalog app: `docs/catalog/catalog.md`
 - Front app and future tenant-aware UI direction: `docs/front/front.md`
+- Quotation app: `docs/quotation/quotation.md`
 - Tenancy app: `docs/tenancy/tenancy.md`
 - Tenancy runtime behavior: `docs/tenancy/runtime.md`
 - Tenancy access policies: `docs/tenancy/access.md`
@@ -69,7 +74,9 @@ To avoid repeating the same explanation in multiple places:
 - `docs/core/config/storage/storage.md` owns storage provider and env-var details
 - `docs/core/config/storage/testing.md` owns storage integration-test structure and execution guidance
 - `docs/accounts/accounts.md` owns the `accounts/` domain structure
+- `docs/catalog/catalog.md` owns the `catalog/` domain structure
 - `docs/front/front.md` owns the frontend structure and future tenant-aware UI direction
+- `docs/quotation/quotation.md` owns the `quotation/` domain structure
 - `docs/tenancy/tenancy.md` owns the `tenancy/` domain structure and persistence-oriented app boundary
 - `docs/tenancy/runtime.md` owns request-time tenant runtime behavior and switching
 - `docs/tenancy/access.md` owns tenant access-policy guidance

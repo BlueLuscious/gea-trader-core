@@ -42,6 +42,10 @@ Current contents:
 
 Current runtime app scope wired by `core/settings.py`:
 
+- `masterdata`
+- `catalog`
+- `cart`
+- `quotation`
 - `accounts`
 - `tenancy`
 
