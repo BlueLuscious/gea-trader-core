@@ -1,5 +1,6 @@
 """ Quote admin registration for the owner admin site. """
 
+import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
@@ -13,6 +14,8 @@ from quotation.models import QuoteModel
 if TYPE_CHECKING:
     from quotation.models.querysets.quote_model_queryset import QuoteModelQuerySet
     from tenancy.models import TenantModel
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(QuoteModel, site=owner_admin_site)
@@ -96,9 +99,16 @@ class QuoteModelAdmin(ModelAdmin):
         """
         tenant: "TenantModel | None" = getattr(request, "tenant", None)
         if tenant is None:
+            logger.info("Returned no owner-visible quotes because no active tenant is bound to the request")
             return QuoteModel.objects.none()
 
-        return super().get_queryset(request).for_tenant(tenant)
+        tenant_queryset: "QuoteModelQuerySet" = super().get_queryset(request).for_tenant(tenant)
+        logger.info(
+            "Scoped owner quote queryset tenant_id=%s quote_count=%s",
+            tenant.pk,
+            tenant_queryset.count(),
+        )
+        return tenant_queryset
 
     def save_model(self, request: HttpRequest, obj: QuoteModel, form: QuoteModelAdminForm, change: bool) -> None:
         """ Persist owner-created quotes under the active tenant.
@@ -113,6 +123,12 @@ class QuoteModelAdmin(ModelAdmin):
             obj.tenant = getattr(request, "tenant", None)
 
         super().save_model(request, obj, form, change)
+        logger.info(
+            "Saved owner quote tenant_id=%s quote_id=%s change=%s",
+            getattr(obj.tenant, "pk", None),
+            obj.pk,
+            change,
+        )
 
     def has_module_permission(self, request: HttpRequest) -> bool:
         """ Return whether the quotation module should appear in owner admin.

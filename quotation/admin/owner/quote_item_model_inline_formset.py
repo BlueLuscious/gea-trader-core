@@ -1,5 +1,6 @@
 """ Formset used by the owner quote item inline. """
 
+import logging
 from typing import Any, TYPE_CHECKING
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
@@ -8,6 +9,8 @@ from quotation.models import QuoteItemModel
 
 if TYPE_CHECKING:
     from quotation.models import QuoteModel
+
+logger = logging.getLogger(__name__)
 
 
 class QuoteItemModelInlineFormSet(BaseInlineFormSet):
@@ -78,6 +81,14 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
         instance.sku_snapshot = variant.sku if variant is not None else product.sku_base
         instance.attributes_snapshot = dict(variant.attributes_json or {}) if variant is not None else {}
         instance.unit_price_snapshot = variant.price if variant is not None else None
+
+        logger.info(
+            "Built owner quote item snapshot tenant_id=%s quote_id=%s product_id=%s variant_id=%s",
+            getattr(self.instance, "tenant_id", None),
+            getattr(self.instance, "pk", None),
+            product.pk,
+            getattr(variant, "pk", None),
+        )
 
         if commit:
             instance.save()

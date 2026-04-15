@@ -1,6 +1,7 @@
 """ Owner admin tests for tenant-scoped quotation flows. """
 
 from decimal import Decimal
+from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
 from accounts.models import UserModel
@@ -96,9 +97,11 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
         """ Verify the owner quote queryset only returns quotes from the active tenant. """
         request = self.build_request(self.operator, self.tenant)
 
-        queryset = self.admin.get_queryset(request)
+        with patch("quotation.admin.owner.quote_model_admin.logger.info") as logger_info_mock:
+            queryset = self.admin.get_queryset(request)
 
         self.assertEqual([self.in_scope_quote], list(queryset))
+        logger_info_mock.assert_called_once()
 
     def test_save_model_assigns_the_active_tenant_on_create(self) -> None:
         """ Verify owner-created quotes inherit the active tenant automatically. """
@@ -106,9 +109,11 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
         quote = QuoteModel(customer_name="Manual quote", customer_email="manual@example.com")
         form = QuoteModelAdmin.form(instance=quote)
 
-        self.admin.save_model(request, quote, form, change=False)
+        with patch("quotation.admin.owner.quote_model_admin.logger.info") as logger_info_mock:
+            self.admin.save_model(request, quote, form, change=False)
 
         self.assertEqual(self.tenant, quote.tenant)
+        logger_info_mock.assert_called_once()
 
     def test_view_and_change_permissions_reject_quotes_from_other_tenants(self) -> None:
         """ Verify quote object permissions stay scoped to the active tenant. """
@@ -140,3 +145,32 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
 
         self.assertEqual([self.in_scope_product], list(empty_form.fields["product"].queryset))
         self.assertEqual([self.in_scope_variant], list(empty_form.fields["variant"].queryset))
+
+    def test_quote_item_inline_logs_snapshot_creation_for_the_active_tenant(self) -> None:
+        """ Verify add-time quote item snapshot creation logs the current tenant and catalog selection. """
+        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+        request = self.request_factory.post("/owner-admin/quotation/quotemodel/add/")
+        request.user = self.operator
+        request.tenant = self.tenant
+        formset_class = inline.get_formset(request, obj=None)
+        prefix = "items"
+        formset = formset_class(
+            data={
+                f"{prefix}-TOTAL_FORMS": "1",
+                f"{prefix}-INITIAL_FORMS": "0",
+                f"{prefix}-MIN_NUM_FORMS": "0",
+                f"{prefix}-MAX_NUM_FORMS": "1000",
+                f"{prefix}-0-product": str(self.in_scope_product.pk),
+                f"{prefix}-0-variant": str(self.in_scope_variant.pk),
+                f"{prefix}-0-quantity": "2",
+                f"{prefix}-0-notes": "Urgent",
+            },
+            instance=QuoteModel(tenant=self.tenant, customer_name="Manual"),
+            prefix=prefix,
+        )
+
+        self.assertTrue(formset.is_valid(), formset.errors)
+        with patch("quotation.admin.owner.quote_item_model_inline_formset.logger.info") as logger_info_mock:
+            formset.save(commit=False)
+
+        logger_info_mock.assert_called_once()
