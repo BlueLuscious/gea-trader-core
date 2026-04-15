@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from quotation.models.managers.quote_item_model_manager import QuoteItemModelManager
 
 if TYPE_CHECKING:
@@ -14,6 +15,8 @@ class QuoteItemModel(models.Model):
         "quotation.QuoteModel",
         on_delete=models.CASCADE,
         related_name="items",
+        verbose_name=_("Quote"),
+        help_text=_("Quote this line item belongs to."),
     )
     product: "ProductModel | None" = models.ForeignKey(
         "catalog.ProductModel",
@@ -21,6 +24,8 @@ class QuoteItemModel(models.Model):
         null=True,
         blank=True,
         related_name="quote_items",
+        verbose_name=_("Product"),
+        help_text=_("Optional product reference kept while the catalog product still exists."),
     )
     variant: "ProductVariantModel | None" = models.ForeignKey(
         "catalog.ProductVariantModel",
@@ -28,14 +33,51 @@ class QuoteItemModel(models.Model):
         null=True,
         blank=True,
         related_name="quote_items",
+        verbose_name=_("Variant"),
+        help_text=_("Optional variant reference kept while the catalog variant still exists."),
     )
-    product_name_snapshot = models.CharField(max_length=255)
-    sku_snapshot = models.CharField(max_length=64, blank=True, default="")
-    attributes_snapshot = models.JSONField(blank=True, default=dict)
-    unit_price_snapshot = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    quantity = models.PositiveIntegerField(default=1)
-    notes = models.TextField(blank=True, default="")
-    created_at = models.DateTimeField(auto_now_add=True)
+    product_name_snapshot = models.CharField(
+        max_length=255,
+        verbose_name=_("Product name snapshot"),
+        help_text=_("Product name captured when this quote item was created."),
+    )
+    sku_snapshot = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        verbose_name=_("SKU snapshot"),
+        help_text=_("SKU captured when this quote item was created."),
+    )
+    attributes_snapshot = models.JSONField(
+        blank=True,
+        default=dict,
+        verbose_name=_("Attribute snapshot"),
+        help_text=_("Variant attributes captured when this quote item was created."),
+    )
+    unit_price_snapshot = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name=_("Unit price snapshot"),
+        help_text=_("Unit price captured when this quote item was created."),
+    )
+    quantity = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_("Quantity"),
+        help_text=_("Number of units requested for this quote item."),
+    )
+    notes = models.TextField(
+        blank=True,
+        default="",
+        verbose_name=_("Item notes"),
+        help_text=_("Optional internal note for this specific quote item."),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created at"),
+        help_text=_("When this quote item was created."),
+    )
 
     id: int
     quote_id: int
@@ -46,8 +88,8 @@ class QuoteItemModel(models.Model):
 
     class Meta:
         ordering = ("created_at", "id")
-        verbose_name = "Quote item"
-        verbose_name_plural = "Quote items"
+        verbose_name = _("Quote item")
+        verbose_name_plural = _("Quote items")
 
     def __str__(self) -> str:
         """ Return the admin-friendly label for the quote item.

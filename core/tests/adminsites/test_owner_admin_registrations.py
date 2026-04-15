@@ -3,6 +3,7 @@
 from decimal import Decimal
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
+from django.utils.translation import gettext as _
 from accounts.admin.owner.user_model_admin import OwnerUserModelAdmin
 from accounts.models import UserModel
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
@@ -297,8 +298,8 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         add_titles = [fieldset[0] for fieldset in quote_admin.get_fieldsets(request, obj=None)]
         change_titles = [fieldset[0] for fieldset in quote_admin.get_fieldsets(request, obj=QuoteModel(tenant=self._create_tenant("owner-quote-timeline")))]
 
-        self.assertEqual(["Customer", "Quote details"], add_titles)
-        self.assertEqual(["Customer", "Quote details", "Origin", "Timeline"], change_titles)
+        self.assertEqual([_("Customer"), _("Quote details")], add_titles)
+        self.assertEqual([_("Customer"), _("Quote details"), _("Origin"), _("Timeline")], change_titles)
 
     def test_owner_quote_item_formset_populates_snapshot_fields_from_selected_catalog_data(self) -> None:
         """ Verify add-time quote items snapshot the chosen product and variant data automatically. """

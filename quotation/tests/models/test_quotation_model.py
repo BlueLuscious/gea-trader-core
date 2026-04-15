@@ -1,3 +1,5 @@
+from django.apps import apps
+from django.utils.translation import override
 from core.testing.base import LoggedTestCase
 from cart.models import CartModel
 from catalog.models import ProductModel, ProductVariantModel
@@ -49,3 +51,32 @@ class TestQuotationModel(LoggedTestCase):
 
         self.assertEqual(str(quote), f'Quote {quote.pk}')
         self.assertEqual(str(item), 'Bomba')
+
+    def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
+        """ Verify quotation model fields expose user-friendly labels and help texts. """
+        quote_field_expectations = {
+            "tenant": ("Business", "Business that owns this quote and the follow-up around it."),
+            "user": ("Customer account", "Optional customer account related to this quote."),
+            "status": ("Quote status", "Current stage of this quote in your sales follow-up."),
+            "notes": ("Internal notes", "Private context for your team. Customers do not need to see this text."),
+        }
+        item_field_expectations = {
+            "quote": ("Quote", "Quote this line item belongs to."),
+            "product_name_snapshot": ("Product name snapshot", "Product name captured when this quote item was created."),
+            "unit_price_snapshot": ("Unit price snapshot", "Unit price captured when this quote item was created."),
+        }
+
+        with override("en"):
+            app_config = apps.get_app_config("quotation")
+
+            self.assertEqual("Quotations", str(app_config.verbose_name))
+
+            for field_name, expected_values in quote_field_expectations.items():
+                field = QuoteModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))
+
+            for field_name, expected_values in item_field_expectations.items():
+                field = QuoteItemModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))

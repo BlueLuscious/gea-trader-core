@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
 from core.adminsites.site_instances import owner_admin_site
 from quotation.access import QuotationAccessPolicy
@@ -40,10 +41,10 @@ class QuoteModelAdmin(ModelAdmin):
 
     add_fieldsets = (
         (
-            "Customer",
+            _("Customer"),
             {
                 "classes": ("tab",),
-                "description": "Fill in who requested the quote and how your team can contact them.",
+                "description": _("Fill in who requested the quote and how your team can contact them."),
                 "fields": (
                     ("customer_name", "customer_email"),
                     ("customer_phone", "company_name"),
@@ -52,10 +53,10 @@ class QuoteModelAdmin(ModelAdmin):
             },
         ),
         (
-            "Quote details",
+            _("Quote details"),
             {
                 "classes": ("tab",),
-                "description": "Start the quote with a status and any internal context you need for follow-up.",
+                "description": _("Start the quote with a status and any internal context you need for follow-up."),
                 "fields": (
                     "status",
                     "notes",
@@ -65,20 +66,20 @@ class QuoteModelAdmin(ModelAdmin):
     )
     change_fieldsets = add_fieldsets + (
         (
-            "Origin",
+            _("Origin"),
             {
                 "classes": ("tab",),
-                "description": "Reference information about where this quote came from.",
+                "description": _("Reference information about where this quote came from."),
                 "fields": (
                     ("user", "cart"),
                 ),
             },
         ),
         (
-            "Timeline",
+            _("Timeline"),
             {
                 "classes": ("tab",),
-                "description": "Read-only timestamps that describe the quote lifecycle.",
+                "description": _("Read-only timestamps that describe the quote lifecycle."),
                 "fields": (
                     ("requested_at", "sent_at"),
                     ("answered_at", "created_at"),

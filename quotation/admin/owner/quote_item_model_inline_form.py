@@ -3,6 +3,7 @@
 from typing import Any
 from django import forms
 from django.forms import ModelChoiceField
+from django.utils.translation import gettext_lazy as _
 from catalog.models import ProductModel, ProductVariantModel
 from quotation.models import QuoteItemModel
 from tenancy.models import TenantModel
@@ -15,16 +16,16 @@ class QuoteItemModelInlineForm(forms.ModelForm):
         model = QuoteItemModel
         fields = ("product", "variant", "quantity", "notes")
         labels = {
-            "product": "Product",
-            "variant": "Variant",
-            "quantity": "Quantity",
-            "notes": "Item notes",
+            "product": _("Product"),
+            "variant": _("Variant"),
+            "quantity": _("Quantity"),
+            "notes": _("Item notes"),
         }
         help_texts = {
-            "product": "Choose the catalog product this quote item refers to.",
-            "variant": "Optional. Choose a specific variant when the quote depends on one.",
-            "quantity": "How many units should this quote item include.",
-            "notes": "Optional internal note for this specific quote item.",
+            "product": _("Choose the catalog product this quote item refers to."),
+            "variant": _("Optional. Choose a specific variant when the quote depends on one."),
+            "quantity": _("How many units this quote item should include."),
+            "notes": _("Optional private note for this specific quote item."),
         }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -53,7 +54,7 @@ class QuoteItemModelInlineForm(forms.ModelForm):
             return cleaned_data
 
         if variant is not None and variant.product_id != product.id:
-            self.add_error("variant", "The selected variant must belong to the chosen product.")
+            self.add_error("variant", _("Choose a variant that belongs to the selected product."))
 
         return cleaned_data
 

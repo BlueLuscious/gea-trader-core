@@ -4,6 +4,7 @@ import logging
 from typing import Any, TYPE_CHECKING
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
+from django.utils.translation import gettext_lazy as _
 from quotation.admin.owner.quote_item_model_inline_form import QuoteItemModelInlineForm
 from quotation.models import QuoteItemModel
 
@@ -45,7 +46,7 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
         )
 
         if not has_item and self.instance.pk is None:
-            raise ValidationError("Add at least one quote item before saving the quote.")
+            raise ValidationError(_("Add at least one quote item before saving the quote."))
 
     def get_form_kwargs(self, index: int) -> dict[str, Any]:
         """ Return form kwargs enriched with the active tenant context.
@@ -75,7 +76,7 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
         variant = form.get_selected_variant()
 
         if product is None:
-            raise ValidationError("Quote items require a selected product.")
+            raise ValidationError(_("Quote items require a selected product."))
 
         instance.product_name_snapshot = product.name
         instance.sku_snapshot = variant.sku if variant is not None else product.sku_base

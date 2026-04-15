@@ -2,6 +2,7 @@
 
 from typing import Any, TYPE_CHECKING
 from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
 from unfold.admin import StackedInline
 from quotation.admin.owner.quote_item_model_inline_form import QuoteItemModelInlineForm
 from quotation.admin.owner.quote_item_model_inline_formset import QuoteItemModelInlineFormSet
@@ -21,8 +22,8 @@ class QuoteItemModelInline(StackedInline):
     show_count = True
     can_delete = False
     show_change_link = False
-    verbose_name = "Quote item"
-    verbose_name_plural = "Quote items"
+    verbose_name = _("Quote item")
+    verbose_name_plural = _("Quote items")
 
     def get_fields(self, request: HttpRequest, obj: "QuoteModel | None" = None) -> tuple[Any, ...]:
         """ Return add-time or read-only fields depending on quote persistence state.
