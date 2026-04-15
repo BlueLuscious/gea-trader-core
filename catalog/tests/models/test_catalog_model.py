@@ -23,8 +23,8 @@ class TestCatalogModel(LoggedTestCase):
     def test_product_variant_and_image_relationships(self) -> None:
         """ Verify catalog relations between product, variant and image. """
         tenant = self._create_tenant("gea")
-        brand = BrandModel.objects.create(name="GEA", slug="gea")
-        category = CategoryModel.objects.create(name="Lubricacion", slug="lubricacion")
+        brand = BrandModel.objects.create(tenant=tenant, name="GEA", slug="gea")
+        category = CategoryModel.objects.create(tenant=tenant, name="Lubricacion", slug="lubricacion")
         product = ProductModel.objects.create(tenant=tenant, brand=brand, category=category, name="Aceite termico", slug="aceite-termico")
         variant = ProductVariantModel.objects.create(product=product, sku="ACE-001", attributes_json={"viscosidad": "46"}, is_default=True)
         image = ProductImageModel.objects.create(product=product, variant=variant, image=SimpleUploadedFile("aceite.jpg", b"binary", content_type="image/jpeg"), alt_text="Aceite termico", is_primary=True)

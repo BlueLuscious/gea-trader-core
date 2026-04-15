@@ -7,6 +7,7 @@ class BrandModelDTO:
     """ Public DTO for brand data. """
 
     id: int
+    tenant_id: str
     name: str
     slug: str
     description: str

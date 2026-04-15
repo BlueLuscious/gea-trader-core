@@ -3,6 +3,7 @@ from django.db import models
 
 if TYPE_CHECKING:
     from masterdata.models.category_model import CategoryModel
+    from tenancy.models import TenantModel
 
 
 class CategoryModelQuerySet(models.QuerySet["CategoryModel"]):
@@ -27,3 +28,14 @@ class CategoryModelQuerySet(models.QuerySet["CategoryModel"]):
             CategoryModelQuerySet: Categories without parent.
         """
         return self.filter(parent__isnull=True)
+
+    def for_tenant(self, tenant: "TenantModel") -> "CategoryModelQuerySet":
+        """ Return categories that belong to one tenant.
+
+        Args:
+            tenant: Tenant that owns the categories.
+
+        Returns:
+            CategoryModelQuerySet: Tenant-scoped category queryset.
+        """
+        return self.filter(tenant=tenant)

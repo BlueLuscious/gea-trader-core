@@ -18,6 +18,7 @@ class CategoryModelDTOFactory:
         """
         return CategoryModelDTO(
             id=instance.id,
+            tenant_id=str(instance.tenant_id),
             name=instance.name,
             slug=instance.slug,
             description=instance.description,

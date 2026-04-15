@@ -183,8 +183,8 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
     def test_owner_product_image_inline_limits_variant_choices_to_current_product(self) -> None:
         """ Verify the image inline only exposes variants belonging to the current product. """
         tenant = self._create_tenant("owner-products")
-        brand = BrandModel.objects.create(name="Brand", slug="brand")
-        category = CategoryModel.objects.create(name="Category", slug="category")
+        brand = BrandModel.objects.create(tenant=tenant, name="Brand", slug="brand")
+        category = CategoryModel.objects.create(tenant=tenant, name="Category", slug="category")
         first_product = ProductModel.objects.create(tenant=tenant, name="First", slug="first", brand=brand, category=category)
         second_product = ProductModel.objects.create(tenant=tenant, name="Second", slug="second", brand=brand, category=category)
         first_variant = ProductVariantModel.objects.create(product=first_product, sku="FIRST-1")
@@ -304,8 +304,8 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
     def test_owner_quote_item_formset_populates_snapshot_fields_from_selected_catalog_data(self) -> None:
         """ Verify add-time quote items snapshot the chosen product and variant data automatically. """
         tenant = self._create_tenant("owner-quote-items")
-        brand = BrandModel.objects.create(name="Brand", slug="brand-inline")
-        category = CategoryModel.objects.create(name="Category", slug="category-inline")
+        brand = BrandModel.objects.create(tenant=tenant, name="Brand", slug="brand-inline")
+        category = CategoryModel.objects.create(tenant=tenant, name="Category", slug="category-inline")
         product = ProductModel.objects.create(tenant=tenant, name="Pump", slug="pump", sku_base="PUMP", brand=brand, category=category)
         variant = ProductVariantModel.objects.create(
             product=product,

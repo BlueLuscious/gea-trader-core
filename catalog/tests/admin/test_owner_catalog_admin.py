@@ -46,8 +46,8 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
                 codename__in=("view_productmodel", "add_productmodel", "change_productmodel")
             )
         )
-        self.brand = BrandModel.objects.create(name="Brand", slug="brand")
-        self.category = CategoryModel.objects.create(name="Category", slug="category")
+        self.brand = BrandModel.objects.create(tenant=self.tenant, name="Brand", slug="brand")
+        self.category = CategoryModel.objects.create(tenant=self.tenant, name="Category", slug="category")
         self.in_scope_product = ProductModel.objects.create(
             tenant=self.tenant,
             brand=self.brand,

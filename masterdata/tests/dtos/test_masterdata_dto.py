@@ -12,6 +12,7 @@ class TestMasterdataDTO(LoggedSimpleTestCase):
         """ Verify BrandModelDTO behaves as an immutable dataclass. """
         dto = BrandModelDTO(
             id=1,
+            tenant_id="tenant-1",
             name="GEA",
             slug="gea",
             description="",
@@ -28,6 +29,7 @@ class TestMasterdataDTO(LoggedSimpleTestCase):
         now: datetime = timezone.now()
         dto = CategoryModelDTO(
             id=2,
+            tenant_id="tenant-2",
             name="Lubricacion",
             slug="lubricacion",
             description="",
@@ -39,4 +41,5 @@ class TestMasterdataDTO(LoggedSimpleTestCase):
         )
 
         self.assertEqual(dto.parent_id, 1)
+        self.assertEqual(dto.tenant_id, "tenant-2")
         self.assertEqual(dto.sort_order, 10)

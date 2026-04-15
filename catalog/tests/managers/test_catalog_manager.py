@@ -22,8 +22,8 @@ class TestCatalogManager(LoggedTestCase):
     def test_product_manager_helpers_filter_and_select_related(self) -> None:
         """ Verify product manager helpers expose active, featured and related loading behavior. """
         tenant = self._create_tenant("north")
-        brand = BrandModel.objects.create(name="GEA", slug="gea")
-        category = CategoryModel.objects.create(name="Lubricacion", slug="lubricacion")
+        brand = BrandModel.objects.create(tenant=tenant, name="GEA", slug="gea")
+        category = CategoryModel.objects.create(tenant=tenant, name="Lubricacion", slug="lubricacion")
         active_featured = ProductModel.objects.create(tenant=tenant, brand=brand, category=category, name="Activo", slug="activo", is_active=True, is_featured=True, requires_quote=True)
         ProductModel.objects.create(tenant=tenant, name="Inactivo", slug="inactivo", is_active=False, is_featured=False, requires_quote=False)
 

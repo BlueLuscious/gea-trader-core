@@ -7,6 +7,7 @@ class CategoryModelDTO:
     """ Public DTO for category data. """
 
     id: int
+    tenant_id: str
     name: str
     slug: str
     description: str

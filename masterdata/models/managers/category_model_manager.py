@@ -4,6 +4,7 @@ from masterdata.models.querysets.category_model_queryset import CategoryModelQue
 
 if TYPE_CHECKING:
     from masterdata.models.category_model import CategoryModel
+    from tenancy.models import TenantModel
 
 
 class CategoryModelManager(models.Manager["CategoryModel"]):
@@ -32,3 +33,14 @@ class CategoryModelManager(models.Manager["CategoryModel"]):
             CategoryModelQuerySet: Root categories queryset.
         """
         return self.get_queryset().roots()
+
+    def for_tenant(self, tenant: "TenantModel") -> "CategoryModelQuerySet":
+        """ Return categories that belong to one tenant.
+
+        Args:
+            tenant: Tenant that owns the categories.
+
+        Returns:
+            CategoryModelQuerySet: Tenant-scoped category queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
