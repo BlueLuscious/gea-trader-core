@@ -10,6 +10,8 @@ It currently defines:
 
 - persisted quotes and quote item snapshots
 - typed query infrastructure for quote data
+- tenant-aware quote ownership at the quote root
+- quotation-specific access rules for owner-managed flows
 - DTOs and DTO factories for higher layers
 - master admin registrations for technical visibility
 - an owner-facing quotes flow for manual creation and follow-up
@@ -34,7 +36,9 @@ The `quotation/` app is responsible for:
 
 - defining persisted quote lifecycle data
 - storing quote items as snapshots
+- scoping quotes to the owning business
 - exposing reusable quote query helpers
+- exposing quotation-specific access rules
 - registering quote admin flows for both master and owner admin sites
 
 ## Models
@@ -45,6 +49,7 @@ The `quotation/` app is responsible for:
 
 Current fields cover:
 
+- mandatory business ownership through `tenant`
 - optional origin relations to cart and user
 - lifecycle status
 - customer and company information
@@ -57,6 +62,7 @@ Related files:
 - `quotation/models/quote_model.py`
 - `quotation/models/querysets/quote_model_queryset.py`
 - `quotation/models/managers/quote_model_manager.py`
+- `quotation/access/quotation_access_policy.py`
 
 ### `QuoteItemModel`
 
@@ -76,6 +82,7 @@ Current snapshot fields cover:
 Current intent:
 
 - quote items should preserve the commercial state used by the quote even if catalog data changes later
+- quote items stay tenant-scoped through their parent `QuoteModel`
 
 Related files:
 
@@ -93,6 +100,8 @@ Current choice enum:
 
 This keeps status values reusable across models, admins, and future services.
 
+The choice labels are also translation-ready for owner-facing admin flows.
+
 ## DTOs
 
 The app already includes DTOs and factories for decoupled consumption.
@@ -106,6 +115,10 @@ Current factories:
 
 - `QuoteModelDTOFactory`
 - `QuoteItemModelDTOFactory`
+
+Current DTO direction:
+
+- `QuoteModelDTO` includes `tenant_id` so higher layers can keep quote ownership explicit
 
 ## Admin
 
@@ -130,6 +143,7 @@ The owner admin exposes a curated `Sales > Quotes` flow.
 Current behavior:
 
 - the owner manages `QuoteModel` as the main entity
+- the owner quote queryset is scoped to the active tenant
 - quote items appear as a top-level inline tab beside the general quote form
 - the add flow supports manual quote creation with items
 - the change flow freezes quote items as snapshots
@@ -141,17 +155,64 @@ Current owner-specific pieces:
 - `QuoteItemModelInline`
 - `QuoteItemModelInlineForm`
 - `QuoteItemModelInlineFormSet`
+- `QuotationAccessPolicy`
 
 Current owner workflow:
 
 - on add:
   - the owner can create a quote manually
+  - the quote inherits `request.tenant`
   - the owner can add quote items inline
   - the owner must provide a customer name plus at least one contact channel
+  - product and variant choices are limited to the active tenant catalog
   - snapshot fields are populated automatically from the selected product and optional variant
 - on change:
   - quote items become read-only snapshots
   - origin and timeline information become visible
+
+### Access Policy
+
+`quotation/` now defines one app-specific access policy:
+
+- `QuotationAccessPolicy`
+
+Current direction:
+
+- quotation is operator-capable rather than owner-only
+- access builds on active-tenant membership plus Django permissions
+- object-level checks confirm that a quote or quote item belongs to the active tenant context
+
+This keeps sidebar visibility, owner admin permissions, and future quotation-specific checks aligned around one reusable rule set.
+
+### Logging
+
+`quotation/` now applies the shared logging rollout at the owner-admin runtime boundaries that matter operationally.
+
+Current logging boundaries:
+
+- `QuoteModelAdmin.get_queryset()`
+- `QuoteModelAdmin.save_model()`
+- `QuoteItemModelInlineFormSet.save_new()`
+
+Current direction:
+
+- log tenant-scoped queryset resolution
+- log owner quote saves
+- log quote item snapshot creation
+- keep logging out of pure models and queryset internals
+
+### Translation
+
+The quotation owner flow is now prepared for the project translation workflow.
+
+Current translation-ready pieces:
+
+- `QuotationConfig.verbose_name`
+- quote model and quote item model labels and help texts
+- quote status choice labels
+- owner quote admin fieldset titles and descriptions
+- owner quote form labels, help texts, and validation errors
+- owner quote item inline labels, help texts, and validation errors
 
 ## Status and Timestamp Direction
 
@@ -177,6 +238,8 @@ Current test areas:
 - `quotation/tests/models/`
 - `quotation/tests/managers/`
 - `quotation/tests/querysets/`
+- `quotation/tests/access/`
+- `quotation/tests/admin/`
 - `quotation/tests/dtos/`
 - `quotation/tests/factories/`
 

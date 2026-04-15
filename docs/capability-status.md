@@ -127,8 +127,11 @@ Check:
 - persisted quote and quote-item snapshot models
 - quote status choice enum
 - typed managers and querysets
+- tenant-owned quote root with tenant-aware quote and quote-item query helpers
+- quotation-specific access policy for owner-managed quotation flows
 - DTOs and DTO factories
-- master and owner admin flows
+- master and tenant-scoped owner admin flows
+- owner-admin runtime logging at the useful quotation boundaries
 
 Check:
 
