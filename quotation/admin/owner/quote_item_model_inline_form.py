@@ -5,6 +5,7 @@ from django import forms
 from django.forms import ModelChoiceField
 from catalog.models import ProductModel, ProductVariantModel
 from quotation.models import QuoteItemModel
+from tenancy.models import TenantModel
 
 
 class QuoteItemModelInlineForm(forms.ModelForm):
@@ -33,18 +34,10 @@ class QuoteItemModelInlineForm(forms.ModelForm):
             *args: Positional form arguments.
             **kwargs: Keyword form arguments.
         """
+        tenant: TenantModel | None = kwargs.pop("tenant", None)
         super().__init__(*args, **kwargs)
-        product_field = self.fields.get("product")
-        if isinstance(product_field, ModelChoiceField):
-            product_field.required = True
-            product_field.queryset = ProductModel.objects.active().order_by("name")
-
-        variant_field = self.fields.get("variant")
-        if isinstance(variant_field, ModelChoiceField):
-            variant_field.required = False
-            variant_field.queryset = ProductVariantModel.objects.active().select_related("product").order_by(
-                "product_id", "sort_order", "name", "id",
-            )
+        self._configure_product_field(tenant)
+        self._configure_variant_field(tenant)
 
     def clean(self) -> dict[str, Any]:
         """ Validate product and variant consistency for manual quote item creation.
@@ -95,3 +88,39 @@ class QuoteItemModelInlineForm(forms.ModelForm):
             bool: True when the inline row contains a selected product.
         """
         return self.get_selected_product() is not None
+
+    def _configure_product_field(self, tenant: TenantModel | None) -> None:
+        """ Configure the tenant-scoped product field queryset.
+
+        Args:
+            tenant: Active tenant in scope for the owner quote flow.
+        """
+        product_field = self.fields.get("product")
+        if not isinstance(product_field, ModelChoiceField):
+            return
+
+        product_field.required = True
+        product_queryset = ProductModel.objects.active()
+        if tenant is not None:
+            product_queryset = product_queryset.for_tenant(tenant)
+
+        product_field.queryset = product_queryset.order_by("name")
+
+    def _configure_variant_field(self, tenant: TenantModel | None) -> None:
+        """ Configure the tenant-scoped variant field queryset.
+
+        Args:
+            tenant: Active tenant in scope for the owner quote flow.
+        """
+        variant_field = self.fields.get("variant")
+        if not isinstance(variant_field, ModelChoiceField):
+            return
+
+        variant_field.required = False
+        variant_queryset = ProductVariantModel.objects.active().select_related("product")
+        if tenant is not None:
+            variant_queryset = variant_queryset.for_tenant(tenant)
+
+        variant_field.queryset = variant_queryset.order_by(
+            "product_id", "sort_order", "name", "id",
+        )

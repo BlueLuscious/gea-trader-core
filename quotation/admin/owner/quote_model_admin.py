@@ -1,12 +1,18 @@
 """ Quote admin registration for the owner admin site. """
 
+from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
 from unfold.admin import ModelAdmin
 from core.adminsites.site_instances import owner_admin_site
+from quotation.access import QuotationAccessPolicy
 from quotation.admin.owner.quote_item_model_inline import QuoteItemModelInline
 from quotation.admin.owner.quote_model_admin_form import QuoteModelAdminForm
 from quotation.models import QuoteModel
+
+if TYPE_CHECKING:
+    from quotation.models.querysets.quote_model_queryset import QuoteModelQuerySet
+    from tenancy.models import TenantModel
 
 
 @admin.register(QuoteModel, site=owner_admin_site)
@@ -78,7 +84,88 @@ class QuoteModelAdmin(ModelAdmin):
             },
         ),
     )
+    
+    def get_queryset(self, request: HttpRequest) -> "QuoteModelQuerySet":
+        """ Return only quotes that belong to the active tenant.
 
+        Args:
+            request: Current admin request.
+
+        Returns:
+            QuerySet[QuoteModel]: Tenant-scoped quote queryset.
+        """
+        tenant: "TenantModel | None" = getattr(request, "tenant", None)
+        if tenant is None:
+            return QuoteModel.objects.none()
+
+        return super().get_queryset(request).for_tenant(tenant)
+
+    def save_model(self, request: HttpRequest, obj: QuoteModel, form: QuoteModelAdminForm, change: bool) -> None:
+        """ Persist owner-created quotes under the active tenant.
+
+        Args:
+            request: Current admin request.
+            obj: Quote being saved.
+            form: Bound admin form.
+            change: Whether the object already exists.
+        """
+        if not change:
+            obj.tenant = getattr(request, "tenant", None)
+
+        super().save_model(request, obj, form, change)
+
+    def has_module_permission(self, request: HttpRequest) -> bool:
+        """ Return whether the quotation module should appear in owner admin.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            bool: ``True`` when the actor may access quotation flows.
+        """
+        return QuotationAccessPolicy.can_access_quotation(request)
+
+    def has_view_permission(self, request: HttpRequest, obj: QuoteModel | None = None) -> bool:
+        """ Return whether the current request may view quotes in owner admin.
+
+        Args:
+            request: Current admin request.
+            obj: Quote instance when available.
+
+        Returns:
+            bool: ``True`` when the actor may view the quotation module or one in-scope quote.
+        """
+        if obj is None:
+            return QuotationAccessPolicy.can_access_quotation(request)
+
+        return QuotationAccessPolicy.can_view_quote(request, obj)
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        """ Return whether the current request may create quotes.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            bool: ``True`` when the actor may add quotes in the active tenant.
+        """
+        return QuotationAccessPolicy.can_add_quote(request)
+
+    def has_change_permission(self, request: HttpRequest, obj: QuoteModel | None = None) -> bool:
+        """ Return whether the current request may edit quotes in owner admin.
+
+        Args:
+            request: Current admin request.
+            obj: Quote instance when available.
+
+        Returns:
+            bool: ``True`` when the actor may change the quotation module or one in-scope quote.
+        """
+        if obj is None:
+            return QuotationAccessPolicy.can_access_quotation(request)
+
+        return QuotationAccessPolicy.can_change_quote(request, obj)
+    
     def has_delete_permission(self, request: HttpRequest, obj: QuoteModel | None = None) -> bool:
         """ Disable hard delete for quotes in owner admin.
 

@@ -1,6 +1,6 @@
 """ Formset used by the owner quote item inline. """
 
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
 from quotation.admin.owner.quote_item_model_inline_form import QuoteItemModelInlineForm
@@ -43,6 +43,19 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
 
         if not has_item and self.instance.pk is None:
             raise ValidationError("Add at least one quote item before saving the quote.")
+
+    def get_form_kwargs(self, index: int) -> dict[str, Any]:
+        """ Return form kwargs enriched with the active tenant context.
+
+        Args:
+            index: Position of the inline form in the formset.
+
+        Returns:
+            dict[str, Any]: Form keyword arguments with tenant context when available.
+        """
+        kwargs = super().get_form_kwargs(index)
+        kwargs["tenant"] = getattr(self.instance, "tenant", None)
+        return kwargs
 
     def save_new(self, form: QuoteItemModelInlineForm, commit: bool = True) -> QuoteItemModel:
         """ Populate snapshot fields for a newly created quote item.

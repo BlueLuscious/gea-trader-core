@@ -262,7 +262,7 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         self.assertFalse(quote_admin.has_delete_permission(request))
         self.assertFalse(item_inline.can_delete)
         self.assertTrue(item_inline.has_add_permission(request, obj=None))
-        existing_quote = QuoteModel(customer_name="Owner Quote")
+        existing_quote = QuoteModel(tenant=self._create_tenant("owner-quote-delete-policy"), customer_name="Owner Quote")
         self.assertFalse(item_inline.has_add_permission(request, obj=existing_quote))
         self.assertEqual((), item_inline.get_readonly_fields(request, obj=None))
         self.assertIn("product_name_snapshot", item_inline.get_readonly_fields(request, obj=existing_quote))
@@ -295,7 +295,7 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         request.user = self.owner_user
 
         add_titles = [fieldset[0] for fieldset in quote_admin.get_fieldsets(request, obj=None)]
-        change_titles = [fieldset[0] for fieldset in quote_admin.get_fieldsets(request, obj=QuoteModel())]
+        change_titles = [fieldset[0] for fieldset in quote_admin.get_fieldsets(request, obj=QuoteModel(tenant=self._create_tenant("owner-quote-timeline")))]
 
         self.assertEqual(["Customer", "Quote details"], add_titles)
         self.assertEqual(["Customer", "Quote details", "Origin", "Timeline"], change_titles)
@@ -329,7 +329,7 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
                 f"{prefix}-0-quantity": "2",
                 f"{prefix}-0-notes": "Urgent",
             },
-            instance=QuoteModel(customer_name="Manual"),
+            instance=QuoteModel(tenant=tenant, customer_name="Manual"),
             prefix=prefix,
         )
 
