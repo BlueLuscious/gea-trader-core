@@ -21,7 +21,8 @@ Current status of the other app folders:
 
 - `front/` exists as the intended UI surface for future reusable components and tenant-aware routes, but it is not part of the current runtime app scope wired by `core/settings.py`
 - `catalog/` and `quotation/` already define documented domain and owner-admin flows in this branch
-- `masterdata/` and `cart/` are now part of the runtime app scope wired by `core/settings.py`, but they still need fuller owner documentation once their user-facing role stabilizes
+- `masterdata/` now defines documented tenant-owned reference-data and owner-admin flows in this branch
+- `cart/` is part of the runtime app scope wired by `core/settings.py`, but it still needs fuller owner documentation once its user-facing role stabilizes
 
 ## Project Entry Docs
 
@@ -50,6 +51,7 @@ Current status of the other app folders:
 - Accounts app: `docs/accounts/accounts.md`
 - Catalog app: `docs/catalog/catalog.md`
 - Front app and future tenant-aware UI direction: `docs/front/front.md`
+- Masterdata app: `docs/masterdata/masterdata.md`
 - Quotation app: `docs/quotation/quotation.md`
 - Tenancy app: `docs/tenancy/tenancy.md`
 - Tenancy runtime behavior: `docs/tenancy/runtime.md`
@@ -76,6 +78,7 @@ To avoid repeating the same explanation in multiple places:
 - `docs/accounts/accounts.md` owns the `accounts/` domain structure
 - `docs/catalog/catalog.md` owns the `catalog/` domain structure
 - `docs/front/front.md` owns the frontend structure and future tenant-aware UI direction
+- `docs/masterdata/masterdata.md` owns the `masterdata/` domain structure
 - `docs/quotation/quotation.md` owns the `quotation/` domain structure
 - `docs/tenancy/tenancy.md` owns the `tenancy/` domain structure and persistence-oriented app boundary
 - `docs/tenancy/runtime.md` owns request-time tenant runtime behavior and switching

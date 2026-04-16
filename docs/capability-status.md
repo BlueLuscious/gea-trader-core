@@ -122,6 +122,21 @@ Check:
 
 - `docs/catalog/catalog.md`
 
+### Masterdata Domain
+
+- persisted brand and category models
+- typed managers and querysets
+- tenant-owned reference-data roots with tenant-scoped slug uniqueness
+- category hierarchy validation for same-tenant parenting, no self-parenting, and no cycles
+- brand-specific and category-specific access policies for owner-managed reference-data flows
+- DTOs and DTO factories
+- master and tenant-scoped owner admin flows
+- owner-admin runtime logging at the useful masterdata boundaries
+
+Check:
+
+- `docs/masterdata/masterdata.md`
+
 ### Quotation Domain
 
 - persisted quote and quote-item snapshot models
@@ -205,11 +220,11 @@ Check:
 - `docs/front/front.md`
 - `docs/tenancy/resolution.md`
 
-### Cart And Masterdata As Active Runtime Apps
+### Cart As Active Runtime App
 
-- `cart/` and `masterdata/` are part of the current runtime app scope wired by `core/settings.py`
-- they are present in the repository as active domain packages
-- their fuller user-facing and admin-facing ownership docs should be refined as those surfaces stabilize
+- `cart/` is part of the current runtime app scope wired by `core/settings.py`
+- it is present in the repository as an active domain package
+- its fuller user-facing and admin-facing ownership docs should be refined as that surface stabilizes
 
 Check:
 
