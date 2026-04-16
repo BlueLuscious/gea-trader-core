@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from core.testing.base import LoggedTestCase
 from cart.models import CartItemModel, CartModel
@@ -51,3 +52,24 @@ class TestCartModel(LoggedTestCase):
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
                 CartItemModel.objects.create(cart=cart, product=product, variant=variant, quantity=1)
+
+    def test_cart_item_rejects_product_from_another_tenant(self) -> None:
+        """ Verify cart items stay inside the tenant boundary defined by the cart root. """
+        tenant = self._create_tenant("cart-item-same-tenant")
+        other_tenant = self._create_tenant("cart-item-same-tenant-other")
+        cart = CartModel.objects.create(tenant=tenant, session_key="session-tenant-check")
+        other_product = ProductModel.objects.create(tenant=other_tenant, name="Otro", slug="otro")
+
+        with self.assertRaises(ValidationError):
+            CartItemModel.objects.create(cart=cart, product=other_product, quantity=1)
+
+    def test_cart_item_rejects_variant_from_another_product(self) -> None:
+        """ Verify variants cannot drift away from the selected cart item product. """
+        tenant = self._create_tenant("cart-item-variant-match")
+        cart = CartModel.objects.create(tenant=tenant, session_key="session-variant-check")
+        product = ProductModel.objects.create(tenant=tenant, name="Principal", slug="principal")
+        other_product = ProductModel.objects.create(tenant=tenant, name="Secundario", slug="secundario")
+        foreign_variant = ProductVariantModel.objects.create(product=other_product, sku="SEC-001")
+
+        with self.assertRaises(ValidationError):
+            CartItemModel.objects.create(cart=cart, product=product, variant=foreign_variant, quantity=1)

@@ -12,7 +12,7 @@ class CartItemModelAdmin(ModelAdmin):
 
     list_display = ("id", "cart", "product", "variant", "quantity", "updated_at")
     list_filter = ("created_at", "updated_at")
-    search_fields = ("=id", "=cart__id", "product__name", "variant__sku")
+    search_fields = ("=id", "=cart__id", "cart__tenant__name", "cart__tenant__slug", "product__name", "variant__sku")
     autocomplete_fields = ("cart", "product", "variant")
     readonly_fields = ("created_at", "updated_at")
     ordering = ("created_at", "id")

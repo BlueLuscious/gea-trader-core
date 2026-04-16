@@ -23,6 +23,7 @@ from quotation.admin.owner.quote_model_admin_form import QuoteModelAdminForm
 from quotation.admin.owner.quote_model_admin import QuoteModelAdmin
 from quotation.models import QuoteModel
 from quotation.models import QuoteItemModel
+from cart.models import CartModel, CartItemModel
 
 
 class TestOwnerAdminRegistrations(LoggedTestCase):
@@ -75,6 +76,8 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         self.assertIn(BrandModel, owner_admin_site._registry)
         self.assertIn(CategoryModel, owner_admin_site._registry)
         self.assertIn(QuoteModel, owner_admin_site._registry)
+        self.assertNotIn(CartModel, owner_admin_site._registry)
+        self.assertNotIn(CartItemModel, owner_admin_site._registry)
 
     def test_owner_admin_sidebar_navigation_includes_registered_links(self) -> None:
         """ Verify the owner sidebar exposes the registered user, catalog, masterdata, and quote changelist links. """
@@ -93,6 +96,8 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         self.assertIn("/owner-admin/masterdata/brandmodel/", item_links)
         self.assertIn("/owner-admin/masterdata/categorymodel/", item_links)
         self.assertIn("/owner-admin/quotation/quotemodel/", item_links)
+        self.assertNotIn("/owner-admin/cart/cartmodel/", item_links)
+        self.assertNotIn("/owner-admin/cart/cartitemmodel/", item_links)
 
     def test_owner_users_flow_requires_expected_django_permissions(self) -> None:
         """ Verify the owner users flow is backed by the expected Django model permissions. """

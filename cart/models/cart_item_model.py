@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from cart.models.managers.cart_item_model_manager import CartItemModelManager
 
 if TYPE_CHECKING:
@@ -63,3 +65,43 @@ class CartItemModel(models.Model):
             str: Cart item label.
         """
         return f"Cart item {self.pk}"
+
+    def clean(self) -> None:
+        """ Validate catalog relations against the tenant-owned cart boundary.
+
+        Raises:
+            ValidationError: When the selected product belongs to another tenant or
+            when the selected variant does not belong to the selected product.
+        """
+        super().clean()
+        self._validate_runtime_catalog_scope()
+
+    def save(self, *args: object, **kwargs: object) -> None:
+        """ Persist the cart item after validating runtime catalog consistency.
+
+        Args:
+            *args: Positional save arguments.
+            **kwargs: Keyword save arguments.
+
+        Raises:
+            ValidationError: When the selected product belongs to another tenant or
+            when the selected variant does not belong to the selected product.
+        """
+        self._validate_runtime_catalog_scope()
+        super().save(*args, **kwargs)
+
+    def _validate_runtime_catalog_scope(self) -> None:
+        """ Keep cart items aligned with the tenant-owned cart boundary.
+
+        Raises:
+            ValidationError: When a product belongs to another tenant or a variant
+            does not belong to the selected product.
+        """
+        if self.cart_id is None or self.product_id is None:
+            return
+
+        if self.cart.tenant_id != self.product.tenant_id:
+            raise ValidationError({"product": _("Product must belong to the same business as the cart.")})
+
+        if self.variant_id is not None and self.variant.product_id != self.product_id:
+            raise ValidationError({"variant": _("Variant must belong to the selected product.")})

@@ -1,4 +1,5 @@
 from django.apps import apps
+from django.core.exceptions import ValidationError
 from django.utils.translation import override
 from core.testing.base import LoggedTestCase
 from cart.models import CartModel
@@ -51,6 +52,19 @@ class TestQuotationModel(LoggedTestCase):
 
         self.assertEqual(str(quote), f'Quote {quote.pk}')
         self.assertEqual(str(item), 'Bomba')
+
+    def test_quote_rejects_source_cart_from_another_tenant(self) -> None:
+        """ Verify a quote cannot reference a cart that belongs to another tenant. """
+        tenant = self._create_tenant("quotation-cart-scope")
+        other_tenant = self._create_tenant("quotation-cart-scope-other")
+        foreign_cart = CartModel.objects.create(tenant=other_tenant, session_key="foreign-cart")
+
+        with self.assertRaises(ValidationError):
+            QuoteModel.objects.create(
+                tenant=tenant,
+                cart=foreign_cart,
+                customer_email="cliente@example.com",
+            )
 
     def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
         """ Verify quotation model fields expose user-friendly labels and help texts. """

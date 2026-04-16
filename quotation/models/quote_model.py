@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 from uuid import UUID
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from quotation.choices import QuoteStatus
@@ -135,3 +136,40 @@ class QuoteModel(models.Model):
             str: Quote label.
         """
         return f"Quote {self.pk}"
+
+    def clean(self) -> None:
+        """ Validate optional source cart ownership before persistence.
+
+        Raises:
+            ValidationError: When the selected source cart belongs to another
+            tenant.
+        """
+        super().clean()
+        self._validate_source_cart_scope()
+
+    def save(self, *args: object, **kwargs: object) -> None:
+        """ Persist the quote after validating source cart ownership.
+
+        Args:
+            *args: Positional save arguments.
+            **kwargs: Keyword save arguments.
+
+        Raises:
+            ValidationError: When the selected source cart belongs to another
+            tenant.
+        """
+        self._validate_source_cart_scope()
+        super().save(*args, **kwargs)
+
+    def _validate_source_cart_scope(self) -> None:
+        """ Keep cart-originated quotes inside one tenant boundary.
+
+        Raises:
+            ValidationError: When the selected source cart belongs to another
+            tenant.
+        """
+        if self.cart_id is None:
+            return
+
+        if self.cart.tenant_id != self.tenant_id:
+            raise ValidationError({"cart": _("Source cart must belong to the same business as the quote.")})
