@@ -27,7 +27,6 @@ class CategoryModelAdmin(ModelAdmin):
     list_display = ("name", "parent", "sort_order", "is_active", "updated_at")
     list_filter = ("is_active", "created_at", "updated_at")
     search_fields = ("name", "slug")
-    autocomplete_fields = ("parent",)
     readonly_fields = ("created_at", "updated_at")
     ordering = ("sort_order", "name")
     prepopulated_fields = {"slug": ("name",)}
