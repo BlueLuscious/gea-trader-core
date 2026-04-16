@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-16 03:02-0300\n"
+"POT-Creation-Date: 2026-04-16 03:54-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -289,8 +289,8 @@ msgstr ""
 "cotización."
 
 #: .\catalog\admin\owner\product_model_admin.py:78
-#: .\masterdata\admin\owner\brand_model_admin.py:47
-#: .\masterdata\admin\owner\category_model_admin.py:52
+#: .\masterdata\admin\owner\brand_model_admin.py:54
+#: .\masterdata\admin\owner\category_model_admin.py:59
 msgid "Advanced details"
 msgstr "Detalles avanzados"
 
@@ -957,6 +957,21 @@ msgstr "Ejecutar"
 msgid "Select value"
 msgstr "Seleccionar valor"
 
+#: .\core\i18n\translation_anchors.py:71
+msgid "No results found"
+msgstr "No se encontraron resultados"
+
+#: .\core\i18n\translation_anchors.py:72
+msgid ""
+"This page yielded into no results. Create a new item or reset your filters."
+msgstr ""
+"Esta página no arrojó resultados. Crea un nuevo elemento o restablece tus "
+"filtros."
+
+#: .\core\i18n\translation_anchors.py:73
+msgid "Reset filters"
+msgstr "Restablecer filtros"
+
 #: .\core\settings.py:164
 msgid "Spanish"
 msgstr "Español"
@@ -987,15 +1002,16 @@ msgstr "Origen"
 msgid "Timeline"
 msgstr "Cronología"
 
-#: .\masterdata\admin\owner\brand_model_admin.py:35
+#: .\masterdata\admin\owner\brand_model_admin.py:42
 msgid "Brand details"
 msgstr "Detalles de la marca"
 
-#: .\masterdata\admin\owner\brand_model_admin.py:38
+#: .\masterdata\admin\owner\brand_model_admin.py:45
 msgid "Create reusable brand references for the active business catalog."
-msgstr "Crea referencias de marcas reutilizables para el catálogo activo del negocio."
+msgstr ""
+"Crea referencias de marcas reutilizables para el catálogo activo del negocio."
 
-#: .\masterdata\admin\owner\brand_model_admin.py:50
+#: .\masterdata\admin\owner\brand_model_admin.py:57
 msgid "Read-only audit details for this brand."
 msgstr "Detalles de auditoría de solo lectura para esta marca."
 
@@ -1061,22 +1077,24 @@ msgid ""
 "Usually created from the subcategory name. Adjust it only when you need a "
 "custom URL."
 msgstr ""
-"Normalmente se crea a partir del nombre de la subcategoría. Ajústalo solo "
-"si necesitas una URL personalizada."
+"Normalmente se crea a partir del nombre de la subcategoría. Ajústalo solo si "
+"necesitas una URL personalizada."
 
 #: .\masterdata\admin\owner\category_child_model_inline_form.py:29
 msgid "Lower values appear first inside this parent category."
 msgstr "Los valores más bajos aparecen primero dentro de esta categoría padre."
 
-#: .\masterdata\admin\owner\category_model_admin.py:39
+#: .\masterdata\admin\owner\category_model_admin.py:46
 msgid "Category details"
 msgstr "Detalles de la categoría"
 
-#: .\masterdata\admin\owner\category_model_admin.py:42
+#: .\masterdata\admin\owner\category_model_admin.py:49
 msgid "Create reusable category references for the active business catalog."
-msgstr "Crea referencias de categorías reutilizables para el catálogo activo del negocio."
+msgstr ""
+"Crea referencias de categorías reutilizables para el catálogo activo del "
+"negocio."
 
-#: .\masterdata\admin\owner\category_model_admin.py:55
+#: .\masterdata\admin\owner\category_model_admin.py:62
 msgid "Read-only audit details for this category."
 msgstr "Detalles de auditoría de solo lectura para esta categoría."
 
@@ -1105,8 +1123,8 @@ msgid ""
 "Optional. Add short guidance so your team understands when to use this "
 "category."
 msgstr ""
-"Opcional. Agrega una breve guía para que tu equipo entienda cuándo usar "
-"esta categoría."
+"Opcional. Agrega una breve guía para que tu equipo entienda cuándo usar esta "
+"categoría."
 
 #: .\masterdata\admin\owner\category_model_admin_form.py:45
 #: .\masterdata\models\category_model.py:48
@@ -1120,7 +1138,8 @@ msgstr ""
 #: .\masterdata\admin\owner\category_model_admin_form.py:46
 #: .\masterdata\models\category_model.py:53
 msgid "Lower values appear first when categories are listed."
-msgstr "Los valores más bajos aparecen primero cuando se listan las categorías."
+msgstr ""
+"Los valores más bajos aparecen primero cuando se listan las categorías."
 
 #: .\masterdata\admin\owner\category_model_admin_form.py:47
 #: .\masterdata\models\category_model.py:58
