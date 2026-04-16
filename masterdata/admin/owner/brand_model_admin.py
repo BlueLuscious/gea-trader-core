@@ -1,5 +1,6 @@
 """ Brand admin registration for the owner admin site. """
 
+import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.http import HttpRequest
@@ -12,6 +13,8 @@ from masterdata.models import BrandModel
 if TYPE_CHECKING:
     from masterdata.models.querysets.brand_model_queryset import BrandModelQuerySet
     from tenancy.models import TenantModel
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(BrandModel, site=owner_admin_site)
@@ -59,9 +62,16 @@ class BrandModelAdmin(ModelAdmin):
         """
         tenant: "TenantModel | None" = getattr(request, "tenant", None)
         if tenant is None:
+            logger.info("Returned no owner-visible brands because no active tenant is bound to the request")
             return BrandModel.objects.none()
 
-        return super().get_queryset(request).for_tenant(tenant)
+        tenant_queryset: "BrandModelQuerySet" = super().get_queryset(request).for_tenant(tenant)
+        logger.info(
+            "Scoped owner brand queryset tenant_id=%s brand_count=%s",
+            tenant.pk,
+            tenant_queryset.count(),
+        )
+        return tenant_queryset
 
     def save_model(self, request: HttpRequest, obj: BrandModel, form, change: bool) -> None:
         """ Persist brands under the active tenant in owner admin.
@@ -76,6 +86,12 @@ class BrandModelAdmin(ModelAdmin):
             obj.tenant = getattr(request, "tenant", None)
 
         super().save_model(request, obj, form, change)
+        logger.info(
+            "Saved owner brand tenant_id=%s brand_id=%s change=%s",
+            getattr(obj.tenant, "pk", None),
+            obj.pk,
+            change,
+        )
 
     def has_module_permission(self, request: HttpRequest) -> bool:
         """ Return whether the brand module should appear in owner admin.

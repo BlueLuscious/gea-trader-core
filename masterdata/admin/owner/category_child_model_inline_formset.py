@@ -1,8 +1,11 @@
 """ Owner inline formset for direct category children. """
 
+import logging
 from django.forms import ModelForm
 from django.forms.models import BaseInlineFormSet
 from masterdata.models import CategoryModel
+
+logger = logging.getLogger(__name__)
 
 
 class CategoryChildModelInlineFormSet(BaseInlineFormSet):
@@ -39,5 +42,11 @@ class CategoryChildModelInlineFormSet(BaseInlineFormSet):
         if commit:
             child_category.save()
             form.save_m2m()
+            logger.info(
+                "Saved owner child category tenant_id=%s parent_id=%s category_id=%s",
+                child_category.tenant_id,
+                child_category.parent_id,
+                child_category.pk,
+            )
 
         return child_category

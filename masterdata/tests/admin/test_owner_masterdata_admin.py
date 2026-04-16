@@ -1,6 +1,7 @@
 """ Owner admin tests for tenant-scoped masterdata flows. """
 
 from types import SimpleNamespace
+from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import Client, RequestFactory
 from django.urls import reverse
@@ -97,35 +98,63 @@ class TestOwnerMasterdataAdmin(LoggedTestCase):
         """ Verify the owner brand queryset only returns brands from the active tenant. """
         request = self.build_request(self.operator, self.tenant)
 
-        queryset = self.brand_admin.get_queryset(request)
+        with patch("masterdata.admin.owner.brand_model_admin.logger.info") as logger_info_mock:
+            queryset = self.brand_admin.get_queryset(request)
 
         self.assertEqual([self.in_scope_brand], list(queryset))
+        logger_info_mock.assert_called_once()
 
     def test_category_admin_get_queryset_is_scoped_to_the_active_tenant(self) -> None:
         """ Verify the owner category queryset only returns categories from the active tenant. """
         request = self.build_request(self.operator, self.tenant)
 
-        queryset = self.category_admin.get_queryset(request)
+        with patch("masterdata.admin.owner.category_model_admin.logger.info") as logger_info_mock:
+            queryset = self.category_admin.get_queryset(request)
 
         self.assertEqual([self.in_scope_category], list(queryset))
+        logger_info_mock.assert_called_once()
+
+    def test_brand_admin_get_queryset_logs_when_no_active_tenant_exists(self) -> None:
+        """ Verify the owner brand queryset logs when no tenant is bound to the request. """
+        request = self.build_request(self.operator, tenant=None)
+
+        with patch("masterdata.admin.owner.brand_model_admin.logger.info") as logger_info_mock:
+            queryset = self.brand_admin.get_queryset(request)
+
+        self.assertEqual([], list(queryset))
+        logger_info_mock.assert_called_once()
+
+    def test_category_admin_get_queryset_logs_when_no_active_tenant_exists(self) -> None:
+        """ Verify the owner category queryset logs when no tenant is bound to the request. """
+        request = self.build_request(self.operator, tenant=None)
+
+        with patch("masterdata.admin.owner.category_model_admin.logger.info") as logger_info_mock:
+            queryset = self.category_admin.get_queryset(request)
+
+        self.assertEqual([], list(queryset))
+        logger_info_mock.assert_called_once()
 
     def test_brand_admin_save_model_assigns_the_active_tenant_on_create(self) -> None:
         """ Verify owner-created brands inherit the active tenant automatically. """
         request = self.build_request(self.operator, self.tenant)
         brand = BrandModel(name="North", slug="north")
 
-        self.brand_admin.save_model(request, brand, form=None, change=False)
+        with patch("masterdata.admin.owner.brand_model_admin.logger.info") as logger_info_mock:
+            self.brand_admin.save_model(request, brand, form=None, change=False)
 
         self.assertEqual(self.tenant, brand.tenant)
+        logger_info_mock.assert_called_once()
 
     def test_category_admin_save_model_assigns_the_active_tenant_on_create(self) -> None:
         """ Verify owner-created categories inherit the active tenant automatically. """
         request = self.build_request(self.operator, self.tenant)
         category = CategoryModel(name="Pumps", slug="pumps")
 
-        self.category_admin.save_model(request, category, form=None, change=False)
+        with patch("masterdata.admin.owner.category_model_admin.logger.info") as logger_info_mock:
+            self.category_admin.save_model(request, category, form=None, change=False)
 
         self.assertEqual(self.tenant, category.tenant)
+        logger_info_mock.assert_called_once()
 
     def test_brand_permissions_reject_objects_from_other_tenants(self) -> None:
         """ Verify brand object permissions stay scoped to the active tenant. """
@@ -245,10 +274,12 @@ class TestOwnerMasterdataAdmin(LoggedTestCase):
 
         self.assertTrue(formset.is_valid(), formset.errors)
 
-        child_category = formset.save()[0]
+        with patch("masterdata.admin.owner.category_child_model_inline_formset.logger.info") as logger_info_mock:
+            child_category = formset.save()[0]
 
         self.assertEqual(self.tenant, child_category.tenant)
         self.assertEqual(self.in_scope_category, child_category.parent)
+        logger_info_mock.assert_called_once()
 
     def test_category_admin_form_accepts_parent_from_the_active_tenant_on_add(self) -> None:
         """ Verify the owner category form can validate one in-tenant parent during adds. """

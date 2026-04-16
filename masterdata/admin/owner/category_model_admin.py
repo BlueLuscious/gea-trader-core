@@ -1,5 +1,6 @@
 """ Category admin registration for the owner admin site. """
 
+import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.db.models import ForeignKey
@@ -16,6 +17,8 @@ if TYPE_CHECKING:
     from django.forms import ModelChoiceField
     from masterdata.models.querysets.category_model_queryset import CategoryModelQuerySet
     from tenancy.models import TenantModel
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(CategoryModel, site=owner_admin_site)
@@ -66,9 +69,16 @@ class CategoryModelAdmin(ModelAdmin):
         """
         tenant: "TenantModel | None" = getattr(request, "tenant", None)
         if tenant is None:
+            logger.info("Returned no owner-visible categories because no active tenant is bound to the request")
             return CategoryModel.objects.none()
 
-        return super().get_queryset(request).for_tenant(tenant)
+        tenant_queryset: "CategoryModelQuerySet" = super().get_queryset(request).for_tenant(tenant)
+        logger.info(
+            "Scoped owner category queryset tenant_id=%s category_count=%s",
+            tenant.pk,
+            tenant_queryset.count(),
+        )
+        return tenant_queryset
 
     def save_model(self, request: HttpRequest, obj: CategoryModel, form, change: bool) -> None:
         """ Persist categories under the active tenant in owner admin.
@@ -83,6 +93,13 @@ class CategoryModelAdmin(ModelAdmin):
             obj.tenant = getattr(request, "tenant", None)
 
         super().save_model(request, obj, form, change)
+        logger.info(
+            "Saved owner category tenant_id=%s category_id=%s parent_id=%s change=%s",
+            getattr(obj.tenant, "pk", None),
+            obj.pk,
+            obj.parent_id,
+            change,
+        )
 
     def get_form(self, request: HttpRequest, obj: CategoryModel | None = None, change: bool = False, **kwargs):
         """ Inject the current request into the owner category form.
