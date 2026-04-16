@@ -1,5 +1,7 @@
+from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
+from django.utils.translation import override
 from core.testing.base import LoggedTestCase
 from cart.models import CartItemModel, CartModel
 from catalog.models import ProductModel, ProductVariantModel
@@ -73,3 +75,33 @@ class TestCartModel(LoggedTestCase):
 
         with self.assertRaises(ValidationError):
             CartItemModel.objects.create(cart=cart, product=product, variant=foreign_variant, quantity=1)
+
+    def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
+        """ Verify cart model fields expose user-friendly labels and help texts. """
+        cart_field_expectations = {
+            "tenant": ("Business", "Business that owns this cart and the runtime activity around it."),
+            "user": ("Customer account", "Optional customer account currently associated with this cart."),
+            "session_key": ("Session key", "Session identifier used when the cart is not tied to a signed-in customer account."),
+            "status": ("Cart status", "Current lifecycle stage of this cart in the runtime flow."),
+        }
+        item_field_expectations = {
+            "cart": ("Cart", "Cart this line belongs to."),
+            "product": ("Product", "Product currently selected in this cart line."),
+            "variant": ("Variant", "Optional variant currently selected for this cart line."),
+            "quantity": ("Quantity", "How many units of the selected product the cart currently holds."),
+        }
+
+        with override("en"):
+            app_config = apps.get_app_config("cart")
+
+            self.assertEqual("Carts", str(app_config.verbose_name))
+
+            for field_name, expected_values in cart_field_expectations.items():
+                field = CartModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))
+
+            for field_name, expected_values in item_field_expectations.items():
+                field = CartItemModel._meta.get_field(field_name)
+                self.assertEqual(expected_values[0], str(field.verbose_name))
+                self.assertEqual(expected_values[1], str(field.help_text))

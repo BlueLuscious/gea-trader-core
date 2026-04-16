@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-16 03:54-0300\n"
+"POT-Creation-Date: 2026-04-16 20:47-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -172,6 +172,7 @@ msgstr "Correo electrónico"
 
 #: .\accounts\admin\owner\user_model_admin_creation_form.py:35
 #: .\accounts\admin\owner\user_model_admin_form.py:21
+#: .\cart\choices\cart_status.py:10
 msgid "Active"
 msgstr "Activo"
 
@@ -243,6 +244,179 @@ msgstr "Propietario"
 #: .\tenancy\choices\tenant_role.py:12
 msgid "Operator"
 msgstr "Operador"
+
+#: .\cart\apps.py:10 .\cart\models\cart_model.py:80
+msgid "Carts"
+msgstr "Carritos"
+
+#: .\cart\choices\cart_status.py:11
+msgid "Converted"
+msgstr "Convertido"
+
+#: .\cart\choices\cart_status.py:12
+msgid "Abandoned"
+msgstr "Abandonado"
+
+#: .\cart\models\cart_item_model.py:20 .\cart\models\cart_model.py:79
+msgid "Cart"
+msgstr "Carrito"
+
+#: .\cart\models\cart_item_model.py:21
+msgid "Cart this line belongs to."
+msgstr "Carrito al que pertenece esta línea."
+
+#: .\cart\models\cart_item_model.py:27
+#: .\catalog\models\product_image_model.py:17
+#: .\catalog\models\product_model.py:116
+#: .\catalog\models\product_variant_model.py:18
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:19
+#: .\quotation\models\quote_item_model.py:27
+msgid "Product"
+msgstr "Producto"
+
+#: .\cart\models\cart_item_model.py:28
+msgid "Product currently selected in this cart line."
+msgstr "Producto seleccionado actualmente en esta línea del carrito."
+
+#: .\cart\models\cart_item_model.py:36
+#: .\catalog\admin\owner\product_variant_model_inline.py:18
+#: .\catalog\models\product_image_model.py:26
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:20
+#: .\quotation\models\quote_item_model.py:36
+msgid "Variant"
+msgstr "Variante"
+
+#: .\cart\models\cart_item_model.py:37
+msgid "Optional variant currently selected for this cart line."
+msgstr "Variante opcional seleccionada actualmente para esta línea del carrito."
+
+#: .\cart\models\cart_item_model.py:41
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:21
+#: .\quotation\models\quote_item_model.py:67
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: .\cart\models\cart_item_model.py:42
+msgid "How many units of the selected product the cart currently holds."
+msgstr "Cuántas unidades del producto seleccionado contiene actualmente el carrito."
+
+#: .\cart\models\cart_item_model.py:47
+msgid "Notes"
+msgstr "Notas"
+
+#: .\cart\models\cart_item_model.py:48
+msgid "Optional runtime notes captured for this cart line."
+msgstr "Notas opcionales de runtime capturadas para esta línea del carrito."
+
+#: .\cart\models\cart_item_model.py:52 .\cart\models\cart_model.py:56
+#: .\catalog\models\product_image_model.py:53
+#: .\catalog\models\product_model.py:91
+#: .\catalog\models\product_variant_model.py:65
+#: .\masterdata\models\brand_model.py:45
+#: .\masterdata\models\category_model.py:60
+#: .\quotation\models\quote_item_model.py:78
+#: .\quotation\models\quote_model.py:111
+msgid "Created at"
+msgstr "Creado el"
+
+#: .\cart\models\cart_item_model.py:53
+msgid "When this cart item was created."
+msgstr "Cuándo se creó este ítem del carrito."
+
+#: .\cart\models\cart_item_model.py:57 .\cart\models\cart_model.py:61
+#: .\catalog\models\product_model.py:96
+#: .\catalog\models\product_variant_model.py:70
+#: .\masterdata\models\brand_model.py:46
+#: .\masterdata\models\category_model.py:61
+#: .\quotation\models\quote_model.py:116
+msgid "Updated at"
+msgstr "Actualizado el"
+
+#: .\cart\models\cart_item_model.py:58
+msgid "When this cart item was last updated."
+msgstr "Cuándo se actualizó por última vez este ítem del carrito."
+
+#: .\cart\models\cart_item_model.py:81
+msgid "Cart item"
+msgstr "Ítem del carrito"
+
+#: .\cart\models\cart_item_model.py:82
+msgid "Cart items"
+msgstr "Ítems del carrito"
+
+#: .\cart\models\cart_item_model.py:127
+msgid "Product must belong to the same business as the cart."
+msgstr "El producto debe pertenecer al mismo negocio que el carrito."
+
+#: .\cart\models\cart_item_model.py:130
+msgid "Variant must belong to the selected product."
+msgstr "La variante debe pertenecer al producto seleccionado."
+
+#: .\cart\models\cart_model.py:22
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:54
+#: .\masterdata\models\brand_model.py:22
+#: .\masterdata\models\category_model.py:23
+#: .\quotation\models\quote_model.py:23
+#: .\tenancy\admin\owner\owner_tenant_settings_admin.py:37
+#: .\tenancy\models\tenant_branding_model.py:19
+#: .\tenancy\models\tenant_group_model.py:20
+#: .\tenancy\models\tenant_membership_model.py:24
+#: .\tenancy\models\tenant_model.py:69
+msgid "Business"
+msgstr "Negocio"
+
+#: .\cart\models\cart_model.py:23
+msgid "Business that owns this cart and the runtime activity around it."
+msgstr "Negocio al que pertenece este carrito y la actividad de runtime que lo rodea."
+
+#: .\cart\models\cart_model.py:31
+#: .\quotation\admin\owner\quote_model_admin_form.py:37
+#: .\quotation\models\quote_model.py:41
+msgid "Customer account"
+msgstr "Cuenta del cliente"
+
+#: .\cart\models\cart_model.py:32
+msgid "Optional customer account currently associated with this cart."
+msgstr "Cuenta del cliente opcional actualmente asociada a este carrito."
+
+#: .\cart\models\cart_model.py:38
+msgid "Session key"
+msgstr "Clave de sesión"
+
+#: .\cart\models\cart_model.py:39
+msgid ""
+"Session identifier used when the cart is not tied to a signed-in customer "
+"account."
+msgstr ""
+"Identificador de sesión usado cuando el carrito no está vinculado a una "
+"cuenta de cliente con sesión iniciada."
+
+#: .\cart\models\cart_model.py:45
+msgid "Cart status"
+msgstr "Estado del carrito"
+
+#: .\cart\models\cart_model.py:46
+msgid "Current lifecycle stage of this cart in the runtime flow."
+msgstr "Etapa actual del ciclo de vida de este carrito dentro del flujo de runtime."
+
+#: .\cart\models\cart_model.py:51
+msgid "Expires at"
+msgstr "Vence el"
+
+#: .\cart\models\cart_model.py:52
+msgid ""
+"Optional expiration timestamp used by runtime cleanup or follow-up rules."
+msgstr ""
+"Marca de tiempo de vencimiento opcional usada por reglas de limpieza o "
+"seguimiento en runtime."
+
+#: .\cart\models\cart_model.py:57
+msgid "When this cart was created."
+msgstr "Cuándo se creó este carrito."
+
+#: .\cart\models\cart_model.py:62
+msgid "When this cart was last updated."
+msgstr "Cuándo se actualizó por última vez este carrito."
 
 #: .\catalog\admin\owner\product_image_model_inline.py:19
 msgid "Image details"
@@ -391,13 +565,6 @@ msgstr "Producto destacado"
 msgid "Request through quote"
 msgstr "Solicitar mediante cotización"
 
-#: .\catalog\admin\owner\product_variant_model_inline.py:18
-#: .\catalog\models\product_image_model.py:26
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:20
-#: .\quotation\models\quote_item_model.py:36
-msgid "Variant"
-msgstr "Variante"
-
 #: .\catalog\admin\owner\product_variant_model_inline.py:19
 msgid "Variants"
 msgstr "Variantes"
@@ -406,14 +573,6 @@ msgstr "Variantes"
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:90
 msgid "Catalog"
 msgstr "Catálogo"
-
-#: .\catalog\models\product_image_model.py:17
-#: .\catalog\models\product_model.py:116
-#: .\catalog\models\product_variant_model.py:18
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:19
-#: .\quotation\models\quote_item_model.py:27
-msgid "Product"
-msgstr "Producto"
 
 #: .\catalog\models\product_image_model.py:18
 msgid "Product this image belongs to."
@@ -463,16 +622,6 @@ msgstr "Imagen principal"
 #: .\catalog\models\product_image_model.py:49
 msgid "Use this image as the main visual for the product or variant."
 msgstr "Usa esta imagen como imagen principal del producto o de la variante."
-
-#: .\catalog\models\product_image_model.py:53
-#: .\catalog\models\product_model.py:91
-#: .\catalog\models\product_variant_model.py:65
-#: .\masterdata\models\brand_model.py:45
-#: .\masterdata\models\category_model.py:60
-#: .\quotation\models\quote_item_model.py:78
-#: .\quotation\models\quote_model.py:110
-msgid "Created at"
-msgstr "Creado el"
 
 #: .\catalog\models\product_image_model.py:54
 msgid "When this image was created."
@@ -525,14 +674,6 @@ msgstr "Destaca este producto en las secciones destacadas del catálogo."
 #: .\catalog\models\product_model.py:92
 msgid "When this product was created."
 msgstr "Cuándo se creó este producto."
-
-#: .\catalog\models\product_model.py:96
-#: .\catalog\models\product_variant_model.py:70
-#: .\masterdata\models\brand_model.py:46
-#: .\masterdata\models\category_model.py:61
-#: .\quotation\models\quote_model.py:115
-msgid "Updated at"
-msgstr "Actualizado el"
 
 #: .\catalog\models\product_model.py:97
 msgid "When this product was last updated."
@@ -626,18 +767,6 @@ msgstr "Variantes del producto"
 msgid "Current"
 msgstr "Actual"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:54
-#: .\masterdata\models\brand_model.py:22
-#: .\masterdata\models\category_model.py:23
-#: .\quotation\models\quote_model.py:22
-#: .\tenancy\admin\owner\owner_tenant_settings_admin.py:37
-#: .\tenancy\models\tenant_branding_model.py:19
-#: .\tenancy\models\tenant_group_model.py:20
-#: .\tenancy\models\tenant_membership_model.py:24
-#: .\tenancy\models\tenant_model.py:69
-msgid "Business"
-msgstr "Negocio"
-
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:57
 #: .\core\tests\adminsites\test_adminsites.py:81
 msgid "Settings"
@@ -661,7 +790,7 @@ msgstr "Ventas"
 
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:116
 #: .\core\tests\adminsites\test_adminsites.py:87
-#: .\quotation\models\quote_model.py:129
+#: .\quotation\models\quote_model.py:130
 msgid "Quotes"
 msgstr "Cotizaciones"
 
@@ -980,24 +1109,24 @@ msgstr "Español"
 msgid "English"
 msgstr "Inglés"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:338
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:343
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:344
 #: .\quotation\admin\owner\quote_model_admin.py:44
 msgid "Customer"
 msgstr "Cliente"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:338
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:343
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:344
 #: .\quotation\admin\owner\quote_model_admin.py:56
 msgid "Quote details"
 msgstr "Detalles de la cotización"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:344
 #: .\quotation\admin\owner\quote_model_admin.py:69
 msgid "Origin"
 msgstr "Origen"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:344
 #: .\quotation\admin\owner\quote_model_admin.py:79
 msgid "Timeline"
 msgstr "Cronología"
@@ -1188,11 +1317,6 @@ msgstr "Ítem de cotización"
 msgid "Quote items"
 msgstr "Ítems de cotización"
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:21
-#: .\quotation\models\quote_item_model.py:67
-msgid "Quantity"
-msgstr "Cantidad"
-
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:22
 #: .\quotation\models\quote_item_model.py:73
 msgid "Item notes"
@@ -1252,62 +1376,57 @@ msgstr ""
 "cotización."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:29
-#: .\quotation\models\quote_model.py:47
+#: .\quotation\models\quote_model.py:48
 msgid "Quote status"
 msgstr "Estado de la cotización"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:30
-#: .\quotation\models\quote_model.py:54
+#: .\quotation\models\quote_model.py:55
 msgid "Customer name"
 msgstr "Nombre del cliente"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:31
-#: .\quotation\models\quote_model.py:60
+#: .\quotation\models\quote_model.py:61
 msgid "Customer email"
 msgstr "Correo del cliente"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:32
-#: .\quotation\models\quote_model.py:67
+#: .\quotation\models\quote_model.py:68
 msgid "Customer phone"
 msgstr "Teléfono del cliente"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:33
-#: .\quotation\models\quote_model.py:74
+#: .\quotation\models\quote_model.py:75
 msgid "Company"
 msgstr "Empresa"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:34
-#: .\quotation\models\quote_model.py:81
+#: .\quotation\models\quote_model.py:82
 msgid "Tax ID"
 msgstr "Identificación fiscal"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:35
-#: .\quotation\models\quote_model.py:87
+#: .\quotation\models\quote_model.py:88
 msgid "Internal notes"
 msgstr "Notas internas"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:36
-#: .\quotation\models\quote_model.py:31
+#: .\quotation\models\quote_model.py:32
 msgid "Source cart"
 msgstr "Carrito de origen"
 
-#: .\quotation\admin\owner\quote_model_admin_form.py:37
-#: .\quotation\models\quote_model.py:40
-msgid "Customer account"
-msgstr "Cuenta del cliente"
-
 #: .\quotation\admin\owner\quote_model_admin_form.py:38
-#: .\quotation\models\quote_model.py:93
+#: .\quotation\models\quote_model.py:94
 msgid "Requested at"
 msgstr "Solicitada el"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:39
-#: .\quotation\models\quote_model.py:99
+#: .\quotation\models\quote_model.py:100
 msgid "Sent at"
 msgstr "Enviada el"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:40
-#: .\quotation\models\quote_model.py:105
+#: .\quotation\models\quote_model.py:106
 msgid "Answered at"
 msgstr "Respondida el"
 
@@ -1322,12 +1441,12 @@ msgid "Optional. Use this when the quote belongs to a business customer."
 msgstr "Opcional. Úsalo cuando la cotización corresponda a un cliente empresa."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:45
-#: .\quotation\models\quote_model.py:82
+#: .\quotation\models\quote_model.py:83
 msgid "Optional tax or company identification reference."
 msgstr "Referencia opcional de identificación fiscal o empresarial."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:46
-#: .\quotation\models\quote_model.py:88
+#: .\quotation\models\quote_model.py:89
 msgid "Private context for your team. Customers do not need to see this text."
 msgstr ""
 "Contexto privado para tu equipo. Los clientes no necesitan ver este texto."
@@ -1372,7 +1491,7 @@ msgid "Expired"
 msgstr "Vencida"
 
 #: .\quotation\models\quote_item_model.py:18
-#: .\quotation\models\quote_model.py:128
+#: .\quotation\models\quote_model.py:129
 msgid "Quote"
 msgstr "Cotización"
 
@@ -1437,62 +1556,66 @@ msgstr "Nota interna opcional para este ítem de cotización."
 msgid "When this quote item was created."
 msgstr "Cuándo se creó este ítem de cotización."
 
-#: .\quotation\models\quote_model.py:23
+#: .\quotation\models\quote_model.py:24
 msgid "Business that owns this quote and the follow-up around it."
 msgstr "Negocio al que pertenece esta cotización y el seguimiento asociado."
 
-#: .\quotation\models\quote_model.py:32
+#: .\quotation\models\quote_model.py:33
 msgid "Optional cart that originated this quote."
 msgstr "Carrito opcional que originó esta cotización."
 
-#: .\quotation\models\quote_model.py:41
+#: .\quotation\models\quote_model.py:42
 msgid "Optional customer account related to this quote."
 msgstr "Cuenta de cliente opcional relacionada con esta cotización."
 
-#: .\quotation\models\quote_model.py:48
+#: .\quotation\models\quote_model.py:49
 msgid "Current stage of this quote in your sales follow-up."
 msgstr "Etapa actual de esta cotización dentro de tu seguimiento comercial."
 
-#: .\quotation\models\quote_model.py:55
+#: .\quotation\models\quote_model.py:56
 msgid "Name of the person requesting the quote."
 msgstr "Nombre de la persona que solicita la cotización."
 
-#: .\quotation\models\quote_model.py:61
+#: .\quotation\models\quote_model.py:62
 msgid "Email address your team can use to follow up on this quote."
 msgstr ""
 "Correo electrónico que tu equipo puede usar para dar seguimiento a esta "
 "cotización."
 
-#: .\quotation\models\quote_model.py:68
+#: .\quotation\models\quote_model.py:69
 msgid "Phone number your team can use to follow up on this quote."
 msgstr ""
 "Teléfono que tu equipo puede usar para dar seguimiento a esta cotización."
 
-#: .\quotation\models\quote_model.py:75
+#: .\quotation\models\quote_model.py:76
 msgid "Optional company name when the quote belongs to a business customer."
 msgstr ""
 "Nombre de empresa opcional cuando la cotización corresponde a un cliente "
 "empresa."
 
-#: .\quotation\models\quote_model.py:94
+#: .\quotation\models\quote_model.py:95
 msgid "When the quote was formally requested."
 msgstr "Cuándo se solicitó formalmente la cotización."
 
-#: .\quotation\models\quote_model.py:100
+#: .\quotation\models\quote_model.py:101
 msgid "When the quote was sent back to the customer."
 msgstr "Cuándo se envió la cotización al cliente."
 
-#: .\quotation\models\quote_model.py:106
+#: .\quotation\models\quote_model.py:107
 msgid "When the customer answered this quote."
 msgstr "Cuándo el cliente respondió esta cotización."
 
-#: .\quotation\models\quote_model.py:111
+#: .\quotation\models\quote_model.py:112
 msgid "When this quote was created."
 msgstr "Cuándo se creó esta cotización."
 
-#: .\quotation\models\quote_model.py:116
+#: .\quotation\models\quote_model.py:117
 msgid "When this quote was last updated."
 msgstr "Cuándo se actualizó por última vez esta cotización."
+
+#: .\quotation\models\quote_model.py:175
+msgid "Source cart must belong to the same business as the quote."
+msgstr ""
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:22
 #: .\tenancy\models\tenant_model.py:33

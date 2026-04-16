@@ -17,11 +17,15 @@ class CartItemModel(models.Model):
         "cart.CartModel",
         on_delete=models.CASCADE,
         related_name="items",
+        verbose_name=_("Cart"),
+        help_text=_("Cart this line belongs to."),
     )
     product: "ProductModel" = models.ForeignKey(
         "catalog.ProductModel",
         on_delete=models.PROTECT,
         related_name="cart_items",
+        verbose_name=_("Product"),
+        help_text=_("Product currently selected in this cart line."),
     )
     variant: "ProductVariantModel | None" = models.ForeignKey(
         "catalog.ProductVariantModel",
@@ -29,11 +33,30 @@ class CartItemModel(models.Model):
         null=True,
         blank=True,
         related_name="cart_items",
+        verbose_name=_("Variant"),
+        help_text=_("Optional variant currently selected for this cart line."),
     )
-    quantity = models.PositiveIntegerField(default=1)
-    notes = models.TextField(blank=True, default="")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    quantity = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_("Quantity"),
+        help_text=_("How many units of the selected product the cart currently holds."),
+    )
+    notes = models.TextField(
+        blank=True,
+        default="",
+        verbose_name=_("Notes"),
+        help_text=_("Optional runtime notes captured for this cart line."),
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created at"),
+        help_text=_("When this cart item was created."),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Updated at"),
+        help_text=_("When this cart item was last updated."),
+    )
 
     objects: CartItemModelManager = CartItemModelManager()
     
@@ -55,8 +78,8 @@ class CartItemModel(models.Model):
                 name="cart_item_unique_cart_product_without_variant",
             ),
         ]
-        verbose_name = "Cart item"
-        verbose_name_plural = "Cart items"
+        verbose_name = _("Cart item")
+        verbose_name_plural = _("Cart items")
 
     def __str__(self) -> str:
         """ Return the admin-friendly label for the cart item.
