@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-15 00:08-0300\n"
+"POT-Creation-Date: 2026-04-16 03:02-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -182,8 +182,8 @@ msgstr "Puede abrir el admin del negocio"
 
 #: .\accounts\admin\owner\user_model_admin_creation_form.py:37
 #: .\accounts\admin\owner\user_model_admin_form.py:23
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:78
-#: .\core\tests\adminsites\test_adminsites.py:77
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:79
+#: .\core\tests\adminsites\test_adminsites.py:83
 msgid "Groups"
 msgstr "Grupos"
 
@@ -210,7 +210,7 @@ msgid "Only permission groups for the current business can be assigned here."
 msgstr "Aquí solo se pueden asignar grupos de permisos del negocio actual."
 
 #: .\accounts\apps.py:12
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:66
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:67
 msgid "Accounts"
 msgstr "Cuentas"
 
@@ -229,8 +229,8 @@ msgid "User"
 msgstr "Usuario"
 
 #: .\accounts\models\user_model.py:33
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:69
-#: .\core\tests\adminsites\test_adminsites.py:77
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:70
+#: .\core\tests\adminsites\test_adminsites.py:82
 msgid "Users"
 msgstr "Usuarios"
 
@@ -289,6 +289,8 @@ msgstr ""
 "cotización."
 
 #: .\catalog\admin\owner\product_model_admin.py:78
+#: .\masterdata\admin\owner\brand_model_admin.py:47
+#: .\masterdata\admin\owner\category_model_admin.py:52
 msgid "Advanced details"
 msgstr "Detalles avanzados"
 
@@ -340,16 +342,22 @@ msgstr "Nombre del producto"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:25
 #: .\catalog\models\product_model.py:51
+#: .\masterdata\admin\owner\brand_model_admin_form.py:18
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:23
+#: .\masterdata\admin\owner\category_model_admin_form.py:36
+#: .\masterdata\models\brand_model.py:31
+#: .\masterdata\models\category_model.py:32
 msgid "URL slug"
 msgstr "Slug de la URL"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:26
-#: .\catalog\models\product_model.py:32
+#: .\catalog\models\product_model.py:32 .\masterdata\models\brand_model.py:61
 msgid "Brand"
 msgstr "Marca"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:27
 #: .\catalog\models\product_model.py:41
+#: .\masterdata\models\category_model.py:78
 msgid "Category"
 msgstr "Categoría"
 
@@ -395,7 +403,7 @@ msgid "Variants"
 msgstr "Variantes"
 
 #: .\catalog\apps.py:10
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:89
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:90
 msgid "Catalog"
 msgstr "Catálogo"
 
@@ -438,6 +446,9 @@ msgstr "Descripción breve y accesible de lo que aparece en la imagen."
 
 #: .\catalog\models\product_image_model.py:43
 #: .\catalog\models\product_variant_model.py:60
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:24
+#: .\masterdata\admin\owner\category_model_admin_form.py:39
+#: .\masterdata\models\category_model.py:52
 msgid "Display order"
 msgstr "Orden de visualización"
 
@@ -456,6 +467,8 @@ msgstr "Usa esta imagen como imagen principal del producto o de la variante."
 #: .\catalog\models\product_image_model.py:53
 #: .\catalog\models\product_model.py:91
 #: .\catalog\models\product_variant_model.py:65
+#: .\masterdata\models\brand_model.py:45
+#: .\masterdata\models\category_model.py:60
 #: .\quotation\models\quote_item_model.py:78
 #: .\quotation\models\quote_model.py:110
 msgid "Created at"
@@ -515,6 +528,8 @@ msgstr "Cuándo se creó este producto."
 
 #: .\catalog\models\product_model.py:96
 #: .\catalog\models\product_variant_model.py:70
+#: .\masterdata\models\brand_model.py:46
+#: .\masterdata\models\category_model.py:61
 #: .\quotation\models\quote_model.py:115
 msgid "Updated at"
 msgstr "Actualizado el"
@@ -524,8 +539,8 @@ msgid "When this product was last updated."
 msgstr "Cuándo se actualizó por última vez este producto."
 
 #: .\catalog\models\product_model.py:117
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:92
-#: .\core\tests\adminsites\test_adminsites.py:77
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:93
+#: .\core\tests\adminsites\test_adminsites.py:84
 msgid "Products"
 msgstr "Productos"
 
@@ -611,7 +626,9 @@ msgstr "Variantes del producto"
 msgid "Current"
 msgstr "Actual"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:53
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:54
+#: .\masterdata\models\brand_model.py:22
+#: .\masterdata\models\category_model.py:23
 #: .\quotation\models\quote_model.py:22
 #: .\tenancy\admin\owner\owner_tenant_settings_admin.py:37
 #: .\tenancy\models\tenant_branding_model.py:19
@@ -621,17 +638,29 @@ msgstr "Actual"
 msgid "Business"
 msgstr "Negocio"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:56
-#: .\core\tests\adminsites\test_adminsites.py:77
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:57
+#: .\core\tests\adminsites\test_adminsites.py:81
 msgid "Settings"
 msgstr "Configuración"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:100
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:99
+#: .\core\tests\adminsites\test_adminsites.py:85
+#: .\masterdata\models\brand_model.py:62
+msgid "Brands"
+msgstr "Marcas"
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:105
+#: .\core\tests\adminsites\test_adminsites.py:86
+#: .\masterdata\models\category_model.py:79
+msgid "Categories"
+msgstr "Categorías"
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:113
 msgid "Sales"
 msgstr "Ventas"
 
-#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:103
-#: .\core\tests\adminsites\test_adminsites.py:77
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:116
+#: .\core\tests\adminsites\test_adminsites.py:87
 #: .\quotation\models\quote_model.py:129
 msgid "Quotes"
 msgstr "Cotizaciones"
@@ -936,27 +965,199 @@ msgstr "Español"
 msgid "English"
 msgstr "Inglés"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:301
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:302
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:338
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
 #: .\quotation\admin\owner\quote_model_admin.py:44
 msgid "Customer"
 msgstr "Cliente"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:301
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:302
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:338
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
 #: .\quotation\admin\owner\quote_model_admin.py:56
 msgid "Quote details"
 msgstr "Detalles de la cotización"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:302
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
 #: .\quotation\admin\owner\quote_model_admin.py:69
 msgid "Origin"
 msgstr "Origen"
 
-#: .\core\tests\adminsites\test_owner_admin_registrations.py:302
+#: .\core\tests\adminsites\test_owner_admin_registrations.py:339
 #: .\quotation\admin\owner\quote_model_admin.py:79
 msgid "Timeline"
 msgstr "Cronología"
+
+#: .\masterdata\admin\owner\brand_model_admin.py:35
+msgid "Brand details"
+msgstr "Detalles de la marca"
+
+#: .\masterdata\admin\owner\brand_model_admin.py:38
+msgid "Create reusable brand references for the active business catalog."
+msgstr "Crea referencias de marcas reutilizables para el catálogo activo del negocio."
+
+#: .\masterdata\admin\owner\brand_model_admin.py:50
+msgid "Read-only audit details for this brand."
+msgstr "Detalles de auditoría de solo lectura para esta marca."
+
+#: .\masterdata\admin\owner\brand_model_admin_form.py:17
+#: .\masterdata\models\brand_model.py:26
+msgid "Brand name"
+msgstr "Nombre de la marca"
+
+#: .\masterdata\admin\owner\brand_model_admin_form.py:19
+#: .\masterdata\admin\owner\category_model_admin_form.py:37
+#: .\masterdata\models\brand_model.py:37
+#: .\masterdata\models\category_model.py:38
+msgid "Description"
+msgstr "Descripción"
+
+#: .\masterdata\admin\owner\brand_model_admin_form.py:20
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:25
+#: .\masterdata\admin\owner\category_model_admin_form.py:40
+#: .\masterdata\models\brand_model.py:42
+#: .\masterdata\models\category_model.py:57
+msgid "Available for products"
+msgstr "Disponible para productos"
+
+#: .\masterdata\admin\owner\brand_model_admin_form.py:23
+#: .\masterdata\models\brand_model.py:32
+msgid ""
+"Usually created from the brand name. Adjust it only when you need a custom "
+"URL."
+msgstr ""
+"Normalmente se crea a partir del nombre de la marca. Ajústalo solo si "
+"necesitas una URL personalizada."
+
+#: .\masterdata\admin\owner\brand_model_admin_form.py:24
+#: .\masterdata\models\brand_model.py:38
+msgid ""
+"Optional. Add short internal guidance about when this brand should be used."
+msgstr ""
+"Opcional. Agrega una breve guía interna sobre cuándo debería usarse esta "
+"marca."
+
+#: .\masterdata\admin\owner\brand_model_admin_form.py:25
+#: .\masterdata\models\brand_model.py:43
+msgid ""
+"Disable this brand when you want to stop using it without deleting its "
+"history."
+msgstr ""
+"Desactiva esta marca cuando quieras dejar de usarla sin borrar su historial."
+
+#: .\masterdata\admin\owner\category_child_model_inline.py:27
+msgid "Subcategory"
+msgstr "Subcategoría"
+
+#: .\masterdata\admin\owner\category_child_model_inline.py:28
+msgid "Subcategories"
+msgstr "Subcategorías"
+
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:22
+msgid "Subcategory name"
+msgstr "Nombre de la subcategoría"
+
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:28
+msgid ""
+"Usually created from the subcategory name. Adjust it only when you need a "
+"custom URL."
+msgstr ""
+"Normalmente se crea a partir del nombre de la subcategoría. Ajústalo solo "
+"si necesitas una URL personalizada."
+
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:29
+msgid "Lower values appear first inside this parent category."
+msgstr "Los valores más bajos aparecen primero dentro de esta categoría padre."
+
+#: .\masterdata\admin\owner\category_model_admin.py:39
+msgid "Category details"
+msgstr "Detalles de la categoría"
+
+#: .\masterdata\admin\owner\category_model_admin.py:42
+msgid "Create reusable category references for the active business catalog."
+msgstr "Crea referencias de categorías reutilizables para el catálogo activo del negocio."
+
+#: .\masterdata\admin\owner\category_model_admin.py:55
+msgid "Read-only audit details for this category."
+msgstr "Detalles de auditoría de solo lectura para esta categoría."
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:35
+#: .\masterdata\models\category_model.py:27
+msgid "Category name"
+msgstr "Nombre de la categoría"
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:38
+#: .\masterdata\models\category_model.py:47
+msgid "Parent category"
+msgstr "Categoría padre"
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:43
+#: .\masterdata\models\category_model.py:33
+msgid ""
+"Usually created from the category name. Adjust it only when you need a "
+"custom URL."
+msgstr ""
+"Normalmente se crea a partir del nombre de la categoría. Ajústalo solo si "
+"necesitas una URL personalizada."
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:44
+#: .\masterdata\models\category_model.py:39
+msgid ""
+"Optional. Add short guidance so your team understands when to use this "
+"category."
+msgstr ""
+"Opcional. Agrega una breve guía para que tu equipo entienda cuándo usar "
+"esta categoría."
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:45
+#: .\masterdata\models\category_model.py:48
+msgid ""
+"Optional. Leave empty to keep this category at the root level of the "
+"business catalog."
+msgstr ""
+"Opcional. Déjalo vacío para mantener esta categoría en el nivel raíz del "
+"catálogo del negocio."
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:46
+#: .\masterdata\models\category_model.py:53
+msgid "Lower values appear first when categories are listed."
+msgstr "Los valores más bajos aparecen primero cuando se listan las categorías."
+
+#: .\masterdata\admin\owner\category_model_admin_form.py:47
+#: .\masterdata\models\category_model.py:58
+msgid ""
+"Disable this category when you want to stop offering it without deleting its "
+"history."
+msgstr ""
+"Desactiva esta categoría cuando quieras dejar de ofrecerla sin borrar su "
+"historial."
+
+#: .\masterdata\apps.py:10
+msgid "Reference data"
+msgstr "Datos de referencia"
+
+#: .\masterdata\models\brand_model.py:27
+msgid "Use the brand name your team and customers already recognize."
+msgstr "Usa el nombre de la marca que tu equipo y tus clientes ya reconocen."
+
+#: .\masterdata\models\category_model.py:28
+msgid ""
+"Use the category name your team will recognize while organizing the business "
+"catalog."
+msgstr ""
+"Usa el nombre de la categoría que tu equipo reconocerá al organizar el "
+"catálogo del negocio."
+
+#: .\masterdata\models\category_model.py:125
+msgid "A category cannot be its own parent."
+msgstr "Una categoría no puede ser su propia categoría padre."
+
+#: .\masterdata\models\category_model.py:128
+msgid "Parent category must belong to the same tenant."
+msgstr "La categoría padre debe pertenecer al mismo tenant."
+
+#: .\masterdata\models\category_model.py:138
+msgid "Category hierarchy cannot contain cycles."
+msgstr "La jerarquía de categorías no puede contener ciclos."
 
 #: .\quotation\admin\owner\quote_item_model_inline.py:25
 #: .\quotation\models\quote_item_model.py:91
@@ -980,11 +1181,13 @@ msgstr "Notas del ítem"
 
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:25
 msgid "Choose the catalog product this quote item refers to."
-msgstr "Elige el producto del catálogo al que corresponde este ítem de cotización."
+msgstr ""
+"Elige el producto del catálogo al que corresponde este ítem de cotización."
 
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:26
 msgid "Optional. Choose a specific variant when the quote depends on one."
-msgstr "Opcional. Elige una variante específica cuando la cotización dependa de una."
+msgstr ""
+"Opcional. Elige una variante específica cuando la cotización dependa de una."
 
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:27
 msgid "How many units this quote item should include."
@@ -1008,7 +1211,8 @@ msgstr "Los ítems de cotización requieren un producto seleccionado."
 
 #: .\quotation\admin\owner\quote_model_admin.py:47
 msgid "Fill in who requested the quote and how your team can contact them."
-msgstr "Completa quién solicitó la cotización y cómo puede contactarlo tu equipo."
+msgstr ""
+"Completa quién solicitó la cotización y cómo puede contactarlo tu equipo."
 
 #: .\quotation\admin\owner\quote_model_admin.py:59
 msgid ""
@@ -1024,7 +1228,9 @@ msgstr "Información de referencia sobre el origen de esta cotización."
 
 #: .\quotation\admin\owner\quote_model_admin.py:82
 msgid "Read-only timestamps that describe the quote lifecycle."
-msgstr "Marcas de tiempo de solo lectura que describen el ciclo de vida de la cotización."
+msgstr ""
+"Marcas de tiempo de solo lectura que describen el ciclo de vida de la "
+"cotización."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:29
 #: .\quotation\models\quote_model.py:47
@@ -1088,7 +1294,9 @@ msgstr "Respondida el"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:43
 msgid "Track where this quote currently is in your sales follow-up."
-msgstr "Sigue en qué etapa se encuentra esta cotización dentro de tu seguimiento comercial."
+msgstr ""
+"Sigue en qué etapa se encuentra esta cotización dentro de tu seguimiento "
+"comercial."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:44
 msgid "Optional. Use this when the quote belongs to a business customer."
@@ -1102,7 +1310,8 @@ msgstr "Referencia opcional de identificación fiscal o empresarial."
 #: .\quotation\admin\owner\quote_model_admin_form.py:46
 #: .\quotation\models\quote_model.py:88
 msgid "Private context for your team. Customers do not need to see this text."
-msgstr "Contexto privado para tu equipo. Los clientes no necesitan ver este texto."
+msgstr ""
+"Contexto privado para tu equipo. Los clientes no necesitan ver este texto."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:61
 msgid "Enter the customer name before saving the quote."
@@ -1112,8 +1321,8 @@ msgstr "Ingresa el nombre del cliente antes de guardar la cotización."
 msgid ""
 "Add at least an email address or phone number so your team can follow up."
 msgstr ""
-"Agrega al menos un correo electrónico o un teléfono para que tu equipo "
-"pueda hacer seguimiento."
+"Agrega al menos un correo electrónico o un teléfono para que tu equipo pueda "
+"hacer seguimiento."
 
 #: .\quotation\apps.py:10
 msgid "Quotations"
@@ -1154,11 +1363,15 @@ msgstr "Cotización a la que pertenece este ítem."
 
 #: .\quotation\models\quote_item_model.py:28
 msgid "Optional product reference kept while the catalog product still exists."
-msgstr "Referencia opcional al producto mientras ese producto siga existiendo en el catálogo."
+msgstr ""
+"Referencia opcional al producto mientras ese producto siga existiendo en el "
+"catálogo."
 
 #: .\quotation\models\quote_item_model.py:37
 msgid "Optional variant reference kept while the catalog variant still exists."
-msgstr "Referencia opcional a la variante mientras esa variante siga existiendo en el catálogo."
+msgstr ""
+"Referencia opcional a la variante mientras esa variante siga existiendo en "
+"el catálogo."
 
 #: .\quotation\models\quote_item_model.py:41
 msgid "Product name snapshot"
@@ -1182,7 +1395,8 @@ msgstr "Instantánea de atributos"
 
 #: .\quotation\models\quote_item_model.py:55
 msgid "Variant attributes captured when this quote item was created."
-msgstr "Atributos de la variante capturados cuando se creó este ítem de cotización."
+msgstr ""
+"Atributos de la variante capturados cuando se creó este ítem de cotización."
 
 #: .\quotation\models\quote_item_model.py:62
 msgid "Unit price snapshot"
@@ -1226,15 +1440,20 @@ msgstr "Nombre de la persona que solicita la cotización."
 
 #: .\quotation\models\quote_model.py:61
 msgid "Email address your team can use to follow up on this quote."
-msgstr "Correo electrónico que tu equipo puede usar para dar seguimiento a esta cotización."
+msgstr ""
+"Correo electrónico que tu equipo puede usar para dar seguimiento a esta "
+"cotización."
 
 #: .\quotation\models\quote_model.py:68
 msgid "Phone number your team can use to follow up on this quote."
-msgstr "Teléfono que tu equipo puede usar para dar seguimiento a esta cotización."
+msgstr ""
+"Teléfono que tu equipo puede usar para dar seguimiento a esta cotización."
 
 #: .\quotation\models\quote_model.py:75
 msgid "Optional company name when the quote belongs to a business customer."
-msgstr "Nombre de empresa opcional cuando la cotización corresponde a un cliente empresa."
+msgstr ""
+"Nombre de empresa opcional cuando la cotización corresponde a un cliente "
+"empresa."
 
 #: .\quotation\models\quote_model.py:94
 msgid "When the quote was formally requested."

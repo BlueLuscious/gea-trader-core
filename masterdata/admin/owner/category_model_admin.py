@@ -25,6 +25,13 @@ logger = logging.getLogger(__name__)
 class CategoryModelAdmin(ModelAdmin):
     """ Guided owner admin for tenant-scoped category reference data. """
 
+    class Media:
+        """ Owner admin assets for small layout refinements. """
+
+        css = {
+            "all": ("masterdata/admin/owner/category_model_admin.css",),
+        }
+
     form = CategoryModelAdminForm
     inlines = (CategoryChildModelInline,)
     list_display = ("name", "parent", "sort_order", "is_active", "updated_at")

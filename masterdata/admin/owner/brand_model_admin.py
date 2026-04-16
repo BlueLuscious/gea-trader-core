@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
 from core.adminsites.site_instances import owner_admin_site
 from masterdata.access import BrandAccessPolicy
+from masterdata.admin.owner.brand_model_admin_form import BrandModelAdminForm
 from masterdata.models import BrandModel
 
 if TYPE_CHECKING:
@@ -21,6 +22,14 @@ logger = logging.getLogger(__name__)
 class BrandModelAdmin(ModelAdmin):
     """ Guided owner admin for tenant-scoped brand reference data. """
 
+    class Media:
+        """ Owner admin assets for small layout refinements. """
+
+        css = {
+            "all": ("masterdata/admin/owner/brand_model_admin.css",),
+        }
+
+    form = BrandModelAdminForm
     list_display = ("name", "slug", "is_active", "updated_at")
     list_filter = ("is_active", "created_at", "updated_at")
     search_fields = ("name", "slug")

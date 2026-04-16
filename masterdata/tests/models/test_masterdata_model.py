@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.utils.translation import override
 from core.testing.base import LoggedTestCase
 from masterdata.models import BrandModel, CategoryModel
 from tenancy.models import TenantModel
@@ -65,3 +66,21 @@ class TestMasterdataModel(LoggedTestCase):
 
         with self.assertRaises(ValidationError):
             root.save()
+
+    def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
+        """ Verify masterdata model fields expose user-friendly labels and help texts. """
+        brand_name_field = BrandModel._meta.get_field("name")
+        brand_slug_field = BrandModel._meta.get_field("slug")
+        category_name_field = CategoryModel._meta.get_field("name")
+        category_parent_field = CategoryModel._meta.get_field("parent")
+        category_sort_order_field = CategoryModel._meta.get_field("sort_order")
+
+        with override("en"):
+            self.assertEqual("Brand name", str(brand_name_field.verbose_name))
+            self.assertEqual(
+                "Usually created from the brand name. Adjust it only when you need a custom URL.",
+                str(brand_slug_field.help_text),
+            )
+            self.assertEqual("Category name", str(category_name_field.verbose_name))
+            self.assertEqual("Parent category", str(category_parent_field.verbose_name))
+            self.assertEqual("Display order", str(category_sort_order_field.verbose_name))
