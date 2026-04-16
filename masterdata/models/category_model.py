@@ -65,10 +65,11 @@ class CategoryModel(models.Model):
         """ Validate category relationships before persistence.
 
         Raises:
-            ValidationError: When the parent category belongs to another tenant.
+            ValidationError: When the parent category belongs to another tenant or
+            creates an invalid hierarchy.
         """
         super().clean()
-        self._validate_parent_tenant()
+        self._validate_parent_relationship()
 
     def save(self, *args: object, **kwargs: object) -> None:
         """ Persist the category after validating tenant-safe hierarchy rules.
@@ -78,18 +79,37 @@ class CategoryModel(models.Model):
             **kwargs: Keyword save arguments.
 
         Raises:
-            ValidationError: When the parent category belongs to another tenant.
+            ValidationError: When the parent category belongs to another tenant or
+            creates an invalid hierarchy.
         """
-        self._validate_parent_tenant()
+        self._validate_parent_relationship()
         super().save(*args, **kwargs)
 
-    def _validate_parent_tenant(self) -> None:
-        """ Keep category trees scoped to a single tenant.
+    def _validate_parent_relationship(self) -> None:
+        """ Keep category trees tenant-scoped and cycle-free.
 
         Raises:
-            ValidationError: When the parent category belongs to a different tenant.
+            ValidationError: When the parent category belongs to a different tenant,
+            when a category tries to parent itself, or when the relationship creates
+            a cycle in the hierarchy.
         """
-        if self.parent_id is None or self.tenant_id == self.parent.tenant_id:
+        if self.parent_id is None:
             return
 
-        raise ValidationError({"parent": "Parent category must belong to the same tenant."})
+        if self.pk is not None and self.parent_id == self.pk:
+            raise ValidationError({"parent": "A category cannot be its own parent."})
+
+        if self.tenant_id != self.parent.tenant_id:
+            raise ValidationError({"parent": "Parent category must belong to the same tenant."})
+
+        current_parent: "CategoryModel | None" = self.parent
+        visited_parent_ids: set[int] = set()
+        while current_parent is not None:
+            if current_parent.pk in visited_parent_ids:
+                raise ValidationError({"parent": "Category hierarchy cannot contain cycles."})
+
+            visited_parent_ids.add(current_parent.pk)
+            if self.pk is not None and current_parent.pk == self.pk:
+                raise ValidationError({"parent": "Category hierarchy cannot contain cycles."})
+
+            current_parent = current_parent.parent

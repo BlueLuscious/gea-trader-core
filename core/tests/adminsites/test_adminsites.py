@@ -62,6 +62,8 @@ class TestAdminSites(LoggedSimpleTestCase):
                     "accounts.view_usermodel",
                     "auth.view_group",
                     "catalog.view_productmodel",
+                    "masterdata.view_brandmodel",
+                    "masterdata.view_categorymodel",
                     "quotation.view_quotemodel",
                 },
             },
@@ -74,7 +76,18 @@ class TestAdminSites(LoggedSimpleTestCase):
         navigation = self.owner_admin_site.get_sidebar_navigation(request)
         item_titles = [item["title"] for group in navigation for item in group["items"]]
 
-        self.assertEqual([_("Settings"), _("Users"), _("Groups"), _("Products"), _("Quotes")], item_titles)
+        self.assertEqual(
+            [
+                _("Settings"),
+                _("Users"),
+                _("Groups"),
+                _("Products"),
+                _("Brands"),
+                _("Categories"),
+                _("Quotes"),
+            ],
+            item_titles,
+        )
 
     def test_admin_sites_reject_anonymous_and_inactive_users(self) -> None:
         """ Verify both admin sites reject anonymous or inactive users. """

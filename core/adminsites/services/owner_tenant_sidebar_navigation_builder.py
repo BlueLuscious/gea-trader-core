@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from catalog.access.catalog_access_policy import CatalogAccessPolicy
+from masterdata.access import BrandAccessPolicy, CategoryAccessPolicy
 from quotation.access.quotation_access_policy import QuotationAccessPolicy
 from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
 from tenancy.access.tenant_access_policy import TenantAccessPolicy
@@ -93,6 +94,18 @@ class OwnerTenantSidebarNavigationBuilder:
                         "icon": "inventory_2",
                         "link": reverse("owner_admin:catalog_productmodel_changelist"),
                         "permission": lambda req: CatalogAccessPolicy.can_access_catalog(req),
+                    },
+                    {
+                        "title": _("Brands"),
+                        "icon": "branding_watermark",
+                        "link": reverse("owner_admin:masterdata_brandmodel_changelist"),
+                        "permission": lambda req: BrandAccessPolicy.can_access_brands(req),
+                    },
+                    {
+                        "title": _("Categories"),
+                        "icon": "category",
+                        "link": reverse("owner_admin:masterdata_categorymodel_changelist"),
+                        "permission": lambda req: CategoryAccessPolicy.can_access_categories(req),
                     },
                 ],
             },

@@ -13,6 +13,8 @@ from catalog.models import ProductModel
 from core.adminsites.site_instances import owner_admin_site
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductVariantModel
+from masterdata.admin.owner.brand_model_admin import BrandModelAdmin
+from masterdata.admin.owner.category_model_admin import CategoryModelAdmin
 from masterdata.models import BrandModel, CategoryModel
 from tenancy.models import TenantMembershipModel
 from tenancy.models import TenantModel
@@ -67,13 +69,15 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_owner_admin_registers_curated_models(self) -> None:
-        """ Verify the owner admin site currently registers the curated user, product, and quote models. """
+        """ Verify the owner admin site currently registers the curated user, catalog, masterdata, and quote models. """
         self.assertIn(UserModel, owner_admin_site._registry)
         self.assertIn(ProductModel, owner_admin_site._registry)
+        self.assertIn(BrandModel, owner_admin_site._registry)
+        self.assertIn(CategoryModel, owner_admin_site._registry)
         self.assertIn(QuoteModel, owner_admin_site._registry)
 
     def test_owner_admin_sidebar_navigation_includes_registered_links(self) -> None:
-        """ Verify the owner sidebar exposes the registered user, product, and quote changelist links. """
+        """ Verify the owner sidebar exposes the registered user, catalog, masterdata, and quote changelist links. """
         request = self.request_factory.get("/owner-admin/")
         request.user = self.owner_user
         navigation = owner_admin_site.get_sidebar_navigation(request)
@@ -86,6 +90,8 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
 
         self.assertIn("/owner-admin/accounts/usermodel/", item_links)
         self.assertIn("/owner-admin/catalog/productmodel/", item_links)
+        self.assertIn("/owner-admin/masterdata/brandmodel/", item_links)
+        self.assertIn("/owner-admin/masterdata/categorymodel/", item_links)
         self.assertIn("/owner-admin/quotation/quotemodel/", item_links)
 
     def test_owner_users_flow_requires_expected_django_permissions(self) -> None:
@@ -212,6 +218,37 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         self.assertFalse(product_admin.has_delete_permission(request))
         self.assertFalse(variant_inline.can_delete)
         self.assertTrue(image_inline.can_delete)
+
+    def test_owner_masterdata_flows_require_expected_django_permissions(self) -> None:
+        """ Verify the owner masterdata flows are backed by the expected Django model permissions. """
+        expected_permissions = {
+            "add_brandmodel",
+            "change_brandmodel",
+            "view_brandmodel",
+            "add_categorymodel",
+            "change_categorymodel",
+            "view_categorymodel",
+        }
+
+        found_permissions = set(
+            Permission.objects.filter(
+                codename__in=expected_permissions,
+                content_type__app_label="masterdata",
+            ).values_list("codename", flat=True)
+        )
+
+        self.assertEqual(expected_permissions, found_permissions)
+
+    def test_owner_masterdata_admin_prefers_guided_delete_policy(self) -> None:
+        """ Verify the owner masterdata flows disable hard delete where active state already exists. """
+        brand_admin = BrandModelAdmin(BrandModel, owner_admin_site)
+        category_admin = CategoryModelAdmin(CategoryModel, owner_admin_site)
+
+        request = self.request_factory.get("/owner-admin/masterdata/")
+        request.user = self.owner_user
+
+        self.assertFalse(brand_admin.has_delete_permission(request))
+        self.assertFalse(category_admin.has_delete_permission(request))
 
     def test_owner_product_admin_uses_tabs_for_sections_and_inline_workflows(self) -> None:
         """ Verify the owner product admin uses Unfold tabs for a more guided layout. """

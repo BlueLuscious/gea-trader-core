@@ -45,3 +45,23 @@ class TestMasterdataModel(LoggedTestCase):
 
         with self.assertRaises(ValidationError):
             child.save()
+
+    def test_category_cannot_parent_itself(self) -> None:
+        """ Reject category rows that try to point to themselves as parent. """
+        tenant = self._create_tenant("self-parent-masterdata")
+        category = CategoryModel.objects.create(tenant=tenant, name="Industrial", slug="industrial")
+        category.parent = category
+
+        with self.assertRaises(ValidationError):
+            category.save()
+
+    def test_category_hierarchy_cannot_contain_cycles(self) -> None:
+        """ Reject category trees that try to loop back into one ancestor. """
+        tenant = self._create_tenant("cycle-masterdata")
+        root = CategoryModel.objects.create(tenant=tenant, name="Root", slug="root")
+        child = CategoryModel.objects.create(tenant=tenant, name="Child", slug="child", parent=root)
+        grandchild = CategoryModel.objects.create(tenant=tenant, name="Grandchild", slug="grandchild", parent=child)
+        root.parent = grandchild
+
+        with self.assertRaises(ValidationError):
+            root.save()
