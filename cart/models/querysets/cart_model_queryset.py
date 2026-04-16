@@ -5,10 +5,22 @@ from cart.choices import CartStatus
 if TYPE_CHECKING:
     from accounts.models.user_model import UserModel
     from cart.models.cart_model import CartModel
+    from tenancy.models import TenantModel
 
 
 class CartModelQuerySet(models.QuerySet["CartModel"]):
     """ QuerySet for reusable cart filters. """
+
+    def for_tenant(self, tenant: "TenantModel") -> "CartModelQuerySet":
+        """ Return carts that belong to one tenant.
+
+        Args:
+            tenant: Tenant instance or compatible lookup value.
+
+        Returns:
+            CartModelQuerySet: Tenant carts queryset.
+        """
+        return self.filter(tenant=tenant)
 
     def active(self) -> "CartModelQuerySet":
         """ Return active carts.

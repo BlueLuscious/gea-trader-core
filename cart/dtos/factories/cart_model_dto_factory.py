@@ -18,6 +18,7 @@ class CartModelDTOFactory:
         """
         return CartModelDTO(
             id=instance.id,
+            tenant_id=str(instance.tenant_id),
             user_id=instance.user_id,
             session_key=instance.session_key,
             status=instance.status,

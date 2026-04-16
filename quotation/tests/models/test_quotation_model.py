@@ -23,8 +23,8 @@ class TestQuotationModel(LoggedTestCase):
 
     def test_quote_and_snapshot_item_relationships(self) -> None:
         """ Verify quote and quote item relationships persist correctly. """
-        cart = CartModel.objects.create(session_key='session-quote')
         tenant = self._create_tenant("quotation-model")
+        cart = CartModel.objects.create(tenant=tenant, session_key='session-quote')
         product = ProductModel.objects.create(tenant=tenant, name='Bomba', slug='bomba')
         variant = ProductVariantModel.objects.create(product=product, sku='BOM-001')
         quote = QuoteModel.objects.create(tenant=tenant, cart=cart, customer_email='cliente@example.com')

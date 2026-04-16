@@ -4,6 +4,7 @@ from cart.models.querysets.cart_item_model_queryset import CartItemModelQuerySet
 
 if TYPE_CHECKING:
     from cart.models import CartItemModel, CartModel
+    from tenancy.models import TenantModel
 
 
 class CartItemModelManager(models.Manager["CartItemModel"]):
@@ -24,6 +25,17 @@ class CartItemModelManager(models.Manager["CartItemModel"]):
             CartItemModelQuerySet: Queryset with product and variant loaded.
         """
         return self.get_queryset().with_catalog()
+
+    def for_tenant(self, tenant: "TenantModel") -> "CartItemModelQuerySet":
+        """ Return items that belong to carts from one tenant.
+
+        Args:
+            tenant: Tenant instance or compatible lookup value.
+
+        Returns:
+            CartItemModelQuerySet: Tenant cart items queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
 
     def for_cart(self, cart: "CartModel") -> "CartItemModelQuerySet":
         """ Return items for a cart.

@@ -11,6 +11,7 @@ class TestCartDTO(LoggedSimpleTestCase):
         """ Verify CartModelDTO behaves as an immutable dataclass. """
         dto = CartModelDTO(
             id=1,
+            tenant_id='tenant-1',
             user_id=None,
             session_key='session-1',
             status='active',
@@ -21,6 +22,8 @@ class TestCartDTO(LoggedSimpleTestCase):
 
         with self.assertRaises(FrozenInstanceError):
             dto.status = 'converted'
+
+        self.assertEqual(dto.tenant_id, 'tenant-1')
 
     def test_cart_item_model_dto_stores_quantity_and_notes(self) -> None:
         """ Verify CartItemModelDTO keeps quantity and notes values. """

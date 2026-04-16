@@ -5,6 +5,7 @@ from cart.models.querysets.cart_model_queryset import CartModelQuerySet
 if TYPE_CHECKING:
     from accounts.models.user_model import UserModel
     from cart.models.cart_model import CartModel
+    from tenancy.models import TenantModel
 
 
 class CartModelManager(models.Manager["CartModel"]):
@@ -25,6 +26,17 @@ class CartModelManager(models.Manager["CartModel"]):
             CartModelQuerySet: Active carts queryset.
         """
         return self.get_queryset().active()
+
+    def for_tenant(self, tenant: "TenantModel") -> "CartModelQuerySet":
+        """ Return carts for one tenant.
+
+        Args:
+            tenant: Tenant instance or compatible lookup value.
+
+        Returns:
+            CartModelQuerySet: Tenant carts queryset.
+        """
+        return self.get_queryset().for_tenant(tenant)
 
     def converted(self) -> "CartModelQuerySet":
         """ Return converted carts.

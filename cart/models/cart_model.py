@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from uuid import UUID
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
@@ -7,11 +8,17 @@ from cart.models.managers.cart_model_manager import CartModelManager
 
 if TYPE_CHECKING:
     from accounts.models.user_model import UserModel
+    from tenancy.models import TenantModel
 
 
 class CartModel(models.Model):
     """ Persisted cart used as backing store for the quotation basket. """
 
+    tenant: "TenantModel" = models.ForeignKey(
+        "tenancy.TenantModel",
+        on_delete=models.CASCADE,
+        related_name="carts",
+    )
     user: "UserModel | None" = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -28,6 +35,7 @@ class CartModel(models.Model):
     objects: CartModelManager = CartModelManager()
     
     id: int
+    tenant_id: UUID
     user_id: int | None
 
     class Meta:

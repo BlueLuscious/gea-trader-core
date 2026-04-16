@@ -7,6 +7,7 @@ class CartModelDTO:
     """ Public DTO for cart data. """
 
     id: int
+    tenant_id: str
     user_id: int | None
     session_key: str
     status: str
