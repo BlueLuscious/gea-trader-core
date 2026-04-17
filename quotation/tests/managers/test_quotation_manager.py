@@ -1,7 +1,7 @@
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductModel, ProductVariantModel
 from tenancy.models import TenantModel
-from quotation.choices import QuoteStatus
+from quotation.choices import QuoteWorkflowStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
@@ -19,17 +19,39 @@ class TestQuotationManager(LoggedTestCase):
         """
         return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
-    def test_quote_manager_filters_statuses(self) -> None:
-        """ Verify quote manager helpers expose lifecycle subsets. """
+    def test_quote_manager_filters_workflow_statuses(self) -> None:
+        """ Verify quote manager helpers expose internal workflow subsets. """
         tenant = self._create_tenant("quotation-manager-status")
-        draft = QuoteModel.objects.create(tenant=tenant, customer_email='draft@example.com', status=QuoteStatus.DRAFT)
-        requested = QuoteModel.objects.create(tenant=tenant, customer_email='requested@example.com', status=QuoteStatus.REQUESTED)
-        active_sent = QuoteModel.objects.create(tenant=tenant, customer_email='sent@example.com', status=QuoteStatus.SENT)
-        QuoteModel.objects.create(tenant=tenant, customer_email='expired@example.com', status=QuoteStatus.EXPIRED)
+        draft = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='draft@example.com',
+            workflow_status=QuoteWorkflowStatus.DRAFT,
+        )
+        requested = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='requested@example.com',
+            workflow_status=QuoteWorkflowStatus.REQUESTED,
+        )
+        in_progress = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='progress@example.com',
+            workflow_status=QuoteWorkflowStatus.IN_PROGRESS,
+        )
+        QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='completed@example.com',
+            workflow_status=QuoteWorkflowStatus.COMPLETED,
+        )
+        QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='cancelled@example.com',
+            workflow_status=QuoteWorkflowStatus.CANCELLED,
+        )
 
         self.assertQuerySetEqual(QuoteModel.objects.drafts(), [draft], transform=lambda instance: instance)
         self.assertQuerySetEqual(QuoteModel.objects.requested(), [requested], transform=lambda instance: instance)
-        self.assertEqual(set(QuoteModel.objects.active()), {draft, requested, active_sent})
+        self.assertQuerySetEqual(QuoteModel.objects.in_progress(), [in_progress], transform=lambda instance: instance)
+        self.assertEqual(set(QuoteModel.objects.active()), {draft, requested, in_progress})
 
     def test_quote_manager_filters_by_tenant(self) -> None:
         """ Verify quote manager exposes tenant-scoped access to quote roots. """

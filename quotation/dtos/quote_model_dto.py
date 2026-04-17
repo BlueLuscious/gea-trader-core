@@ -10,7 +10,7 @@ class QuoteModelDTO:
     tenant_id: str
     cart_id: int | None
     user_id: int | None
-    status: str
+    workflow_status: str
     customer_name: str
     customer_email: str
     customer_phone: str
@@ -18,7 +18,6 @@ class QuoteModelDTO:
     tax_id: str
     notes: str
     requested_at: datetime | None
-    sent_at: datetime | None
-    answered_at: datetime | None
+    resolved_at: datetime | None
     created_at: datetime
     updated_at: datetime

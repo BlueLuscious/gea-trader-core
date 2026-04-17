@@ -54,6 +54,7 @@ Current status of the other app folders:
 - Masterdata app: `docs/masterdata/masterdata.md`
 - Cart app: `docs/cart/cart.md`
 - Quotation app: `docs/quotation/quotation.md`
+- Quotation lifecycle design: `docs/quotation/lifecycle.md`
 - Tenancy app: `docs/tenancy/tenancy.md`
 - Tenancy runtime behavior: `docs/tenancy/runtime.md`
 - Tenancy access policies: `docs/tenancy/access.md`
@@ -82,6 +83,7 @@ To avoid repeating the same explanation in multiple places:
 - `docs/masterdata/masterdata.md` owns the `masterdata/` domain structure
 - `docs/cart/cart.md` owns the `cart/` runtime domain structure
 - `docs/quotation/quotation.md` owns the `quotation/` domain structure
+- `docs/quotation/lifecycle.md` owns the future quote lifecycle redesign direction
 - `docs/tenancy/tenancy.md` owns the `tenancy/` domain structure and persistence-oriented app boundary
 - `docs/tenancy/runtime.md` owns request-time tenant runtime behavior and switching
 - `docs/tenancy/access.md` owns tenant access-policy guidance

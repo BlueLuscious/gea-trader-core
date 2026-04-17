@@ -45,6 +45,14 @@ class QuoteModelManager(models.Manager["QuoteModel"]):
         """
         return self.get_queryset().requested()
 
+    def in_progress(self) -> "QuoteModelQuerySet":
+        """ Return in-progress quotes.
+
+        Returns:
+            QuoteModelQuerySet: In-progress quotes queryset.
+        """
+        return self.get_queryset().in_progress()
+
     def active(self) -> "QuoteModelQuerySet":
         """ Return active quotes.
 

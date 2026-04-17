@@ -23,9 +23,9 @@ class QuoteItemModelInlineForm(forms.ModelForm):
         }
         help_texts = {
             "product": _("Choose the catalog product this quote item refers to."),
-            "variant": _("Optional. Choose a specific variant when the quote depends on one."),
+            "variant": _("Optional. Choose a specific variant when needed."),
             "quantity": _("How many units this quote item should include."),
-            "notes": _("Optional private note for this specific quote item."),
+            "notes": _("Optional private note for this item."),
         }
 
     def __init__(self, *args, **kwargs) -> None:

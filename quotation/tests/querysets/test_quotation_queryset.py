@@ -1,7 +1,7 @@
 from core.testing.base import LoggedTestCase
 from catalog.models import ProductModel, ProductVariantModel
 from tenancy.models import TenantModel
-from quotation.choices import QuoteStatus
+from quotation.choices import QuoteWorkflowStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
@@ -20,15 +20,37 @@ class TestQuotationQuerySet(LoggedTestCase):
         return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_quote_queryset_filters_active_business_flow(self) -> None:
-        """ Verify QuoteModelQuerySet.active excludes rejected and expired rows. """
+        """ Verify QuoteModelQuerySet.active excludes terminal workflow rows. """
         tenant = self._create_tenant("quotation-active")
-        draft = QuoteModel.objects.create(tenant=tenant, customer_email='draft@example.com', status=QuoteStatus.DRAFT)
-        requested = QuoteModel.objects.create(tenant=tenant, customer_email='requested@example.com', status=QuoteStatus.REQUESTED)
-        QuoteModel.objects.create(tenant=tenant, customer_email='rejected@example.com', status=QuoteStatus.REJECTED)
+        draft = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='draft@example.com',
+            workflow_status=QuoteWorkflowStatus.DRAFT,
+        )
+        requested = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='requested@example.com',
+            workflow_status=QuoteWorkflowStatus.REQUESTED,
+        )
+        in_progress = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='progress@example.com',
+            workflow_status=QuoteWorkflowStatus.IN_PROGRESS,
+        )
+        QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='completed@example.com',
+            workflow_status=QuoteWorkflowStatus.COMPLETED,
+        )
+        QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='cancelled@example.com',
+            workflow_status=QuoteWorkflowStatus.CANCELLED,
+        )
 
         queryset = QuoteModel.objects.get_queryset().active()
 
-        self.assertEqual(set(queryset), {draft, requested})
+        self.assertEqual(set(queryset), {draft, requested, in_progress})
 
     def test_quote_queryset_filters_by_tenant(self) -> None:
         """ Verify QuoteModelQuerySet.for_tenant returns only quotes owned by the chosen tenant. """

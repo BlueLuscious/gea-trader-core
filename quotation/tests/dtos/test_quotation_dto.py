@@ -15,7 +15,7 @@ class TestQuotationDTO(LoggedSimpleTestCase):
             tenant_id="tenant-1",
             cart_id=None,
             user_id=None,
-            status='draft',
+            workflow_status='draft',
             customer_name='',
             customer_email='cliente@example.com',
             customer_phone='',
@@ -23,14 +23,13 @@ class TestQuotationDTO(LoggedSimpleTestCase):
             tax_id='',
             notes='',
             requested_at=None,
-            sent_at=None,
-            answered_at=None,
+            resolved_at=None,
             created_at=timezone.now(),
             updated_at=timezone.now()
         )
 
         with self.assertRaises(FrozenInstanceError):
-            dto.status = 'requested'
+            dto.workflow_status = 'requested'
 
     def test_quote_item_model_dto_keeps_snapshot_values(self) -> None:
         """ Verify QuoteItemModelDTO preserves snapshot and pricing values. """

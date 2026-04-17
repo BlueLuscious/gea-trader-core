@@ -1,15 +1,14 @@
-""" Quote lifecycle choices. """
+""" Quote workflow choices. """
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class QuoteStatus(models.TextChoices):
-    """ Supported quote lifecycle states. """
+class QuoteWorkflowStatus(models.TextChoices):
+    """ Supported internal quote workflow states. """
 
     DRAFT = "draft", _("Draft")
     REQUESTED = "requested", _("Requested")
-    SENT = "sent", _("Sent")
-    APPROVED = "approved", _("Approved")
-    REJECTED = "rejected", _("Rejected")
-    EXPIRED = "expired", _("Expired")
+    IN_PROGRESS = "in_progress", _("In progress")
+    COMPLETED = "completed", _("Completed")
+    CANCELLED = "cancelled", _("Cancelled")

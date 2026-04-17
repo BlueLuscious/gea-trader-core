@@ -31,8 +31,8 @@ class QuoteModelAdmin(ModelAdmin):
         }
 
     form = QuoteModelAdminForm
-    list_display = ("id", "customer_name", "customer_email", "status", "requested_at", "updated_at")
-    list_filter = ("status", "requested_at", "created_at", "updated_at")
+    list_display = ("id", "customer_name", "customer_email", "workflow_status", "requested_at", "updated_at")
+    list_filter = ("workflow_status", "requested_at", "created_at", "updated_at")
     search_fields = ("=id", "customer_name", "customer_email", "company_name", "tax_id")
     ordering = ("-created_at",)
     list_select_related = ("cart", "user")
@@ -44,7 +44,7 @@ class QuoteModelAdmin(ModelAdmin):
             _("Customer"),
             {
                 "classes": ("tab",),
-                "description": _("Fill in who requested the quote and how your team can contact them."),
+                "description": _("Fill in who requested the quote and how to contact them."),
                 "fields": (
                     ("customer_name", "customer_email"),
                     ("customer_phone", "company_name"),
@@ -56,9 +56,9 @@ class QuoteModelAdmin(ModelAdmin):
             _("Quote details"),
             {
                 "classes": ("tab",),
-                "description": _("Start the quote with a status and any internal context you need for follow-up."),
+                "description": _("Start the quote with one workflow stage and any notes needed for follow-up."),
                 "fields": (
-                    "status",
+                    "workflow_status",
                     "notes",
                 ),
             },
@@ -81,9 +81,8 @@ class QuoteModelAdmin(ModelAdmin):
                 "classes": ("tab",),
                 "description": _("Read-only timestamps that describe the quote lifecycle."),
                 "fields": (
-                    ("requested_at", "sent_at"),
-                    ("answered_at", "created_at"),
-                    "updated_at",
+                    ("requested_at", "resolved_at"),
+                    ("created_at", "updated_at"),
                 ),
             },
         ),
@@ -208,7 +207,7 @@ class QuoteModelAdmin(ModelAdmin):
         if obj is None:
             return ()
 
-        return ("cart", "user", "requested_at", "sent_at", "answered_at", "created_at", "updated_at")
+        return ("cart", "user", "requested_at", "resolved_at", "created_at", "updated_at")
 
     def get_fieldsets(self, request: HttpRequest, obj: QuoteModel | None = None) -> tuple[tuple[str, dict[str, object]], ...]:
         """ Return a simpler add layout and a richer read-only layout after creation.

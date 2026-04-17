@@ -140,7 +140,7 @@ Check:
 ### Quotation Domain
 
 - persisted quote and quote-item snapshot models
-- quote status choice enum
+- quote workflow status choice enum
 - typed managers and querysets
 - tenant-owned quote root with tenant-aware quote and quote-item query helpers
 - quotation-specific access policy for owner-managed quotation flows

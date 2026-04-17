@@ -21,7 +21,7 @@ class QuoteModelDTOFactory:
             tenant_id=str(instance.tenant_id),
             cart_id=instance.cart_id,
             user_id=instance.user_id,
-            status=instance.status,
+            workflow_status=instance.workflow_status,
             customer_name=instance.customer_name,
             customer_email=instance.customer_email,
             customer_phone=instance.customer_phone,
@@ -29,8 +29,7 @@ class QuoteModelDTOFactory:
             tax_id=instance.tax_id,
             notes=instance.notes,
             requested_at=instance.requested_at,
-            sent_at=instance.sent_at,
-            answered_at=instance.answered_at,
+            resolved_at=instance.resolved_at,
             created_at=instance.created_at,
             updated_at=instance.updated_at,
         )

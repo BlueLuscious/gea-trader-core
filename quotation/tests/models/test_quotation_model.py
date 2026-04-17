@@ -5,6 +5,7 @@ from core.testing.base import LoggedTestCase
 from cart.models import CartModel
 from catalog.models import ProductModel, ProductVariantModel
 from tenancy.models import TenantModel
+from quotation.choices import QuoteWorkflowStatus
 from quotation.models import QuoteItemModel, QuoteModel
 
 
@@ -66,13 +67,99 @@ class TestQuotationModel(LoggedTestCase):
                 customer_email="cliente@example.com",
             )
 
+    def test_quote_workflow_timestamps_are_derived_from_internal_progress(self) -> None:
+        """ Verify requested and resolved timestamps follow the internal workflow status. """
+        tenant = self._create_tenant("quotation-workflow-timestamps")
+        draft_quote = QuoteModel.objects.create(tenant=tenant, customer_email="draft@example.com")
+        requested_quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="requested@example.com",
+            workflow_status=QuoteWorkflowStatus.REQUESTED,
+        )
+        in_progress_quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="progress@example.com",
+            workflow_status=QuoteWorkflowStatus.IN_PROGRESS,
+        )
+        completed_quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="completed@example.com",
+            workflow_status=QuoteWorkflowStatus.COMPLETED,
+        )
+        cancelled_quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="cancelled@example.com",
+            workflow_status=QuoteWorkflowStatus.CANCELLED,
+        )
+
+        self.assertIsNone(draft_quote.requested_at)
+        self.assertIsNone(draft_quote.resolved_at)
+        self.assertIsNotNone(requested_quote.requested_at)
+        self.assertIsNone(requested_quote.resolved_at)
+        self.assertIsNotNone(in_progress_quote.requested_at)
+        self.assertIsNone(in_progress_quote.resolved_at)
+        self.assertIsNotNone(completed_quote.requested_at)
+        self.assertIsNotNone(completed_quote.resolved_at)
+        self.assertIsNotNone(cancelled_quote.requested_at)
+        self.assertIsNotNone(cancelled_quote.resolved_at)
+
+    def test_quote_workflow_timestamps_are_first_write_only(self) -> None:
+        """ Verify derived workflow timestamps stay stable after later updates. """
+        tenant = self._create_tenant("quotation-workflow-first-write")
+        quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="requested@example.com",
+            workflow_status=QuoteWorkflowStatus.REQUESTED,
+        )
+        first_requested_at = quote.requested_at
+
+        quote.workflow_status = QuoteWorkflowStatus.COMPLETED
+        quote.save()
+        first_resolved_at = quote.resolved_at
+
+        quote.notes = "Updated after closure"
+        quote.save()
+        quote.refresh_from_db()
+
+        self.assertEqual(first_requested_at, quote.requested_at)
+        self.assertEqual(first_resolved_at, quote.resolved_at)
+
+    def test_quote_rejects_backward_workflow_transitions(self) -> None:
+        """ Verify workflow transitions cannot move backward once the quote progresses. """
+        tenant = self._create_tenant("quotation-workflow-backward")
+        quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="progress@example.com",
+            workflow_status=QuoteWorkflowStatus.IN_PROGRESS,
+        )
+
+        quote.workflow_status = QuoteWorkflowStatus.REQUESTED
+
+        with self.assertRaises(ValidationError):
+            quote.save()
+
+    def test_quote_rejects_terminal_workflow_switches(self) -> None:
+        """ Verify terminal workflow states cannot switch once the quote is resolved internally. """
+        tenant = self._create_tenant("quotation-workflow-terminal")
+        quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email="completed@example.com",
+            workflow_status=QuoteWorkflowStatus.COMPLETED,
+        )
+
+        quote.workflow_status = QuoteWorkflowStatus.CANCELLED
+
+        with self.assertRaises(ValidationError):
+            quote.save()
+
     def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
         """ Verify quotation model fields expose user-friendly labels and help texts. """
         quote_field_expectations = {
             "tenant": ("Business", "Business that owns this quote and the follow-up around it."),
             "user": ("Customer account", "Optional customer account related to this quote."),
-            "status": ("Quote status", "Current stage of this quote in your sales follow-up."),
-            "notes": ("Internal notes", "Private context for your team. Customers do not need to see this text."),
+            "workflow_status": ("Workflow status", "Current internal workflow stage of this quote."),
+            "notes": ("Internal notes", "Private notes not intended for customers."),
+            "resolved_at": ("Resolved at", "When the internal workflow for this quote reached a terminal resolution."),
         }
         item_field_expectations = {
             "quote": ("Quote", "Quote this line item belongs to."),

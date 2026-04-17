@@ -21,12 +21,17 @@ class TestQuotationDTOFactory(LoggedTestCase):
     def test_quote_model_dto_factory_build_maps_fields(self) -> None:
         """ Verify QuoteModelDTOFactory.build maps quote fields. """
         tenant = self._create_tenant("quotation-dto-factory")
-        quote = QuoteModel.objects.create(tenant=tenant, customer_email='cliente@example.com', company_name='GEA')
+        quote = QuoteModel.objects.create(
+            tenant=tenant,
+            customer_email='cliente@example.com',
+            company_name='GEA',
+        )
 
         dto = QuoteModelDTOFactory.build(quote)
 
         self.assertEqual(dto.id, quote.id)
         self.assertEqual(dto.tenant_id, str(tenant.pk))
+        self.assertEqual(dto.workflow_status, quote.workflow_status)
         self.assertEqual(dto.customer_email, 'cliente@example.com')
         self.assertEqual(dto.company_name, 'GEA')
 

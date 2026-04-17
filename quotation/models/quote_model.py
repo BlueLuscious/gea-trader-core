@@ -3,8 +3,9 @@ from uuid import UUID
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from quotation.choices import QuoteStatus
+from quotation.choices import QuoteWorkflowStatus
 from quotation.models.managers.quote_model_manager import QuoteModelManager
 
 if TYPE_CHECKING:
@@ -41,12 +42,12 @@ class QuoteModel(models.Model):
         verbose_name=_("Customer account"),
         help_text=_("Optional customer account related to this quote."),
     )
-    status = models.CharField(
+    workflow_status = models.CharField(
         max_length=16,
-        choices=QuoteStatus.choices,
-        default=QuoteStatus.DRAFT,
-        verbose_name=_("Quote status"),
-        help_text=_("Current stage of this quote in your sales follow-up."),
+        choices=QuoteWorkflowStatus.choices,
+        default=QuoteWorkflowStatus.DRAFT,
+        verbose_name=_("Workflow status"),
+        help_text=_("Current internal workflow stage of this quote."),
     )
     customer_name = models.CharField(
         max_length=255,
@@ -59,14 +60,14 @@ class QuoteModel(models.Model):
         blank=True,
         default="",
         verbose_name=_("Customer email"),
-        help_text=_("Email address your team can use to follow up on this quote."),
+        help_text=_("Email address used to follow up on this quote."),
     )
     customer_phone = models.CharField(
         max_length=64,
         blank=True,
         default="",
         verbose_name=_("Customer phone"),
-        help_text=_("Phone number your team can use to follow up on this quote."),
+        help_text=_("Phone number used to follow up on this quote."),
     )
     company_name = models.CharField(
         max_length=255,
@@ -86,7 +87,7 @@ class QuoteModel(models.Model):
         blank=True,
         default="",
         verbose_name=_("Internal notes"),
-        help_text=_("Private context for your team. Customers do not need to see this text."),
+        help_text=_("Private notes not intended for customers."),
     )
     requested_at = models.DateTimeField(
         null=True,
@@ -94,17 +95,11 @@ class QuoteModel(models.Model):
         verbose_name=_("Requested at"),
         help_text=_("When the quote was formally requested."),
     )
-    sent_at = models.DateTimeField(
+    resolved_at = models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name=_("Sent at"),
-        help_text=_("When the quote was sent back to the customer."),
-    )
-    answered_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name=_("Answered at"),
-        help_text=_("When the customer answered this quote."),
+        verbose_name=_("Resolved at"),
+        help_text=_("When the internal workflow for this quote reached a terminal resolution."),
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -141,11 +136,11 @@ class QuoteModel(models.Model):
         """ Validate optional source cart ownership before persistence.
 
         Raises:
-            ValidationError: When the selected source cart belongs to another
-            tenant.
+            ValidationError: When the selected source cart belongs to another tenant.
         """
         super().clean()
         self._validate_source_cart_scope()
+        self._validate_workflow_transition()
 
     def save(self, *args: object, **kwargs: object) -> None:
         """ Persist the quote after validating source cart ownership.
@@ -155,21 +150,83 @@ class QuoteModel(models.Model):
             **kwargs: Keyword save arguments.
 
         Raises:
-            ValidationError: When the selected source cart belongs to another
-            tenant.
+            ValidationError: When the selected source cart belongs to another tenant.
         """
         self._validate_source_cart_scope()
+        self._validate_workflow_transition()
+        self._apply_workflow_timestamps()
         super().save(*args, **kwargs)
 
     def _validate_source_cart_scope(self) -> None:
         """ Keep cart-originated quotes inside one tenant boundary.
 
         Raises:
-            ValidationError: When the selected source cart belongs to another
-            tenant.
+            ValidationError: When the selected source cart belongs to another tenant.
         """
         if self.cart_id is None:
             return
 
         if self.cart.tenant_id != self.tenant_id:
             raise ValidationError({"cart": _("Source cart must belong to the same business as the quote.")})
+
+    def _get_previous_workflow_status(self) -> str | None:
+        """ Return the previously persisted workflow status when the quote exists.
+
+        Returns:
+            str | None: Persisted workflow status or ``None`` for new quotes.
+        """
+        if self.pk is None:
+            return None
+
+        return type(self).objects.filter(pk=self.pk).values_list("workflow_status", flat=True).first()
+
+    def _validate_workflow_transition(self) -> None:
+        """ Keep workflow transitions monotonic through the internal quote flow.
+
+        Raises:
+            ValidationError: When one workflow transition moves backward.
+        """
+        previous_status = self._get_previous_workflow_status()
+        if previous_status is None:
+            return
+
+        workflow_order = self._get_workflow_order()
+        previous_order = workflow_order[previous_status]
+        current_order = workflow_order[self.workflow_status]
+
+        terminal_statuses = {QuoteWorkflowStatus.COMPLETED, QuoteWorkflowStatus.CANCELLED}
+        if previous_status in terminal_statuses and self.workflow_status != previous_status:
+            raise ValidationError(
+                {"workflow_status": _("Workflow status cannot change after the quote reaches a terminal resolution.")}
+            )
+
+        if current_order < previous_order:
+            raise ValidationError(
+                {"workflow_status": _("Workflow status cannot move backward once the quote progresses.")}
+            )
+
+    def _apply_workflow_timestamps(self) -> None:
+        """ Derive internal workflow timestamps from the current workflow status. """
+        workflow_order = self._get_workflow_order()
+        now = timezone.now()
+        current_order = workflow_order[self.workflow_status]
+
+        if current_order >= workflow_order[QuoteWorkflowStatus.REQUESTED] and self.requested_at is None:
+            self.requested_at = now
+
+        if self.workflow_status in {QuoteWorkflowStatus.COMPLETED, QuoteWorkflowStatus.CANCELLED} and self.resolved_at is None:
+            self.resolved_at = now
+
+    def _get_workflow_order(self) -> dict[str, int]:
+        """ Return the current internal workflow progression order.
+
+        Returns:
+            dict[str, int]: Rank per workflow status.
+        """
+        return {
+            QuoteWorkflowStatus.DRAFT: 0,
+            QuoteWorkflowStatus.REQUESTED: 1,
+            QuoteWorkflowStatus.IN_PROGRESS: 2,
+            QuoteWorkflowStatus.COMPLETED: 3,
+            QuoteWorkflowStatus.CANCELLED: 3,
+        }

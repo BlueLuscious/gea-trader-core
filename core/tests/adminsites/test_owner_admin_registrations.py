@@ -388,7 +388,7 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         """ Verify manual owner quotes require a name plus at least one contact method. """
         form = QuoteModelAdminForm(
             data={
-                "status": "draft",
+                "workflow_status": "draft",
                 "customer_name": "",
                 "customer_email": "",
                 "customer_phone": "",
@@ -407,7 +407,7 @@ class TestOwnerAdminRegistrations(LoggedTestCase):
         """ Verify manual owner quotes remain valid with a customer name and one contact channel. """
         form = QuoteModelAdminForm(
             data={
-                "status": "draft",
+                "workflow_status": "draft",
                 "customer_name": "Lucio",
                 "customer_email": "lucio@example.com",
                 "customer_phone": "",

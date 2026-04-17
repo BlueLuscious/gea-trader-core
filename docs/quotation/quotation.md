@@ -51,10 +51,10 @@ Current fields cover:
 
 - mandatory business ownership through `tenant`
 - optional origin relations to cart and user
-- lifecycle status
+- internal workflow status
 - customer and company information
 - internal notes
-- quote lifecycle timestamps
+- workflow timestamps
 - audit timestamps
 
 Related files:
@@ -96,9 +96,9 @@ The app keeps quote lifecycle choices outside the model.
 
 Current choice enum:
 
-- `QuoteStatus`
+- `QuoteWorkflowStatus`
 
-This keeps status values reusable across models, admins, and future services.
+This keeps workflow values reusable across models, admins, and future services.
 
 The choice labels are also translation-ready for owner-facing admin flows.
 
@@ -209,25 +209,32 @@ Current translation-ready pieces:
 
 - `QuotationConfig.verbose_name`
 - quote model and quote item model labels and help texts
-- quote status choice labels
+- quote workflow status choice labels
 - owner quote admin fieldset titles and descriptions
 - owner quote form labels, help texts, and validation errors
 - owner quote item inline labels, help texts, and validation errors
 
 ## Status and Timestamp Direction
 
-The current owner admin allows the status field to be edited directly while lifecycle timestamps remain read-only.
+The current owner admin allows the workflow field to be edited directly while workflow timestamps remain read-only.
 
 Current behavior:
 
-- `status` is owner-editable
-- `requested_at`, `sent_at`, and `answered_at` are read-only
-- those timestamps are not yet auto-derived from status transitions
+- `workflow_status` is owner-editable
+- `requested_at` and `resolved_at` are read-only
+- `requested_at` is derived the first time the workflow reaches `requested` or beyond
+- `resolved_at` is derived the first time the workflow reaches `completed` or `cancelled`
+- workflow transitions cannot move backward once the quote progresses
 
 Future direction:
 
-- status transitions should eventually drive lifecycle timestamps consistently
-- that logic should live in domain or application rules, not in ad hoc admin-side field editing
+- keep the internal workflow focused on `draft`, `requested`, `in_progress`, `completed`, and `cancelled`
+- keep any future `customer_status` as a second later dimension instead of overloading `workflow_status`
+- only add customer-facing timestamps such as `sent_at` or `answered_at` once a real customer-facing quote flow exists
+
+For the target lifecycle design, see:
+
+- `docs/quotation/lifecycle.md`
 
 ## Tests
 
