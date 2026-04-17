@@ -257,3 +257,44 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
             formset.is_valid(),
             f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
         )
+
+    def test_variant_inline_requires_a_priced_default_variant_for_purchasable_products(self) -> None:
+        """ Verify purchasable products need a price on the default variant. """
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "1",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-name": "Primary",
+                "variants-0-sku": "PUMP-003",
+                "variants-0-is_default": "on",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+            }
+        )
+
+        self.assertFalse(formset.is_valid())
+        self.assertIn("Purchasable products require a price on the default variant.", formset.non_form_errors())
+
+    def test_variant_inline_allows_an_unpriced_default_variant_for_quote_only_products(self) -> None:
+        """ Verify quote-only products may keep the default variant price empty. """
+        formset = self.build_variant_formset(
+            data={
+                "requires_quote": "on",
+                "variants-TOTAL_FORMS": "1",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-name": "Primary",
+                "variants-0-sku": "PUMP-004",
+                "variants-0-is_default": "on",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+            }
+        )
+
+        self.assertTrue(
+            formset.is_valid(),
+            f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
+        )

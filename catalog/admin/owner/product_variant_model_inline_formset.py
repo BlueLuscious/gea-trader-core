@@ -57,8 +57,37 @@ class ProductVariantModelInlineFormSet(BaseInlineFormSet):
         """
         return bool(form.data.get(form.add_prefix("is_default")))
 
+    def _requires_quote(self) -> bool:
+        """ Return whether the parent product still follows the quote-only flow.
+
+        Returns:
+            bool: ``True`` when the owner submitted or kept quote-only behavior.
+        """
+        if self.is_bound:
+            return bool(self.data.get("requires_quote"))
+
+        return bool(getattr(self.instance, "requires_quote", False))
+
+    def _has_price(self, form: ModelForm) -> bool:
+        """ Return whether one inline variant row currently carries a usable price.
+
+        Args:
+            form: Inline product-variant form.
+
+        Returns:
+            bool: ``True`` when the row keeps or submits a price.
+        """
+        if hasattr(form, "cleaned_data") and form.cleaned_data.get("price") is not None:
+            return True
+
+        submitted_price = str(form.data.get(form.add_prefix("price"), "")).strip()
+        if submitted_price:
+            return True
+
+        return getattr(form.instance, "price", None) is not None
+
     def clean(self) -> None:
-        """ Require at least one variant and exactly one default variant.
+        """ Require a complete default variant contract for the current product flow.
 
         Raises:
             ValidationError: When the submitted inline variants do not satisfy the
@@ -78,3 +107,7 @@ class ProductVariantModelInlineFormSet(BaseInlineFormSet):
         default_variant_count = len(default_variant_forms)
         if default_variant_count != 1:
             raise ValidationError(_("Choose exactly one default variant for this product."))
+
+        if not self._requires_quote():
+            if not self._has_price(default_variant_forms[0]):
+                raise ValidationError(_("Purchasable products require a price on the default variant."))
