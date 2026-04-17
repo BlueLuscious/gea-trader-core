@@ -4,6 +4,7 @@ from decimal import Decimal
 from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
+from django.utils.translation import override
 from accounts.models import UserModel
 from catalog.models import ProductModel, ProductVariantModel
 from core.adminsites.site_instances import owner_admin_site
@@ -137,19 +138,20 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
 
     def test_quote_item_inline_limits_catalog_choices_to_the_active_tenant(self) -> None:
         """ Verify add-time quote item choices expose only products and variants from the active tenant. """
-        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
-        request = self.build_request(self.operator, self.tenant)
-        request.method = "POST"
-        formset_class = inline.get_formset(request, obj=None)
-        formset = formset_class(instance=QuoteModel(tenant=self.tenant))
-        empty_form = formset.empty_form
+        with override("en"):
+            inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+            request = self.build_request(self.operator, self.tenant)
+            request.method = "POST"
+            formset_class = inline.get_formset(request, obj=None)
+            formset = formset_class(instance=QuoteModel(tenant=self.tenant))
+            empty_form = formset.empty_form
 
-        self.assertEqual([self.in_scope_product], list(empty_form.fields["product"].queryset))
-        self.assertEqual([self.in_scope_variant], list(empty_form.fields["variant"].queryset))
-        self.assertEqual(
-            "Optional. If left empty, the default variant for the selected product will be used.",
-            empty_form.fields["variant"].help_text,
-        )
+            self.assertEqual([self.in_scope_product], list(empty_form.fields["product"].queryset))
+            self.assertEqual([self.in_scope_variant], list(empty_form.fields["variant"].queryset))
+            self.assertEqual(
+                "Optional. If left empty, the default variant for the selected product will be used.",
+                empty_form.fields["variant"].help_text,
+            )
 
     def test_quote_item_inline_logs_snapshot_creation_for_the_active_tenant(self) -> None:
         """ Verify add-time quote item snapshot creation logs the current tenant and catalog selection. """
@@ -215,41 +217,42 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
 
     def test_quote_item_inline_requires_variant_resolution_when_the_product_has_no_default(self) -> None:
         """ Verify quote items stay invalid when no explicit or default variant can be resolved. """
-        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
-        request = self.request_factory.post("/owner-admin/quotation/quotemodel/add/")
-        request.user = self.operator
-        request.tenant = self.tenant
-        product_without_default = ProductModel.objects.create(
-            tenant=self.tenant,
-            name="Valve",
-            slug="valve",
-            sku_base="VALVE",
-        )
-        ProductVariantModel.objects.create(
-            product=product_without_default,
-            sku="VALVE-001",
-            price=Decimal("21.00"),
-            is_default=False,
-        )
-        formset_class = inline.get_formset(request, obj=None)
-        prefix = "items"
-        formset = formset_class(
-            data={
-                f"{prefix}-TOTAL_FORMS": "1",
-                f"{prefix}-INITIAL_FORMS": "0",
-                f"{prefix}-MIN_NUM_FORMS": "0",
-                f"{prefix}-MAX_NUM_FORMS": "1000",
-                f"{prefix}-0-product": str(product_without_default.pk),
-                f"{prefix}-0-variant": "",
-                f"{prefix}-0-quantity": "1",
-                f"{prefix}-0-notes": "",
-            },
-            instance=QuoteModel(tenant=self.tenant, customer_name="Manual"),
-            prefix=prefix,
-        )
+        with override("en"):
+            inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+            request = self.request_factory.post("/owner-admin/quotation/quotemodel/add/")
+            request.user = self.operator
+            request.tenant = self.tenant
+            product_without_default = ProductModel.objects.create(
+                tenant=self.tenant,
+                name="Valve",
+                slug="valve",
+                sku_base="VALVE",
+            )
+            ProductVariantModel.objects.create(
+                product=product_without_default,
+                sku="VALVE-001",
+                price=Decimal("21.00"),
+                is_default=False,
+            )
+            formset_class = inline.get_formset(request, obj=None)
+            prefix = "items"
+            formset = formset_class(
+                data={
+                    f"{prefix}-TOTAL_FORMS": "1",
+                    f"{prefix}-INITIAL_FORMS": "0",
+                    f"{prefix}-MIN_NUM_FORMS": "0",
+                    f"{prefix}-MAX_NUM_FORMS": "1000",
+                    f"{prefix}-0-product": str(product_without_default.pk),
+                    f"{prefix}-0-variant": "",
+                    f"{prefix}-0-quantity": "1",
+                    f"{prefix}-0-notes": "",
+                },
+                instance=QuoteModel(tenant=self.tenant, customer_name="Manual"),
+                prefix=prefix,
+            )
 
-        self.assertFalse(formset.is_valid())
-        self.assertIn(
-            "Choose a variant or configure one default variant for the selected product.",
-            formset.forms[0].errors["variant"],
-        )
+            self.assertFalse(formset.is_valid())
+            self.assertIn(
+                "Choose a variant or configure one default variant for the selected product.",
+                formset.forms[0].errors["variant"],
+            )

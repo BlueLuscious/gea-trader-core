@@ -4,6 +4,7 @@ from decimal import Decimal
 from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
+from django.utils.translation import override
 from accounts.models import UserModel
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin import ProductModelAdmin
@@ -191,62 +192,65 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
 
     def test_variant_inline_requires_at_least_one_variant(self) -> None:
         """ Verify owner products cannot be saved without at least one variant. """
-        formset = self.build_variant_formset(
-            data={
-                "variants-TOTAL_FORMS": "0",
-                "variants-INITIAL_FORMS": "0",
-                "variants-MIN_NUM_FORMS": "0",
-                "variants-MAX_NUM_FORMS": "1000",
-            }
-        )
+        with override("en"):
+            formset = self.build_variant_formset(
+                data={
+                    "variants-TOTAL_FORMS": "0",
+                    "variants-INITIAL_FORMS": "0",
+                    "variants-MIN_NUM_FORMS": "0",
+                    "variants-MAX_NUM_FORMS": "1000",
+                }
+            )
 
-        self.assertFalse(formset.is_valid())
-        self.assertIn("Add at least one variant before saving the product.", formset.non_form_errors())
+            self.assertFalse(formset.is_valid())
+            self.assertIn("Add at least one variant before saving the product.", formset.non_form_errors())
 
     def test_variant_inline_requires_one_default_variant(self) -> None:
         """ Verify owner products cannot be saved when no default variant is selected. """
-        formset = self.build_variant_formset(
-            data={
-                "variants-TOTAL_FORMS": "1",
-                "variants-INITIAL_FORMS": "0",
-                "variants-MIN_NUM_FORMS": "0",
-                "variants-MAX_NUM_FORMS": "1000",
-                "variants-0-name": "Standard",
-                "variants-0-sku": "PUMP-001",
-                "variants-0-price": "15.00",
-                "variants-0-is_active": "on",
-                "variants-0-sort_order": "0",
-            }
-        )
+        with override("en"):
+            formset = self.build_variant_formset(
+                data={
+                    "variants-TOTAL_FORMS": "1",
+                    "variants-INITIAL_FORMS": "0",
+                    "variants-MIN_NUM_FORMS": "0",
+                    "variants-MAX_NUM_FORMS": "1000",
+                    "variants-0-name": "Standard",
+                    "variants-0-sku": "PUMP-001",
+                    "variants-0-price": "15.00",
+                    "variants-0-is_active": "on",
+                    "variants-0-sort_order": "0",
+                }
+            )
 
-        self.assertFalse(formset.is_valid())
-        self.assertIn("Choose exactly one default variant for this product.", formset.non_form_errors())
+            self.assertFalse(formset.is_valid())
+            self.assertIn("Choose exactly one default variant for this product.", formset.non_form_errors())
 
     def test_variant_inline_rejects_multiple_default_variants(self) -> None:
         """ Verify owner products cannot be saved with more than one default variant. """
-        formset = self.build_variant_formset(
-            data={
-                "variants-TOTAL_FORMS": "2",
-                "variants-INITIAL_FORMS": "0",
-                "variants-MIN_NUM_FORMS": "0",
-                "variants-MAX_NUM_FORMS": "1000",
-                "variants-0-name": "Primary",
-                "variants-0-sku": "PUMP-001",
-                "variants-0-price": "15.00",
-                "variants-0-is_default": "on",
-                "variants-0-is_active": "on",
-                "variants-0-sort_order": "0",
-                "variants-1-name": "Secondary",
-                "variants-1-sku": "PUMP-002",
-                "variants-1-price": "18.00",
-                "variants-1-is_default": "on",
-                "variants-1-is_active": "on",
-                "variants-1-sort_order": "1",
-            }
-        )
+        with override("en"):
+            formset = self.build_variant_formset(
+                data={
+                    "variants-TOTAL_FORMS": "2",
+                    "variants-INITIAL_FORMS": "0",
+                    "variants-MIN_NUM_FORMS": "0",
+                    "variants-MAX_NUM_FORMS": "1000",
+                    "variants-0-name": "Primary",
+                    "variants-0-sku": "PUMP-001",
+                    "variants-0-price": "15.00",
+                    "variants-0-is_default": "on",
+                    "variants-0-is_active": "on",
+                    "variants-0-sort_order": "0",
+                    "variants-1-name": "Secondary",
+                    "variants-1-sku": "PUMP-002",
+                    "variants-1-price": "18.00",
+                    "variants-1-is_default": "on",
+                    "variants-1-is_active": "on",
+                    "variants-1-sort_order": "1",
+                }
+            )
 
-        self.assertFalse(formset.is_valid())
-        self.assertIn("Choose exactly one default variant for this product.", formset.non_form_errors())
+            self.assertFalse(formset.is_valid())
+            self.assertIn("Choose exactly one default variant for this product.", formset.non_form_errors())
 
     def test_variant_inline_accepts_one_default_variant(self) -> None:
         """ Verify owner products can be saved when exactly one default variant exists. """
@@ -277,58 +281,61 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
 
     def test_variant_inline_explains_quote_only_price_behavior(self) -> None:
         """ Verify quote-only products explain that variant prices stay internal and optional. """
-        quote_only_product = ProductModel.objects.create(
-            tenant=self.tenant,
-            brand=self.brand,
-            category=self.category,
-            name="Quote-only pump",
-            slug="quote-only-pump",
-            requires_quote=True,
-        )
+        with override("en"):
+            quote_only_product = ProductModel.objects.create(
+                tenant=self.tenant,
+                brand=self.brand,
+                category=self.category,
+                name="Quote-only pump",
+                slug="quote-only-pump",
+                requires_quote=True,
+            )
 
-        empty_form = self.build_empty_variant_form(quote_only_product)
+            empty_form = self.build_empty_variant_form(quote_only_product)
 
-        self.assertEqual(
-            "Optional internal price. Customers still request a quote for this product.",
-            empty_form.fields["price"].help_text,
-        )
+            self.assertEqual(
+                "Optional internal price. Customers still request a quote for this product.",
+                empty_form.fields["price"].help_text,
+            )
 
     def test_variant_inline_explains_purchasable_default_price_requirement(self) -> None:
         """ Verify purchasable products explain the priced default-variant rule before save. """
-        purchasable_product = ProductModel.objects.create(
-            tenant=self.tenant,
-            brand=self.brand,
-            category=self.category,
-            name="Purchasable pump",
-            slug="purchasable-pump",
-            requires_quote=False,
-        )
+        with override("en"):
+            purchasable_product = ProductModel.objects.create(
+                tenant=self.tenant,
+                brand=self.brand,
+                category=self.category,
+                name="Purchasable pump",
+                slug="purchasable-pump",
+                requires_quote=False,
+            )
 
-        empty_form = self.build_empty_variant_form(purchasable_product)
+            empty_form = self.build_empty_variant_form(purchasable_product)
 
-        self.assertEqual(
-            "Required on the default variant when the product is directly purchasable.",
-            empty_form.fields["price"].help_text,
-        )
+            self.assertEqual(
+                "Required on the default variant when the product is directly purchasable.",
+                empty_form.fields["price"].help_text,
+            )
 
     def test_variant_inline_requires_a_priced_default_variant_for_purchasable_products(self) -> None:
         """ Verify purchasable products need a price on the default variant. """
-        formset = self.build_variant_formset(
-            data={
-                "variants-TOTAL_FORMS": "1",
-                "variants-INITIAL_FORMS": "0",
-                "variants-MIN_NUM_FORMS": "0",
-                "variants-MAX_NUM_FORMS": "1000",
-                "variants-0-name": "Primary",
-                "variants-0-sku": "PUMP-003",
-                "variants-0-is_default": "on",
-                "variants-0-is_active": "on",
-                "variants-0-sort_order": "0",
-            }
-        )
+        with override("en"):
+            formset = self.build_variant_formset(
+                data={
+                    "variants-TOTAL_FORMS": "1",
+                    "variants-INITIAL_FORMS": "0",
+                    "variants-MIN_NUM_FORMS": "0",
+                    "variants-MAX_NUM_FORMS": "1000",
+                    "variants-0-name": "Primary",
+                    "variants-0-sku": "PUMP-003",
+                    "variants-0-is_default": "on",
+                    "variants-0-is_active": "on",
+                    "variants-0-sort_order": "0",
+                }
+            )
 
-        self.assertFalse(formset.is_valid())
-        self.assertIn("Purchasable products require a price on the default variant.", formset.non_form_errors())
+            self.assertFalse(formset.is_valid())
+            self.assertIn("Purchasable products require a price on the default variant.", formset.non_form_errors())
 
     def test_variant_inline_allows_an_unpriced_default_variant_for_quote_only_products(self) -> None:
         """ Verify quote-only products may keep the default variant price empty. """
