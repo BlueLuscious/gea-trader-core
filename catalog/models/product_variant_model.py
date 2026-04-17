@@ -5,7 +5,9 @@ from django.utils.translation import gettext_lazy as _
 from catalog.models.managers.product_variant_model_manager import ProductVariantModelManager
 
 if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
     from catalog.models import ProductModel
+    from catalog.models.querysets import ProductImageModelQuerySet
 
 
 class ProductVariantModel(models.Model):
@@ -75,6 +77,7 @@ class ProductVariantModel(models.Model):
 
     id: int
     product_id: int
+    images: "RelatedManager[ProductImageModelQuerySet]"
 
     class Meta:
         ordering = ("product_id", "sort_order", "name", "id")

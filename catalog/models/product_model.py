@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
 from django.db import models
@@ -5,7 +6,10 @@ from django.utils.translation import gettext_lazy as _
 from catalog.models.managers.product_model_manager import ProductModelManager
 
 if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
     from masterdata.models import BrandModel, CategoryModel
+    from catalog.models import ProductVariantModel
+    from catalog.models.querysets import ProductImageModelQuerySet, ProductVariantModelQuerySet
     from tenancy.models import TenantModel
 
 
@@ -103,6 +107,8 @@ class ProductModel(models.Model):
     tenant_id: UUID
     brand_id: int | None
     category_id: int | None
+    variants: "RelatedManager[ProductVariantModelQuerySet]"
+    images: "RelatedManager[ProductImageModelQuerySet]"
 
     class Meta:
         ordering = ("name",)
@@ -123,3 +129,35 @@ class ProductModel(models.Model):
             str: Product name.
         """
         return self.name
+
+    def has_variants(self) -> bool:
+        """ Return whether this product currently has any persisted variants.
+
+        Returns:
+            bool: ``True`` when at least one variant exists for the product.
+        """
+        return self.variants.exists()
+
+    def get_default_variant(self) -> "ProductVariantModel | None":
+        """ Return the current default variant when one exists.
+
+        Returns:
+            ProductVariantModel | None: Default variant or ``None``.
+        """
+        return self.variants.filter(is_default=True).order_by("sort_order", "name", "id").first()
+
+    def get_public_price(self) -> Decimal | None:
+        """ Return the public price resolved from the default variant.
+
+        Returns:
+            Decimal | None: Default variant price for purchasable products or
+            ``None`` when the product still goes through the quote flow.
+        """
+        if self.requires_quote:
+            return None
+
+        default_variant = self.get_default_variant()
+        if default_variant is None:
+            return None
+
+        return default_variant.price
