@@ -23,7 +23,9 @@ class QuoteItemModelInlineForm(forms.ModelForm):
         }
         help_texts = {
             "product": _("Choose the catalog product this quote item refers to."),
-            "variant": _("Optional. Choose a specific variant when needed."),
+            "variant": _(
+                "Optional. If left empty, the default variant for the selected product will be used."
+            ),
             "quantity": _("How many units this quote item should include."),
             "notes": _("Optional private note for this item."),
         }
@@ -55,6 +57,10 @@ class QuoteItemModelInlineForm(forms.ModelForm):
 
         if variant is not None and variant.product_id != product.id:
             self.add_error("variant", _("Choose a variant that belongs to the selected product."))
+            return cleaned_data
+
+        if variant is None and product.get_default_variant() is None:
+            self.add_error("variant", _("Choose a variant or configure one default variant for the selected product."))
 
         return cleaned_data
 

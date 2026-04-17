@@ -71,6 +71,7 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
             product=self.in_scope_product,
             sku="PUMP-001",
             price=Decimal("42.50"),
+            is_default=True,
         )
         ProductVariantModel.objects.create(
             product=self.out_of_scope_product,
@@ -145,6 +146,10 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
 
         self.assertEqual([self.in_scope_product], list(empty_form.fields["product"].queryset))
         self.assertEqual([self.in_scope_variant], list(empty_form.fields["variant"].queryset))
+        self.assertEqual(
+            "Optional. If left empty, the default variant for the selected product will be used.",
+            empty_form.fields["variant"].help_text,
+        )
 
     def test_quote_item_inline_logs_snapshot_creation_for_the_active_tenant(self) -> None:
         """ Verify add-time quote item snapshot creation logs the current tenant and catalog selection. """
@@ -174,3 +179,77 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
             formset.save(commit=False)
 
         logger_info_mock.assert_called_once()
+
+    def test_quote_item_inline_uses_the_default_variant_when_none_is_selected(self) -> None:
+        """ Verify quote items fall back to the product default variant when the inline leaves variant empty. """
+        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+        request = self.request_factory.post("/owner-admin/quotation/quotemodel/add/")
+        request.user = self.operator
+        request.tenant = self.tenant
+        formset_class = inline.get_formset(request, obj=None)
+        prefix = "items"
+        formset = formset_class(
+            data={
+                f"{prefix}-TOTAL_FORMS": "1",
+                f"{prefix}-INITIAL_FORMS": "0",
+                f"{prefix}-MIN_NUM_FORMS": "0",
+                f"{prefix}-MAX_NUM_FORMS": "1000",
+                f"{prefix}-0-product": str(self.in_scope_product.pk),
+                f"{prefix}-0-variant": "",
+                f"{prefix}-0-quantity": "2",
+                f"{prefix}-0-notes": "Urgent",
+            },
+            instance=QuoteModel(tenant=self.tenant, customer_name="Manual"),
+            prefix=prefix,
+        )
+
+        self.assertTrue(formset.is_valid(), formset.errors)
+        built_items = formset.save(commit=False)
+        built_item = built_items[0]
+
+        self.assertEqual(self.in_scope_product, built_item.product)
+        self.assertEqual(self.in_scope_variant, built_item.variant)
+        self.assertEqual(self.in_scope_variant.sku, built_item.sku_snapshot)
+        self.assertEqual(self.in_scope_variant.price, built_item.unit_price_snapshot)
+        self.assertEqual({}, built_item.attributes_snapshot)
+
+    def test_quote_item_inline_requires_variant_resolution_when_the_product_has_no_default(self) -> None:
+        """ Verify quote items stay invalid when no explicit or default variant can be resolved. """
+        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+        request = self.request_factory.post("/owner-admin/quotation/quotemodel/add/")
+        request.user = self.operator
+        request.tenant = self.tenant
+        product_without_default = ProductModel.objects.create(
+            tenant=self.tenant,
+            name="Valve",
+            slug="valve",
+            sku_base="VALVE",
+        )
+        ProductVariantModel.objects.create(
+            product=product_without_default,
+            sku="VALVE-001",
+            price=Decimal("21.00"),
+            is_default=False,
+        )
+        formset_class = inline.get_formset(request, obj=None)
+        prefix = "items"
+        formset = formset_class(
+            data={
+                f"{prefix}-TOTAL_FORMS": "1",
+                f"{prefix}-INITIAL_FORMS": "0",
+                f"{prefix}-MIN_NUM_FORMS": "0",
+                f"{prefix}-MAX_NUM_FORMS": "1000",
+                f"{prefix}-0-product": str(product_without_default.pk),
+                f"{prefix}-0-variant": "",
+                f"{prefix}-0-quantity": "1",
+                f"{prefix}-0-notes": "",
+            },
+            instance=QuoteModel(tenant=self.tenant, customer_name="Manual"),
+            prefix=prefix,
+        )
+
+        self.assertFalse(formset.is_valid())
+        self.assertIn(
+            "Choose a variant or configure one default variant for the selected product.",
+            formset.forms[0].errors["variant"],
+        )

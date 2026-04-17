@@ -75,13 +75,17 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
         product = form.get_selected_product()
         variant = form.get_selected_variant()
 
-        if product is None:
-            raise ValidationError(_("Quote items require a selected product."))
+        if variant is None:
+            variant = product.get_default_variant()
+
+        if variant is None:
+            raise ValidationError(_("Quote items require a variant or one default variant on the selected product."))
 
         instance.product_name_snapshot = product.name
-        instance.sku_snapshot = variant.sku if variant is not None else product.sku_base
-        instance.attributes_snapshot = dict(variant.attributes_json or {}) if variant is not None else {}
-        instance.unit_price_snapshot = variant.price if variant is not None else None
+        instance.variant = variant
+        instance.sku_snapshot = variant.sku
+        instance.attributes_snapshot = dict(variant.attributes_json or {})
+        instance.unit_price_snapshot = variant.price
 
         logger.info(
             "Built owner quote item snapshot tenant_id=%s quote_id=%s product_id=%s variant_id=%s",

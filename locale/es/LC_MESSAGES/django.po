@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 02:36-0300\n"
+"POT-Creation-Date: 2026-04-17 06:05-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -464,8 +464,8 @@ msgid ""
 "products need a priced default variant."
 msgstr ""
 "Controla si los clientes deben solicitar una cotización o si pueden comprar "
-"directamente. Los productos comprables necesitan una variante "
-"predeterminada con precio."
+"directamente. Los productos comprables necesitan una variante predeterminada "
+"con precio."
 
 #: .\catalog\admin\owner\product_model_admin.py:81
 #: .\masterdata\admin\owner\brand_model_admin.py:54
@@ -1374,29 +1374,43 @@ msgid "Choose the catalog product this quote item refers to."
 msgstr ""
 "Elige el producto del catálogo al que corresponde este ítem de cotización."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:26
-msgid "Optional. Choose a specific variant when needed."
-msgstr "Opcional. Elige una variante específica cuando sea necesario."
-
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:27
+msgid ""
+"Optional. If left empty, the default variant for the selected product will "
+"be used."
+msgstr ""
+"Opcional. Si se deja vacío, se usará la variante predeterminada del producto "
+"seleccionado."
+
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:29
 msgid "How many units this quote item should include."
 msgstr "Cuántas unidades debe incluir este ítem de cotización."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:28
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:30
 msgid "Optional private note for this item."
 msgstr "Nota privada opcional para este ítem."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:57
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:59
 msgid "Choose a variant that belongs to the selected product."
 msgstr "Elige una variante que pertenezca al producto seleccionado."
+
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:63
+msgid ""
+"Choose a variant or configure one default variant for the selected product."
+msgstr ""
+"Elige una variante o configura una variante predeterminada para el producto "
+"seleccionado."
 
 #: .\quotation\admin\owner\quote_item_model_inline_formset.py:49
 msgid "Add at least one quote item before saving the quote."
 msgstr "Agrega al menos un ítem de cotización antes de guardar la cotización."
 
-#: .\quotation\admin\owner\quote_item_model_inline_formset.py:79
-msgid "Quote items require a selected product."
-msgstr "Los ítems de cotización requieren un producto seleccionado."
+#: .\quotation\admin\owner\quote_item_model_inline_formset.py:82
+msgid ""
+"Quote items require a variant or one default variant on the selected product."
+msgstr ""
+"Los ítems de cotización requieren una variante o una variante "
+"predeterminada en el producto seleccionado."
 
 #: .\quotation\admin\owner\quote_model_admin.py:47
 msgid "Fill in who requested the quote and how to contact them."
