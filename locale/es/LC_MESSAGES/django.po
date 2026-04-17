@@ -463,7 +463,7 @@ msgid ""
 "Control whether customers request a quote or can buy directly. Purchasable "
 "products need a priced default variant."
 msgstr ""
-"Controla si los clientes deben solicitar una cotizaciÃ³n o si pueden comprar "
+"Controla si los clientes deben solicitar una cotización o si pueden comprar "
 "directamente. Los productos comprables necesitan una variante "
 "predeterminada con precio."
 
@@ -578,7 +578,7 @@ msgstr "Variantes"
 msgid ""
 "Optional internal price. Customers still request a quote for this product."
 msgstr ""
-"Precio interno opcional. Los clientes igual solicitarÃ¡n una cotizaciÃ³n para "
+"Precio interno opcional. Los clientes igual solicitarán una cotización para "
 "este producto."
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:27
