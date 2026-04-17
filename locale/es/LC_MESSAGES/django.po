@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 00:54-0300\n"
+"POT-Creation-Date: 2026-04-17 02:36-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -267,8 +267,8 @@ msgstr "Carrito al que pertenece esta línea."
 
 #: .\cart\models\cart_item_model.py:27
 #: .\catalog\models\product_image_model.py:17
-#: .\catalog\models\product_model.py:116
-#: .\catalog\models\product_variant_model.py:18
+#: .\catalog\models\product_model.py:122
+#: .\catalog\models\product_variant_model.py:20
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:19
 #: .\quotation\models\quote_item_model.py:27
 msgid "Product"
@@ -279,7 +279,7 @@ msgid "Product currently selected in this cart line."
 msgstr "Producto seleccionado actualmente en esta línea del carrito."
 
 #: .\cart\models\cart_item_model.py:36
-#: .\catalog\admin\owner\product_variant_model_inline.py:18
+#: .\catalog\admin\owner\product_variant_model_inline.py:22
 #: .\catalog\models\product_image_model.py:26
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:20
 #: .\quotation\models\quote_item_model.py:36
@@ -312,8 +312,8 @@ msgstr "Notas opcionales de runtime capturadas para esta línea del carrito."
 
 #: .\cart\models\cart_item_model.py:52 .\cart\models\cart_model.py:56
 #: .\catalog\models\product_image_model.py:53
-#: .\catalog\models\product_model.py:91
-#: .\catalog\models\product_variant_model.py:65
+#: .\catalog\models\product_model.py:95
+#: .\catalog\models\product_variant_model.py:67
 #: .\masterdata\models\brand_model.py:45
 #: .\masterdata\models\category_model.py:60
 #: .\quotation\models\quote_item_model.py:78
@@ -326,8 +326,8 @@ msgid "When this cart item was created."
 msgstr "Cuándo se creó este ítem del carrito."
 
 #: .\cart\models\cart_item_model.py:57 .\cart\models\cart_model.py:61
-#: .\catalog\models\product_model.py:96
-#: .\catalog\models\product_variant_model.py:70
+#: .\catalog\models\product_model.py:100
+#: .\catalog\models\product_variant_model.py:72
 #: .\masterdata\models\brand_model.py:46
 #: .\masterdata\models\category_model.py:61
 #: .\quotation\models\quote_model.py:111
@@ -458,21 +458,22 @@ msgstr ""
 msgid "Visibility and sales"
 msgstr "Visibilidad y ventas"
 
-#: .\catalog\admin\owner\product_model_admin.py:70
+#: .\catalog\admin\owner\product_model_admin.py:71
 msgid ""
-"Control how this product appears and whether it should go through the quote "
-"flow."
+"Control whether customers request a quote or can buy directly. Purchasable "
+"products need a priced default variant."
 msgstr ""
-"Controla cómo se muestra este producto y si debe gestionarse mediante "
-"cotización."
+"Controla si los clientes deben solicitar una cotizaciÃ³n o si pueden comprar "
+"directamente. Los productos comprables necesitan una variante "
+"predeterminada con precio."
 
-#: .\catalog\admin\owner\product_model_admin.py:78
+#: .\catalog\admin\owner\product_model_admin.py:81
 #: .\masterdata\admin\owner\brand_model_admin.py:54
 #: .\masterdata\admin\owner\category_model_admin.py:59
 msgid "Advanced details"
 msgstr "Detalles avanzados"
 
-#: .\catalog\admin\owner\product_model_admin.py:81
+#: .\catalog\admin\owner\product_model_admin.py:84
 msgid "Less frequently used information."
 msgstr "Información que se usa con menos frecuencia."
 
@@ -485,19 +486,19 @@ msgstr ""
 "necesitas una URL personalizada."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:18
-#: .\catalog\models\product_model.py:59
+#: .\catalog\models\product_model.py:63
 msgid "Short summary for compact cards and product lists."
 msgstr "Resumen breve para tarjetas compactas y listados de productos."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:19
-#: .\catalog\models\product_model.py:65
+#: .\catalog\models\product_model.py:69
 msgid "Full product description with the details customers should read."
 msgstr ""
 "Descripción completa del producto con los detalles que deberían leer tus "
 "clientes."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:20
-#: .\catalog\models\product_model.py:72
+#: .\catalog\models\product_model.py:76
 msgid ""
 "Internal base reference used to identify this product family and its "
 "variants."
@@ -506,7 +507,7 @@ msgstr ""
 "productos y sus variantes."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:21
-#: .\catalog\models\product_model.py:87
+#: .\catalog\models\product_model.py:91
 msgid ""
 "Enable this when customers should request a quote instead of buying directly."
 msgstr ""
@@ -514,12 +515,12 @@ msgstr ""
 "comprar directamente."
 
 #: .\catalog\admin\owner\product_model_admin_form.py:24
-#: .\catalog\models\product_model.py:46
+#: .\catalog\models\product_model.py:50
 msgid "Product name"
 msgstr "Nombre del producto"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:25
-#: .\catalog\models\product_model.py:51
+#: .\catalog\models\product_model.py:55
 #: .\masterdata\admin\owner\brand_model_admin_form.py:18
 #: .\masterdata\admin\owner\category_child_model_inline_form.py:23
 #: .\masterdata\admin\owner\category_model_admin_form.py:36
@@ -529,49 +530,144 @@ msgid "URL slug"
 msgstr "Slug de la URL"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:26
-#: .\catalog\models\product_model.py:32 .\masterdata\models\brand_model.py:61
+#: .\catalog\models\product_model.py:36 .\masterdata\models\brand_model.py:61
 msgid "Brand"
 msgstr "Marca"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:27
-#: .\catalog\models\product_model.py:41
+#: .\catalog\models\product_model.py:45
 #: .\masterdata\models\category_model.py:78
 msgid "Category"
 msgstr "Categoría"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:28
-#: .\catalog\models\product_model.py:58
+#: .\catalog\models\product_model.py:62
 msgid "Short description"
 msgstr "Descripción breve"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:29
-#: .\catalog\models\product_model.py:64
+#: .\catalog\models\product_model.py:68
 msgid "Full description"
 msgstr "Descripción completa"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:30
-#: .\catalog\models\product_model.py:71
+#: .\catalog\models\product_model.py:75
 msgid "Base SKU"
 msgstr "SKU base"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:31
-#: .\catalog\models\product_model.py:76
+#: .\catalog\models\product_model.py:80
 msgid "Visible to customers"
 msgstr "Visible para clientes"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:32
-#: .\catalog\models\product_model.py:81
+#: .\catalog\models\product_model.py:85
 msgid "Featured product"
 msgstr "Producto destacado"
 
 #: .\catalog\admin\owner\product_model_admin_form.py:33
-#: .\catalog\models\product_model.py:86
+#: .\catalog\models\product_model.py:90
 msgid "Request through quote"
 msgstr "Solicitar mediante cotización"
 
-#: .\catalog\admin\owner\product_variant_model_inline.py:19
+#: .\catalog\admin\owner\product_variant_model_inline.py:23
 msgid "Variants"
 msgstr "Variantes"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:23
+msgid ""
+"Optional internal price. Customers still request a quote for this product."
+msgstr ""
+"Precio interno opcional. Los clientes igual solicitarÃ¡n una cotizaciÃ³n para "
+"este producto."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:27
+msgid ""
+"Required on the default variant when the product is directly purchasable."
+msgstr ""
+"Obligatorio en la variante predeterminada cuando el producto se puede "
+"comprar directamente."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:36
+#: .\catalog\models\product_variant_model.py:27
+msgid "Variant name"
+msgstr "Nombre de la variante"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:37
+#: .\catalog\models\product_variant_model.py:33
+msgid "Variant SKU"
+msgstr "SKU de la variante"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:38
+#: .\catalog\models\product_variant_model.py:47
+msgid "Price"
+msgstr "Precio"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:39
+#: .\catalog\models\product_variant_model.py:52
+msgid "Default variant"
+msgstr "Variante predeterminada"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:40
+#: .\catalog\models\product_variant_model.py:57
+msgid "Available for selection"
+msgstr "Disponible para seleccionar"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:41
+#: .\catalog\models\product_image_model.py:43
+#: .\catalog\models\product_variant_model.py:62
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:24
+#: .\masterdata\admin\owner\category_model_admin_form.py:39
+#: .\masterdata\models\category_model.py:52
+msgid "Display order"
+msgstr "Orden de visualización"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:44
+#: .\catalog\models\product_variant_model.py:28
+msgid "Optional customer-facing name for this specific variant."
+msgstr "Nombre opcional visible para clientes para esta variante específica."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:45
+#: .\catalog\models\product_variant_model.py:34
+msgid "Unique internal reference for this variant."
+msgstr "Referencia interna única para esta variante."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:46
+#: .\catalog\models\product_variant_model.py:48
+msgid ""
+"Optional direct price for this variant when it does not rely only on quotes."
+msgstr ""
+"Precio directo opcional para esta variante cuando no depende solo de "
+"cotizaciones."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:47
+msgid "Choose exactly one default variant for each product."
+msgstr "Elige exactamente una variante predeterminada para cada producto."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:48
+#: .\catalog\models\product_variant_model.py:58
+msgid "Turn this off to keep the variant without offering it."
+msgstr "Desactiva esto para conservar la variante sin ofrecerla."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:49
+#: .\catalog\models\product_variant_model.py:63
+msgid "Lower values appear first in admin and customer-facing variant lists."
+msgstr ""
+"Los valores más bajos aparecen primero en el admin y en las listas de "
+"variantes visibles para clientes."
+
+#: .\catalog\admin\owner\product_variant_model_inline_formset.py:114
+msgid "Add at least one variant before saving the product."
+msgstr "Agrega al menos una variante antes de guardar el producto."
+
+#: .\catalog\admin\owner\product_variant_model_inline_formset.py:123
+msgid "Choose exactly one default variant for this product."
+msgstr "Elige exactamente una variante predeterminada para este producto."
+
+#: .\catalog\admin\owner\product_variant_model_inline_formset.py:127
+msgid "Purchasable products require a price on the default variant."
+msgstr ""
+"Los productos comprables requieren un precio en la variante predeterminada."
 
 #: .\catalog\apps.py:10
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:90
@@ -607,14 +703,6 @@ msgstr "Texto alternativo"
 msgid "Short accessibility description of what appears in the image."
 msgstr "Descripción breve y accesible de lo que aparece en la imagen."
 
-#: .\catalog\models\product_image_model.py:43
-#: .\catalog\models\product_variant_model.py:60
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:24
-#: .\masterdata\admin\owner\category_model_admin_form.py:39
-#: .\masterdata\models\category_model.py:52
-msgid "Display order"
-msgstr "Orden de visualización"
-
 #: .\catalog\models\product_image_model.py:44
 msgid "Lower values appear first in product galleries."
 msgstr "Los valores más bajos aparecen primero en las galerías del producto."
@@ -639,130 +727,85 @@ msgstr "Imagen del producto"
 msgid "Product images"
 msgstr "Imágenes del producto"
 
-#: .\catalog\models\product_model.py:23
+#: .\catalog\models\product_model.py:27
 msgid "Tenant"
 msgstr "Negocio"
 
-#: .\catalog\models\product_model.py:24
+#: .\catalog\models\product_model.py:28
 msgid "Tenant that owns this product and its related catalog data."
 msgstr ""
 "Negocio al que pertenece este producto y los datos relacionados de su "
 "catálogo."
 
-#: .\catalog\models\product_model.py:33
+#: .\catalog\models\product_model.py:37
 msgid "Optional brand shown with this product."
 msgstr "Marca opcional que se muestra junto con este producto."
 
-#: .\catalog\models\product_model.py:42
+#: .\catalog\models\product_model.py:46
 msgid "Optional category used to organize this product."
 msgstr "Categoría opcional usada para organizar este producto."
 
-#: .\catalog\models\product_model.py:47
+#: .\catalog\models\product_model.py:51
 msgid "Customer-facing name shown across the catalog."
 msgstr "Nombre visible para clientes que se muestra en todo el catálogo."
 
-#: .\catalog\models\product_model.py:52
+#: .\catalog\models\product_model.py:56
 msgid "Short URL-friendly identifier used in product links."
 msgstr ""
 "Identificador corto y amigable para URLs que se usa en los enlaces del "
 "producto."
 
-#: .\catalog\models\product_model.py:77
+#: .\catalog\models\product_model.py:81
 msgid "Turn this off to hide the product without deleting it."
 msgstr "Desactiva esto para ocultar el producto sin eliminarlo."
 
-#: .\catalog\models\product_model.py:82
+#: .\catalog\models\product_model.py:86
 msgid "Highlight this product in featured catalog sections."
 msgstr "Destaca este producto en las secciones destacadas del catálogo."
 
-#: .\catalog\models\product_model.py:92
+#: .\catalog\models\product_model.py:96
 msgid "When this product was created."
 msgstr "Cuándo se creó este producto."
 
-#: .\catalog\models\product_model.py:97
+#: .\catalog\models\product_model.py:101
 msgid "When this product was last updated."
 msgstr "Cuándo se actualizó por última vez este producto."
 
-#: .\catalog\models\product_model.py:117
+#: .\catalog\models\product_model.py:123
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:93
 #: .\core\tests\adminsites\test_adminsites.py:84
 msgid "Products"
 msgstr "Productos"
 
-#: .\catalog\models\product_variant_model.py:19
+#: .\catalog\models\product_variant_model.py:21
 msgid "Product this variant belongs to."
 msgstr "Producto al que pertenece esta variante."
 
-#: .\catalog\models\product_variant_model.py:25
-msgid "Variant name"
-msgstr "Nombre de la variante"
-
-#: .\catalog\models\product_variant_model.py:26
-msgid "Optional customer-facing name for this specific variant."
-msgstr "Nombre opcional visible para clientes para esta variante específica."
-
-#: .\catalog\models\product_variant_model.py:31
-msgid "Variant SKU"
-msgstr "SKU de la variante"
-
-#: .\catalog\models\product_variant_model.py:32
-msgid "Unique internal reference for this variant."
-msgstr "Referencia interna única para esta variante."
-
-#: .\catalog\models\product_variant_model.py:37
+#: .\catalog\models\product_variant_model.py:39
 msgid "Variant attributes"
 msgstr "Atributos de la variante"
 
-#: .\catalog\models\product_variant_model.py:38
+#: .\catalog\models\product_variant_model.py:40
 msgid "Structured attributes such as size, color, or packaging."
 msgstr "Atributos estructurados como tamaño, color o presentación."
 
-#: .\catalog\models\product_variant_model.py:45
-msgid "Price"
-msgstr "Precio"
-
-#: .\catalog\models\product_variant_model.py:46
-msgid ""
-"Optional direct price for this variant when it does not rely only on quotes."
-msgstr ""
-"Precio directo opcional para esta variante cuando no depende solo de "
-"cotizaciones."
-
-#: .\catalog\models\product_variant_model.py:50
-msgid "Default variant"
-msgstr "Variante predeterminada"
-
-#: .\catalog\models\product_variant_model.py:51
+#: .\catalog\models\product_variant_model.py:53
 msgid "Use this as the preselected variant for the product."
 msgstr "Usa esta como la variante preseleccionada del producto."
 
-#: .\catalog\models\product_variant_model.py:55
-msgid "Available for selection"
-msgstr "Disponible para seleccionar"
-
-#: .\catalog\models\product_variant_model.py:56
-msgid "Turn this off to keep the variant without offering it."
-msgstr "Desactiva esto para conservar la variante sin ofrecerla."
-
-#: .\catalog\models\product_variant_model.py:61
-msgid "Lower values appear first in admin and customer-facing variant lists."
-msgstr ""
-"Los valores más bajos aparecen primero en el admin y en las listas de "
-"variantes visibles para clientes."
-
-#: .\catalog\models\product_variant_model.py:66
+#: .\catalog\models\product_variant_model.py:68
 msgid "When this variant was created."
 msgstr "Cuándo se creó esta variante."
 
-#: .\catalog\models\product_variant_model.py:71
+#: .\catalog\models\product_variant_model.py:73
 msgid "When this variant was last updated."
 msgstr "Cuándo se actualizó por última vez esta variante."
 
-#: .\catalog\models\product_variant_model.py:88
+#: .\catalog\models\product_variant_model.py:91
 msgid "Product variant"
 msgstr "Variante del producto"
 
-#: .\catalog\models\product_variant_model.py:89
+#: .\catalog\models\product_variant_model.py:92
 msgid "Product variants"
 msgstr "Variantes del producto"
 
@@ -1428,7 +1471,8 @@ msgstr "Resuelta el"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:41
 msgid "Track the current internal workflow stage of this quote."
-msgstr "Indica la etapa actual del flujo de trabajo interno de esta cotización."
+msgstr ""
+"Indica la etapa actual del flujo de trabajo interno de esta cotización."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:42
 msgid "Optional. Use this when the quote belongs to a business customer."
@@ -1450,7 +1494,8 @@ msgstr "Ingresa el nombre del cliente antes de guardar la cotización."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:62
 msgid "Add at least an email address or phone number for follow-up."
-msgstr "Agrega al menos un correo electrónico o un teléfono para el seguimiento."
+msgstr ""
+"Agrega al menos un correo electrónico o un teléfono para el seguimiento."
 
 #: .\quotation\apps.py:10
 msgid "Quotations"
@@ -1583,7 +1628,9 @@ msgstr "Cuándo se solicitó formalmente la cotización."
 #: .\quotation\models\quote_model.py:102
 msgid ""
 "When the internal workflow for this quote reached a terminal resolution."
-msgstr "Cuándo el flujo de trabajo interno de esta cotización llegó a una resolución terminal."
+msgstr ""
+"Cuándo el flujo de trabajo interno de esta cotización llegó a una resolución "
+"terminal."
 
 #: .\quotation\models\quote_model.py:107
 msgid "When this quote was created."
@@ -1593,18 +1640,23 @@ msgstr "Cuándo se creó esta cotización."
 msgid "When this quote was last updated."
 msgstr "Cuándo se actualizó por última vez esta cotización."
 
-#: .\quotation\models\quote_model.py:173
+#: .\quotation\models\quote_model.py:170
 msgid "Source cart must belong to the same business as the quote."
-msgstr "El carrito de origen debe pertenecer al mismo negocio que la cotización."
+msgstr ""
+"El carrito de origen debe pertenecer al mismo negocio que la cotización."
 
-#: .\quotation\models\quote_model.py:203
+#: .\quotation\models\quote_model.py:200
 msgid ""
 "Workflow status cannot change after the quote reaches a terminal resolution."
-msgstr "El estado del flujo de trabajo no puede cambiar después de que la cotización llegue a una resolución terminal."
+msgstr ""
+"El estado del flujo de trabajo no puede cambiar después de que la cotización "
+"llegue a una resolución terminal."
 
-#: .\quotation\models\quote_model.py:208
+#: .\quotation\models\quote_model.py:205
 msgid "Workflow status cannot move backward once the quote progresses."
-msgstr "El estado del flujo de trabajo no puede retroceder una vez que la cotización avanza."
+msgstr ""
+"El estado del flujo de trabajo no puede retroceder una vez que la cotización "
+"avanza."
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:22
 #: .\tenancy\models\tenant_model.py:33
