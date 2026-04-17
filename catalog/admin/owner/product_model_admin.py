@@ -67,7 +67,10 @@ class ProductModelAdmin(ModelAdmin):
             _("Visibility and sales"),
             {
                 "classes": ("tab",),
-                "description": _("Control how this product appears and whether it should go through the quote flow."),
+                "description": _(
+                    "Control whether customers request a quote or can buy directly. "
+                    "Purchasable products need a priced default variant."
+                ),
                 "fields": (
                     "sku_base",
                     ("is_active", "is_featured", "requires_quote"),

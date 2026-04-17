@@ -8,6 +8,25 @@ from catalog.models import ProductVariantModel
 class ProductVariantModelInlineForm(forms.ModelForm):
     """ Keep one focused and reusable owner form contract for product variants. """
 
+    def __init__(self, *args: object, requires_quote: bool | None = None, **kwargs: object) -> None:
+        """ Build one owner inline variant form with pricing guidance for the current product flow.
+
+        Args:
+            *args: Positional form arguments.
+            requires_quote: Current product quote behavior when available.
+            **kwargs: Keyword form arguments.
+        """
+        super().__init__(*args, **kwargs)
+
+        if requires_quote is True:
+            self.fields["price"].help_text = _(
+                "Optional internal price. Customers still request a quote for this product."
+            )
+        elif requires_quote is False:
+            self.fields["price"].help_text = _(
+                "Required on the default variant when the product is directly purchasable."
+            )
+
     class Meta:
         """ Configure the owner inline variant form. """
 

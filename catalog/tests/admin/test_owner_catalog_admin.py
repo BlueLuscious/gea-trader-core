@@ -114,6 +114,23 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
         }
         return formset_class(data=normalized_data, instance=product, prefix=prefix)
 
+    def build_empty_variant_form(self, instance: ProductModel) -> object:
+        """ Build the empty owner inline variant form for one existing product.
+
+        Args:
+            instance: Product instance that owns the variant inline.
+
+        Returns:
+            object: Empty inline variant form bound to the current product context.
+        """
+        inline = ProductVariantModelInline(ProductModel, owner_admin_site)
+        request = self.request_factory.get("/owner-admin/catalog/productmodel/")
+        request.user = self.operator
+        request.tenant = self.tenant
+        formset_class = inline.get_formset(request, obj=instance)
+        formset = formset_class(instance=instance)
+        return formset.empty_form
+
     def test_get_queryset_is_scoped_to_the_active_tenant(self) -> None:
         """ Verify the owner product queryset only returns products from the active tenant. """
         request = self.build_request(self.operator, self.tenant)
@@ -256,6 +273,42 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
         self.assertTrue(
             formset.is_valid(),
             f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
+        )
+
+    def test_variant_inline_explains_quote_only_price_behavior(self) -> None:
+        """ Verify quote-only products explain that variant prices stay internal and optional. """
+        quote_only_product = ProductModel.objects.create(
+            tenant=self.tenant,
+            brand=self.brand,
+            category=self.category,
+            name="Quote-only pump",
+            slug="quote-only-pump",
+            requires_quote=True,
+        )
+
+        empty_form = self.build_empty_variant_form(quote_only_product)
+
+        self.assertEqual(
+            "Optional internal price. Customers still request a quote for this product.",
+            empty_form.fields["price"].help_text,
+        )
+
+    def test_variant_inline_explains_purchasable_default_price_requirement(self) -> None:
+        """ Verify purchasable products explain the priced default-variant rule before save. """
+        purchasable_product = ProductModel.objects.create(
+            tenant=self.tenant,
+            brand=self.brand,
+            category=self.category,
+            name="Purchasable pump",
+            slug="purchasable-pump",
+            requires_quote=False,
+        )
+
+        empty_form = self.build_empty_variant_form(purchasable_product)
+
+        self.assertEqual(
+            "Required on the default variant when the product is directly purchasable.",
+            empty_form.fields["price"].help_text,
         )
 
     def test_variant_inline_requires_a_priced_default_variant_for_purchasable_products(self) -> None:

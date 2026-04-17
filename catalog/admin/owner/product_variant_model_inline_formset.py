@@ -1,5 +1,6 @@
 """ Owner inline formset for product variants. """
 
+from typing import Any
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
@@ -67,6 +68,19 @@ class ProductVariantModelInlineFormSet(BaseInlineFormSet):
             return bool(self.data.get("requires_quote"))
 
         return bool(getattr(self.instance, "requires_quote", False))
+
+    def get_form_kwargs(self, index: int) -> dict[str, Any]:
+        """ Pass current product quote behavior into each inline form.
+
+        Args:
+            index: Position of the inline form inside the formset.
+
+        Returns:
+            dict[str, Any]: Inline form kwargs enriched with quote behavior context.
+        """
+        kwargs = super().get_form_kwargs(index)
+        kwargs["requires_quote"] = self._requires_quote()
+        return kwargs
 
     def _has_price(self, form: ModelForm) -> bool:
         """ Return whether one inline variant row currently carries a usable price.
