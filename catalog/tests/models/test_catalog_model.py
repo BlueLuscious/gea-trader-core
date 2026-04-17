@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from decimal import Decimal
 from django.utils.translation import override
@@ -45,6 +46,71 @@ class TestCatalogModel(LoggedTestCase):
         self.assertEqual(str(product), "Bomba")
         self.assertEqual(str(variant), "Linea A")
         self.assertEqual(str(image), "Bomba frontal")
+
+    def test_product_image_rejects_variant_from_another_product(self) -> None:
+        """ Verify product images cannot point to a variant owned by another product. """
+        tenant = self._create_tenant("image-variant-scope")
+        first_product = ProductModel.objects.create(tenant=tenant, name="Pump", slug="pump")
+        second_product = ProductModel.objects.create(tenant=tenant, name="Valve", slug="valve")
+        foreign_variant = ProductVariantModel.objects.create(
+            product=second_product,
+            sku="VALVE-001",
+        )
+        image = ProductImageModel(
+            product=first_product,
+            variant=foreign_variant,
+            image=SimpleUploadedFile("pump.jpg", b"binary", content_type="image/jpeg"),
+            alt_text="Pump image",
+        )
+
+        with self.assertRaises(ValidationError):
+            image.full_clean()
+
+    def test_product_allows_at_most_one_primary_root_image(self) -> None:
+        """ Verify one product cannot keep more than one primary root image. """
+        tenant = self._create_tenant("image-primary-root")
+        product = ProductModel.objects.create(tenant=tenant, name="Pump", slug="pump")
+        ProductImageModel.objects.create(
+            product=product,
+            image=SimpleUploadedFile("pump-primary.jpg", b"binary", content_type="image/jpeg"),
+            alt_text="Primary pump image",
+            is_primary=True,
+        )
+        second_primary_image = ProductImageModel(
+            product=product,
+            image=SimpleUploadedFile("pump-secondary.jpg", b"binary", content_type="image/jpeg"),
+            alt_text="Secondary pump image",
+            is_primary=True,
+        )
+
+        with self.assertRaises(ValidationError):
+            second_primary_image.full_clean()
+
+    def test_variant_allows_at_most_one_primary_image(self) -> None:
+        """ Verify one variant cannot keep more than one primary image. """
+        tenant = self._create_tenant("image-primary-variant")
+        product = ProductModel.objects.create(tenant=tenant, name="Pump", slug="pump")
+        variant = ProductVariantModel.objects.create(
+            product=product,
+            sku="PUMP-001",
+        )
+        ProductImageModel.objects.create(
+            product=product,
+            variant=variant,
+            image=SimpleUploadedFile("pump-variant-primary.jpg", b"binary", content_type="image/jpeg"),
+            alt_text="Primary variant image",
+            is_primary=True,
+        )
+        second_primary_variant_image = ProductImageModel(
+            product=product,
+            variant=variant,
+            image=SimpleUploadedFile("pump-variant-secondary.jpg", b"binary", content_type="image/jpeg"),
+            alt_text="Secondary variant image",
+            is_primary=True,
+        )
+
+        with self.assertRaises(ValidationError):
+            second_primary_variant_image.full_clean()
 
     def test_product_slug_can_repeat_across_different_tenants(self) -> None:
         """ Allow the same product slug when each tenant owns a separate catalog. """

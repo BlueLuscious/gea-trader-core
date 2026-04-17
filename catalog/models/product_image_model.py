@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from catalog.models.managers.product_image_model_manager import ProductImageModelManager
 
@@ -62,8 +64,34 @@ class ProductImageModel(models.Model):
 
     class Meta:
         ordering = ("product_id", "sort_order", "id")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product"],
+                condition=Q(variant__isnull=True, is_primary=True),
+                name="catalog_image_one_primary_root_per_product",
+            ),
+            models.UniqueConstraint(
+                fields=["variant"],
+                condition=Q(variant__isnull=False, is_primary=True),
+                name="catalog_image_one_primary_per_variant",
+            ),
+        ]
         verbose_name = _("Product image")
         verbose_name_plural = _("Product images")
+
+    def clean(self) -> None:
+        """ Validate product-image relationships before persistence.
+
+        Raises:
+            ValidationError: When the selected variant belongs to another product.
+        """
+        super().clean()
+
+        if self.variant_id is None:
+            return
+
+        if self.variant is not None and self.variant.product_id != self.product_id:
+            raise ValidationError({"variant": _("Choose a variant that belongs to the selected product.")})
 
     def __str__(self) -> str:
         """ Return the image label.
