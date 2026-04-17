@@ -22,6 +22,7 @@ class TestCatalogDTO(LoggedSimpleTestCase):
             is_active=True,
             is_featured=False,
             requires_quote=True,
+            public_price=None,
             created_at=timezone.now(),
             updated_at=timezone.now(),
         )

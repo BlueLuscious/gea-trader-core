@@ -21,15 +21,49 @@ class TestCatalogDTOFactory(LoggedTestCase):
         return TenantModel.objects.create(name=slug.replace("-", " ").title(), slug=slug)
 
     def test_product_model_dto_factory_build_maps_fields(self) -> None:
-        """ Verify ProductModelDTOFactory.build maps core product fields. """
+        """ Verify ProductModelDTOFactory.build maps core product fields and public price. """
         tenant = self._create_tenant("north")
-        product = ProductModel.objects.create(tenant=tenant, name='Bomba', slug='bomba', sku_base='BOM', is_featured=True)
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name='Bomba',
+            slug='bomba',
+            sku_base='BOM',
+            is_featured=True,
+            requires_quote=False,
+        )
+        ProductVariantModel.objects.create(
+            product=product,
+            sku='BOM-001',
+            price=Decimal('20.00'),
+            is_default=True,
+        )
 
         dto = ProductModelDTOFactory.build(product)
 
         self.assertEqual(dto.id, product.id)
         self.assertEqual(dto.sku_base, 'BOM')
         self.assertTrue(dto.is_featured)
+        self.assertEqual(dto.public_price, Decimal('20.00'))
+
+    def test_product_model_dto_factory_hides_public_price_for_quote_only_products(self) -> None:
+        """ Verify ProductModelDTOFactory keeps quote-only product prices internal. """
+        tenant = self._create_tenant("quote-only")
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name='Filtro',
+            slug='filtro',
+            requires_quote=True,
+        )
+        ProductVariantModel.objects.create(
+            product=product,
+            sku='FIL-001',
+            price=Decimal('15.00'),
+            is_default=True,
+        )
+
+        dto = ProductModelDTOFactory.build(product)
+
+        self.assertIsNone(dto.public_price)
 
     def test_variant_factory_copies_attributes_json(self) -> None:
         """ Verify ProductVariantModelDTOFactory copies the attributes dictionary. """

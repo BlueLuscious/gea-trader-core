@@ -28,6 +28,7 @@ class ProductModelDTOFactory:
             is_active=instance.is_active,
             is_featured=instance.is_featured,
             requires_quote=instance.requires_quote,
+            public_price=instance.get_public_price(),
             created_at=instance.created_at,
             updated_at=instance.updated_at,
         )

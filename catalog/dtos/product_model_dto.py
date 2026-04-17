@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from decimal import Decimal
 
 
 @dataclass(frozen=True)
@@ -17,5 +18,6 @@ class ProductModelDTO:
     is_active: bool
     is_featured: bool
     requires_quote: bool
+    public_price: Decimal | None
     created_at: datetime
     updated_at: datetime
