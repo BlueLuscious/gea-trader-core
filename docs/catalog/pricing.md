@@ -55,6 +55,8 @@ This applies to both:
 - simple products with one variant
 - multi-variant products with one default entrypoint variant
 
+The default variant must remain available for selection.
+
 ## Current Enforcement
 
 The current contract is enforced through a mix of model helpers, owner-admin validation, and DTO mapping.
@@ -80,6 +82,7 @@ Current owner-admin rules:
 
 - a product cannot be saved without variants
 - a product cannot be saved without exactly one default variant
+- a default variant cannot be kept unavailable for selection
 - a directly purchasable product cannot be saved without a price on the default variant
 - a quote-only product may keep the default variant price empty
 

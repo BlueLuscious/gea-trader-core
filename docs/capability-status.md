@@ -118,8 +118,11 @@ Check:
 - DTOs and DTO factories
 - master and tenant-scoped owner admin flows
 - variant-based catalog pricing with one required default variant per product
+- default variants kept available for selection
 - quote-only products with hidden public price and optional internal variant price
 - directly purchasable products with public price resolved from the priced default variant
+- product-image consistency between products and variants
+- one primary root image per product and one primary image per variant at most
 
 Check:
 

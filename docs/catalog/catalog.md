@@ -99,6 +99,7 @@ Current behavior:
 - only one default variant is allowed per product
 - variants are the current place where price lives
 - variants are used as the more concrete commercial layer for quoting or selling
+- the default variant must stay available for selection
 - variant fields expose user-friendly labels and help texts for admin translation flows
 - owner-admin product saves require at least one variant and exactly one default variant
 - directly purchasable products require a price on the default variant
@@ -127,6 +128,9 @@ Current fields cover:
 Current metadata direction:
 
 - image fields expose user-friendly labels and help texts for owner-admin usage
+- image validation keeps variant assignments scoped to the selected product
+- root product images may have at most one primary image per product
+- variant images may have at most one primary image per variant
 
 Related files:
 
