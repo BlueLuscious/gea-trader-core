@@ -1,11 +1,13 @@
 """ Owner admin tests for tenant-scoped catalog flows. """
 
+from decimal import Decimal
 from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
 from accounts.models import UserModel
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin import ProductModelAdmin
+from catalog.admin.owner.product_variant_model_inline import ProductVariantModelInline
 from catalog.models import ProductModel
 from core.adminsites.site_instances import owner_admin_site
 from core.testing.base import LoggedTestCase
@@ -79,6 +81,39 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
         request.tenant = tenant
         return request
 
+    def build_variant_formset(
+        self,
+        data: dict[str, str],
+        instance: ProductModel | None = None,
+    ) -> object:
+        """ Build the owner variant inline formset with one realistic POST payload.
+
+        Args:
+            data: Bound inline POST payload.
+            instance: Product instance bound to the inline formset.
+
+        Returns:
+            object: Bound variant inline formset.
+        """
+        inline = ProductVariantModelInline(ProductModel, owner_admin_site)
+        request = self.request_factory.post("/owner-admin/catalog/productmodel/add/")
+        request.user = self.operator
+        request.tenant = self.tenant
+        formset_class = inline.get_formset(request, obj=instance)
+        prefix = formset_class.get_default_prefix()
+        product = instance or ProductModel(
+            tenant=self.tenant,
+            brand=self.brand,
+            category=self.category,
+            name="Draft product",
+            slug="draft-product",
+        )
+        normalized_data = {
+            key.replace("variants-", f"{prefix}-", 1): value
+            for key, value in data.items()
+        }
+        return formset_class(data=normalized_data, instance=product, prefix=prefix)
+
     def test_get_queryset_is_scoped_to_the_active_tenant(self) -> None:
         """ Verify the owner product queryset only returns products from the active tenant. """
         request = self.build_request(self.operator, self.tenant)
@@ -136,3 +171,89 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
             formset.empty_form.fields["variant"].queryset.count()
 
         logger_info_mock.assert_called_once()
+
+    def test_variant_inline_requires_at_least_one_variant(self) -> None:
+        """ Verify owner products cannot be saved without at least one variant. """
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "0",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+            }
+        )
+
+        self.assertFalse(formset.is_valid())
+        self.assertIn("Add at least one variant before saving the product.", formset.non_form_errors())
+
+    def test_variant_inline_requires_one_default_variant(self) -> None:
+        """ Verify owner products cannot be saved when no default variant is selected. """
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "1",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-name": "Standard",
+                "variants-0-sku": "PUMP-001",
+                "variants-0-price": "15.00",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+            }
+        )
+
+        self.assertFalse(formset.is_valid())
+        self.assertIn("Choose exactly one default variant for this product.", formset.non_form_errors())
+
+    def test_variant_inline_rejects_multiple_default_variants(self) -> None:
+        """ Verify owner products cannot be saved with more than one default variant. """
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "2",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-name": "Primary",
+                "variants-0-sku": "PUMP-001",
+                "variants-0-price": "15.00",
+                "variants-0-is_default": "on",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+                "variants-1-name": "Secondary",
+                "variants-1-sku": "PUMP-002",
+                "variants-1-price": "18.00",
+                "variants-1-is_default": "on",
+                "variants-1-is_active": "on",
+                "variants-1-sort_order": "1",
+            }
+        )
+
+        self.assertFalse(formset.is_valid())
+        self.assertIn("Choose exactly one default variant for this product.", formset.non_form_errors())
+
+    def test_variant_inline_accepts_one_default_variant(self) -> None:
+        """ Verify owner products can be saved when exactly one default variant exists. """
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "2",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-name": "Primary",
+                "variants-0-sku": "PUMP-001",
+                "variants-0-price": str(Decimal("15.00")),
+                "variants-0-is_default": "on",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+                "variants-1-name": "Secondary",
+                "variants-1-sku": "PUMP-002",
+                "variants-1-price": str(Decimal("18.00")),
+                "variants-1-is_active": "on",
+                "variants-1-sort_order": "1",
+            }
+        )
+
+        self.assertTrue(
+            formset.is_valid(),
+            f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
+        )

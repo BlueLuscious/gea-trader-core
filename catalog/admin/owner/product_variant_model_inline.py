@@ -2,6 +2,8 @@
 
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import TabularInline
+from catalog.admin.owner.product_variant_model_inline_form import ProductVariantModelInlineForm
+from catalog.admin.owner.product_variant_model_inline_formset import ProductVariantModelInlineFormSet
 from catalog.models import ProductVariantModel
 
 
@@ -9,6 +11,8 @@ class ProductVariantModelInline(TabularInline):
     """ Inline editor for product variants inside the owner product admin. """
 
     model = ProductVariantModel
+    form = ProductVariantModelInlineForm
+    formset = ProductVariantModelInlineFormSet
     tab = True
     show_count = True
     extra = 0
