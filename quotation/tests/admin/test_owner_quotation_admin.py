@@ -256,3 +256,30 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
                 "Choose a variant or configure one default variant for the selected product.",
                 formset.forms[0].errors["variant"],
             )
+
+    def test_quote_item_inline_rejects_zero_quantity(self) -> None:
+        """ Verify add-time quote items reject zero quantity through the model-backed inline form. """
+        with override("en"):
+            inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+            request = self.request_factory.post("/owner-admin/quotation/quotemodel/add/")
+            request.user = self.operator
+            request.tenant = self.tenant
+            formset_class = inline.get_formset(request, obj=None)
+            prefix = "items"
+            formset = formset_class(
+                data={
+                    f"{prefix}-TOTAL_FORMS": "1",
+                    f"{prefix}-INITIAL_FORMS": "0",
+                    f"{prefix}-MIN_NUM_FORMS": "0",
+                    f"{prefix}-MAX_NUM_FORMS": "1000",
+                    f"{prefix}-0-product": str(self.in_scope_product.pk),
+                    f"{prefix}-0-variant": str(self.in_scope_variant.pk),
+                    f"{prefix}-0-quantity": "0",
+                    f"{prefix}-0-notes": "",
+                },
+                instance=QuoteModel(tenant=self.tenant, customer_name="Manual"),
+                prefix=prefix,
+            )
+
+            self.assertFalse(formset.is_valid())
+            self.assertIn("Ensure this value is greater than or equal to 1.", formset.forms[0].errors["quantity"])

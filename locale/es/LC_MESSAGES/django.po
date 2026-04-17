@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 06:05-0300\n"
+"POT-Creation-Date: 2026-04-17 06:26-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -270,7 +270,7 @@ msgstr "Carrito al que pertenece esta línea."
 #: .\catalog\models\product_model.py:122
 #: .\catalog\models\product_variant_model.py:20
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:19
-#: .\quotation\models\quote_item_model.py:27
+#: .\quotation\models\quote_item_model.py:28
 msgid "Product"
 msgstr "Producto"
 
@@ -282,7 +282,7 @@ msgstr "Producto seleccionado actualmente en esta línea del carrito."
 #: .\catalog\admin\owner\product_variant_model_inline.py:22
 #: .\catalog\models\product_image_model.py:26
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:20
-#: .\quotation\models\quote_item_model.py:36
+#: .\quotation\models\quote_item_model.py:37
 msgid "Variant"
 msgstr "Variante"
 
@@ -293,7 +293,7 @@ msgstr ""
 
 #: .\cart\models\cart_item_model.py:41
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:21
-#: .\quotation\models\quote_item_model.py:67
+#: .\quotation\models\quote_item_model.py:69
 msgid "Quantity"
 msgstr "Cantidad"
 
@@ -316,7 +316,7 @@ msgstr "Notas opcionales de runtime capturadas para esta línea del carrito."
 #: .\catalog\models\product_variant_model.py:67
 #: .\masterdata\models\brand_model.py:45
 #: .\masterdata\models\category_model.py:60
-#: .\quotation\models\quote_item_model.py:78
+#: .\quotation\models\quote_item_model.py:80
 #: .\quotation\models\quote_model.py:106
 msgid "Created at"
 msgstr "Creado el"
@@ -1355,17 +1355,17 @@ msgid "Category hierarchy cannot contain cycles."
 msgstr "La jerarquía de categorías no puede contener ciclos."
 
 #: .\quotation\admin\owner\quote_item_model_inline.py:25
-#: .\quotation\models\quote_item_model.py:91
+#: .\quotation\models\quote_item_model.py:93
 msgid "Quote item"
 msgstr "Ítem de cotización"
 
 #: .\quotation\admin\owner\quote_item_model_inline.py:26
-#: .\quotation\models\quote_item_model.py:92
+#: .\quotation\models\quote_item_model.py:94
 msgid "Quote items"
 msgstr "Ítems de cotización"
 
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:22
-#: .\quotation\models\quote_item_model.py:73
+#: .\quotation\models\quote_item_model.py:75
 msgid "Item notes"
 msgstr "Notas del ítem"
 
@@ -1409,8 +1409,8 @@ msgstr "Agrega al menos un ítem de cotización antes de guardar la cotización.
 msgid ""
 "Quote items require a variant or one default variant on the selected product."
 msgstr ""
-"Los ítems de cotización requieren una variante o una variante "
-"predeterminada en el producto seleccionado."
+"Los ítems de cotización requieren una variante o una variante predeterminada "
+"en el producto seleccionado."
 
 #: .\quotation\admin\owner\quote_model_admin.py:47
 msgid "Fill in who requested the quote and how to contact them."
@@ -1535,69 +1535,69 @@ msgstr "Completada"
 msgid "Cancelled"
 msgstr "Cancelada"
 
-#: .\quotation\models\quote_item_model.py:18
+#: .\quotation\models\quote_item_model.py:19
 #: .\quotation\models\quote_model.py:124
 msgid "Quote"
 msgstr "Cotización"
 
-#: .\quotation\models\quote_item_model.py:19
+#: .\quotation\models\quote_item_model.py:20
 msgid "Quote this line item belongs to."
 msgstr "Cotización a la que pertenece este ítem."
 
-#: .\quotation\models\quote_item_model.py:28
+#: .\quotation\models\quote_item_model.py:29
 msgid "Optional product reference kept while the catalog product still exists."
 msgstr ""
 "Referencia opcional al producto mientras ese producto siga existiendo en el "
 "catálogo."
 
-#: .\quotation\models\quote_item_model.py:37
+#: .\quotation\models\quote_item_model.py:38
 msgid "Optional variant reference kept while the catalog variant still exists."
 msgstr ""
 "Referencia opcional a la variante mientras esa variante siga existiendo en "
 "el catálogo."
 
-#: .\quotation\models\quote_item_model.py:41
+#: .\quotation\models\quote_item_model.py:42
 msgid "Product name snapshot"
 msgstr "Instantánea del nombre del producto"
 
-#: .\quotation\models\quote_item_model.py:42
+#: .\quotation\models\quote_item_model.py:43
 msgid "Product name captured when this quote item was created."
 msgstr "Nombre del producto capturado cuando se creó este ítem de cotización."
 
-#: .\quotation\models\quote_item_model.py:48
+#: .\quotation\models\quote_item_model.py:49
 msgid "SKU snapshot"
 msgstr "Instantánea del SKU"
 
-#: .\quotation\models\quote_item_model.py:49
+#: .\quotation\models\quote_item_model.py:50
 msgid "SKU captured when this quote item was created."
 msgstr "SKU capturado cuando se creó este ítem de cotización."
 
-#: .\quotation\models\quote_item_model.py:54
+#: .\quotation\models\quote_item_model.py:55
 msgid "Attribute snapshot"
 msgstr "Instantánea de atributos"
 
-#: .\quotation\models\quote_item_model.py:55
+#: .\quotation\models\quote_item_model.py:56
 msgid "Variant attributes captured when this quote item was created."
 msgstr ""
 "Atributos de la variante capturados cuando se creó este ítem de cotización."
 
-#: .\quotation\models\quote_item_model.py:62
+#: .\quotation\models\quote_item_model.py:63
 msgid "Unit price snapshot"
 msgstr "Instantánea del precio unitario"
 
-#: .\quotation\models\quote_item_model.py:63
+#: .\quotation\models\quote_item_model.py:64
 msgid "Unit price captured when this quote item was created."
 msgstr "Precio unitario capturado cuando se creó este ítem de cotización."
 
-#: .\quotation\models\quote_item_model.py:68
+#: .\quotation\models\quote_item_model.py:70
 msgid "Number of units requested for this quote item."
 msgstr "Cantidad de unidades solicitadas para este ítem de cotización."
 
-#: .\quotation\models\quote_item_model.py:74
+#: .\quotation\models\quote_item_model.py:76
 msgid "Optional internal note for this specific quote item."
 msgstr "Nota interna opcional para este ítem de cotización."
 
-#: .\quotation\models\quote_item_model.py:79
+#: .\quotation\models\quote_item_model.py:81
 msgid "When this quote item was created."
 msgstr "Cuándo se creó este ítem de cotización."
 

@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from quotation.models.managers.quote_item_model_manager import QuoteItemModelManager
@@ -64,6 +65,7 @@ class QuoteItemModel(models.Model):
     )
     quantity = models.PositiveIntegerField(
         default=1,
+        validators=[MinValueValidator(1)],
         verbose_name=_("Quantity"),
         help_text=_("Number of units requested for this quote item."),
     )

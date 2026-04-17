@@ -54,6 +54,19 @@ class TestQuotationModel(LoggedTestCase):
         self.assertEqual(str(quote), f'Quote {quote.pk}')
         self.assertEqual(str(item), 'Bomba')
 
+    def test_quote_item_quantity_must_be_positive(self) -> None:
+        """ Verify quote items reject zero quantity at the model layer. """
+        tenant = self._create_tenant("quotation-quantity")
+        quote = QuoteModel.objects.create(tenant=tenant, customer_email="cliente@example.com")
+        item = QuoteItemModel(
+            quote=quote,
+            product_name_snapshot="Bomba",
+            quantity=0,
+        )
+
+        with self.assertRaises(ValidationError):
+            item.full_clean()
+
     def test_quote_rejects_source_cart_from_another_tenant(self) -> None:
         """ Verify a quote cannot reference a cart that belongs to another tenant. """
         tenant = self._create_tenant("quotation-cart-scope")
