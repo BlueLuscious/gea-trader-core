@@ -152,6 +152,20 @@ Check:
 
 - `docs/quotation/quotation.md`
 
+### Cart Domain
+
+- persisted cart and cart-item models
+- cart status choice enum
+- typed managers and querysets
+- tenant-owned cart root with tenant-aware cart and cart-item query helpers
+- DTOs and DTO factories
+- master-admin technical visibility without owner-admin CRUD exposure
+- tenant-safe quotation-origin integration from cart to quote
+
+Check:
+
+- `docs/cart/cart.md`
+
 ## Implemented As Extension Point
 
 ### Project-Wide Async Task Runtime
@@ -219,16 +233,6 @@ Check:
 
 - `docs/front/front.md`
 - `docs/tenancy/resolution.md`
-
-### Cart As Active Runtime App
-
-- `cart/` is part of the current runtime app scope wired by `core/settings.py`
-- it is present in the repository as an active domain package
-- its fuller user-facing and admin-facing ownership docs should be refined as that surface stabilizes
-
-Check:
-
-- `docs/project.md`
 
 ### New Storage Adapter Onboarding
 
