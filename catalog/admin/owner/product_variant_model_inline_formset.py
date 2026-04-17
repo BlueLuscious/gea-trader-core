@@ -100,6 +100,20 @@ class ProductVariantModelInlineFormSet(BaseInlineFormSet):
 
         return getattr(form.instance, "price", None) is not None
 
+    def _is_active_variant_form(self, form: ModelForm) -> bool:
+        """ Return whether one inline variant row stays available for selection.
+
+        Args:
+            form: Inline product-variant form.
+
+        Returns:
+            bool: ``True`` when the row keeps or submits active state.
+        """
+        if form.is_bound:
+            return bool(form.data.get(form.add_prefix("is_active")))
+
+        return bool(getattr(form.instance, "is_active", False))
+
     def clean(self) -> None:
         """ Require a complete default variant contract for the current product flow.
 
@@ -121,6 +135,9 @@ class ProductVariantModelInlineFormSet(BaseInlineFormSet):
         default_variant_count = len(default_variant_forms)
         if default_variant_count != 1:
             raise ValidationError(_("Choose exactly one default variant for this product."))
+
+        if not self._is_active_variant_form(default_variant_forms[0]):
+            raise ValidationError(_("The default variant must stay available for selection."))
 
         if not self._requires_quote():
             if not self._has_price(default_variant_forms[0]):

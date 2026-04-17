@@ -358,3 +358,23 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
             formset.is_valid(),
             f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
         )
+
+    def test_variant_inline_rejects_an_inactive_default_variant(self) -> None:
+        """ Verify owner products cannot keep the default variant unavailable for selection. """
+        with override("en"):
+            formset = self.build_variant_formset(
+                data={
+                    "variants-TOTAL_FORMS": "1",
+                    "variants-INITIAL_FORMS": "0",
+                    "variants-MIN_NUM_FORMS": "0",
+                    "variants-MAX_NUM_FORMS": "1000",
+                    "variants-0-name": "Primary",
+                    "variants-0-sku": "PUMP-005",
+                    "variants-0-price": "15.00",
+                    "variants-0-is_default": "on",
+                    "variants-0-sort_order": "0",
+                }
+            )
+
+            self.assertFalse(formset.is_valid())
+            self.assertIn("The default variant must stay available for selection.", formset.non_form_errors())

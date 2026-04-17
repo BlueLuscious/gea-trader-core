@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -90,6 +91,17 @@ class ProductVariantModel(models.Model):
         ]
         verbose_name = _("Product variant")
         verbose_name_plural = _("Product variants")
+
+    def clean(self) -> None:
+        """ Validate default-variant consistency before persistence.
+
+        Raises:
+            ValidationError: When the default variant is marked inactive.
+        """
+        super().clean()
+
+        if self.is_default and not self.is_active:
+            raise ValidationError({"is_active": _("The default variant must stay available for selection.")})
 
     def __str__(self) -> str:
         """ Return the variant label.

@@ -192,6 +192,24 @@ class TestCatalogModel(LoggedTestCase):
         self.assertIsNone(product.get_default_variant())
         self.assertIsNone(product.get_public_price())
 
+    def test_default_variant_must_stay_active(self) -> None:
+        """ Verify one default variant cannot be saved as inactive. """
+        tenant = self._create_tenant("variant-default-active")
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name="Pump",
+            slug="pump",
+        )
+        variant = ProductVariantModel(
+            product=product,
+            sku="PUMP-DEFAULT",
+            is_default=True,
+            is_active=False,
+        )
+
+        with self.assertRaises(ValidationError):
+            variant.full_clean()
+
     def test_model_field_metadata_uses_friendly_translatable_copy(self) -> None:
         """ Verify catalog model fields expose user-friendly labels and help texts. """
         product_field_expectations = {
