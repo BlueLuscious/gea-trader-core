@@ -14,6 +14,7 @@ It currently defines:
 - a catalog-specific tenant-aware access policy
 - master admin registrations for technical administration
 - an owner-focused products flow inside the curated owner admin
+- a stable variant-based pricing contract for public and owner-facing catalog flows
 
 The app should remain focused on product catalog concerns and not absorb project-wide infrastructure that belongs in `core/`.
 
@@ -99,6 +100,9 @@ Current behavior:
 - variants are the current place where price lives
 - variants are used as the more concrete commercial layer for quoting or selling
 - variant fields expose user-friendly labels and help texts for admin translation flows
+- owner-admin product saves require at least one variant and exactly one default variant
+- directly purchasable products require a price on the default variant
+- quote-only products may keep the default variant price empty
 
 Related files:
 
@@ -182,6 +186,7 @@ Current note:
 - the DTO layer is still intentionally lean
 - it mirrors the persistence structure closely
 - more presentation-specific DTOs can be added later when the public catalog surface becomes more concrete
+- `ProductModelDTO` already exposes `public_price` as the current public pricing read contract
 
 ## Admin
 
@@ -225,6 +230,8 @@ Current owner-specific pieces:
 - `ProductModelAdmin`
 - `ProductModelAdminForm`
 - `ProductVariantModelInline`
+- `ProductVariantModelInlineForm`
+- `ProductVariantModelInlineFormSet`
 - `ProductImageModelInline`
 - `ProductImageModelInlineFormSet`
 - local CSS for small owner-specific layout corrections
@@ -235,6 +242,7 @@ Current UX decisions:
 - `ProductImageModelInline` is stacked because images benefit from a more card-like layout
 - image inline variant choices are restricted to variants of the current product
 - fieldsets are grouped into business-friendly sections instead of exposing a raw model form
+- variant pricing guidance changes based on whether the product remains quote-only or becomes directly purchasable
 
 Current access direction:
 
@@ -256,15 +264,14 @@ The current catalog direction is:
 
 - `ProductModel` is the entity users browse
 - `ProductVariantModel` is the concrete selectable option behind that product
+- price lives on variants rather than on products
+- one default variant acts as the public pricing entrypoint when the product is directly purchasable
 
 This means the public catalog should likely render products as the main cards and detail pages, while variants resolve concrete pricing and selection behavior behind the scenes.
 
-Open decision still under discussion:
+For the stable pricing rules, see:
 
-- whether products with uniform pricing should continue to rely only on variants
-- or whether a shared product-level base price should exist to avoid repeating the same value across many variants
-
-No product-level base price has been introduced yet.
+- `docs/catalog/pricing.md`
 
 ## Tests
 

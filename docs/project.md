@@ -50,6 +50,7 @@ Current status of the other app folders:
 
 - Accounts app: `docs/accounts/accounts.md`
 - Catalog app: `docs/catalog/catalog.md`
+- Catalog pricing contract: `docs/catalog/pricing.md`
 - Front app and future tenant-aware UI direction: `docs/front/front.md`
 - Masterdata app: `docs/masterdata/masterdata.md`
 - Cart app: `docs/cart/cart.md`
@@ -79,6 +80,7 @@ To avoid repeating the same explanation in multiple places:
 - `docs/core/config/storage/testing.md` owns storage integration-test structure and execution guidance
 - `docs/accounts/accounts.md` owns the `accounts/` domain structure
 - `docs/catalog/catalog.md` owns the `catalog/` domain structure
+- `docs/catalog/pricing.md` owns the current catalog pricing contract
 - `docs/front/front.md` owns the frontend structure and future tenant-aware UI direction
 - `docs/masterdata/masterdata.md` owns the `masterdata/` domain structure
 - `docs/cart/cart.md` owns the `cart/` runtime domain structure

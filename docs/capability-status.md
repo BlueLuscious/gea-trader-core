@@ -117,10 +117,14 @@ Check:
 - catalog-specific access policy for owner-managed catalog flows
 - DTOs and DTO factories
 - master and tenant-scoped owner admin flows
+- variant-based catalog pricing with one required default variant per product
+- quote-only products with hidden public price and optional internal variant price
+- directly purchasable products with public price resolved from the priced default variant
 
 Check:
 
 - `docs/catalog/catalog.md`
+- `docs/catalog/pricing.md`
 
 ### Masterdata Domain
 
