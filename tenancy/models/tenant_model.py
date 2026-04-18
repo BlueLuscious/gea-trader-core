@@ -74,6 +74,8 @@ class TenantModel(models.Model):
     quotes: "RelatedManager[QuoteModel]"
 
     class Meta:
+        """ Declarative admin-facing metadata for tenant persistence. """
+
         ordering = ("name",)
         verbose_name = _("Business")
         verbose_name_plural = _("Businesses")
