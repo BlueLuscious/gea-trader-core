@@ -1,0 +1,12 @@
+{{ mail_title }}
+
+{% if mail_intro %}{{ mail_intro }}
+
+{% endif %}{% block content %}{% endblock %}
+{% if cta_url and cta_label %}
+{{ cta_label }}: {{ cta_url }}
+{% endif %}
+{% if mail_outro %}
+{{ mail_outro }}
+{% endif %}
+{% include "mail/partials/footer.txt" %}

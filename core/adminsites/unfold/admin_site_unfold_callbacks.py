@@ -1,5 +1,6 @@
 """ Request-aware Unfold callbacks for project admin sites. """
 
+from typing import Any
 from django.http import HttpRequest
 from django.utils.module_loading import import_string
 from core.adminsites.admin_namespace import AdminNamespace
@@ -50,6 +51,71 @@ class AdminSiteUnfoldCallbacks:
         return site_instance.get_site_symbol(request)
 
     @classmethod
+    def site_logo(cls, request: HttpRequest) -> dict[str, str] | str | None:
+        """ Return the site logo for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            dict[str, str] | str | None: Resolved logo value.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_site_logo(request)
+
+    @classmethod
+    def site_icon(cls, request: HttpRequest) -> dict[str, str] | str | None:
+        """ Return the site icon for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            dict[str, str] | str | None: Resolved icon value.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_site_icon(request)
+
+    @classmethod
+    def site_favicons(cls, request: HttpRequest) -> list[dict[str, str]]:
+        """ Return favicon entries for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            list[dict[str, str]]: Resolved favicon metadata.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_site_favicons(request)
+
+    @classmethod
+    def login_image(cls, request: HttpRequest) -> str | None:
+        """ Return the login image for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            str | None: Resolved login image URL.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_login_image(request)
+
+    @classmethod
+    def site_subheader(cls, request: HttpRequest) -> str | None:
+        """ Return the site subheader for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            str | None: Resolved site subheader.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_site_subheader(request)
+
+    @classmethod
     def site_url(cls, request: HttpRequest) -> str:
         """ Return the site URL for the current request.
 
@@ -61,6 +127,19 @@ class AdminSiteUnfoldCallbacks:
         """
         site_instance = cls._resolve_admin_site_instance(request)
         return site_instance.get_site_url(request)
+
+    @classmethod
+    def environment(cls, request: HttpRequest) -> list[str] | tuple[str, str] | None:
+        """ Return the environment badge for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            list[str] | tuple[str, str] | None: Label and variant pair, or ``None``.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_environment(request)
 
     @classmethod
     def show_search(cls, request: HttpRequest) -> bool:
@@ -76,6 +155,19 @@ class AdminSiteUnfoldCallbacks:
         return site_instance.get_show_sidebar_search(request)
 
     @classmethod
+    def show_languages(cls, request: HttpRequest) -> bool:
+        """ Return whether the language switcher should be visible.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            bool: True when the language switcher should be shown.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_show_languages(request)
+
+    @classmethod
     def show_all_applications(cls, request: HttpRequest) -> bool:
         """ Return whether all applications should be visible in the sidebar.
 
@@ -89,17 +181,49 @@ class AdminSiteUnfoldCallbacks:
         return site_instance.get_show_all_applications(request)
 
     @classmethod
-    def sidebar_navigation(cls, request: HttpRequest) -> list[dict[str, object]]:
+    def sidebar_navigation(cls, request: HttpRequest) -> list[dict[str, Any]]:
         """ Return sidebar navigation for the current request.
 
         Args:
             request: Current admin request.
 
         Returns:
-            list[dict[str, object]]: Resolved sidebar navigation items.
+            list[dict[str, Any]]: Resolved sidebar navigation items.
         """
         site_instance = cls._resolve_admin_site_instance(request)
         return site_instance.get_sidebar_navigation(request)
+
+    @classmethod
+    def site_dropdown(cls, request: HttpRequest) -> list[dict[str, Any]]:
+        """ Return site dropdown items for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            list[dict[str, Any]]: Resolved site dropdown items.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_site_dropdown(request)
+
+    @classmethod
+    def languages_navigation(cls, request: HttpRequest) -> list[dict[str, str]]:
+        """ Return language switcher items for the current request.
+
+        Args:
+            request: Current admin request.
+
+        Returns:
+            list[dict[str, str]]: Language metadata for the Unfold switcher.
+        """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_languages_navigation(request)
+
+    @classmethod
+    def languages_action(cls, request: HttpRequest) -> str:
+        """ Return the URL used by the admin language switcher form. """
+        site_instance = cls._resolve_admin_site_instance(request)
+        return site_instance.get_languages_action(request)
 
     @classmethod
     def scripts(cls, request: HttpRequest) -> list[str]:

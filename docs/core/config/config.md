@@ -2,6 +2,15 @@
 
 This document explains the purpose of `core/config/` and how configuration modules should be organized there.
 
+See also:
+
+- `docs/project.md`
+- `docs/core/core.md`
+- `docs/core/config/logging/logging.md`
+- `docs/core/config/logging/usage.md`
+- `docs/core/config/storage/storage.md`
+- `docs/core/config/storage/testing.md`
+
 ## Goal
 
 `core/config/` exists to keep `core/settings.py` readable while still allowing structured, testable, environment-driven configuration code.
@@ -17,7 +26,14 @@ Use this package for configuration that is:
 
 Current contents:
 
+- `logging/`
 - `storage/`
+
+The `logging/` package contains configuration logic for:
+
+- project-wide logger settings
+- environment-driven log levels
+- shared Django and Celery logging defaults
 
 The `storage/` package contains configuration logic for:
 
@@ -28,6 +44,10 @@ The `storage/` package contains configuration logic for:
 See:
 
 - `docs/core/config/storage/storage.md`
+- `docs/core/config/storage/testing.md`
+
+This document owns the boundary of the configuration layer.
+Detailed provider behavior, environment variables, and storage combinations belong in the storage-specific document instead of being repeated here.
 
 ## What Belongs In `core/config/`
 

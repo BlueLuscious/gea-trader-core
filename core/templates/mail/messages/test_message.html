@@ -1,0 +1,8 @@
+{% extends "mail/layouts/base.html" %}
+
+{% block content %}
+<p style="margin:0 0 16px 0;">{{ mail_body }}</p>
+{% if mail_secondary_body %}
+<p style="margin:0;">{{ mail_secondary_body }}</p>
+{% endif %}
+{% endblock %}

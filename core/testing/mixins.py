@@ -1,8 +1,5 @@
 """ Shared mixins for project tests. """
 
-from inspect import getfile
-from pathlib import Path
-
 
 class LoggedTestMixin:
     """ Print a success log line for each passing test method. """
@@ -36,7 +33,7 @@ class LoggedTestMixin:
             after: Counter snapshot after the test run.
 
         Returns:
-            bool: True when the test passed without failures, errors or skips.
+            bool: ``True`` when the test passed without failures, errors or skips.
         """
         return (
             after["failures"] == before["failures"]
@@ -52,11 +49,10 @@ class LoggedTestMixin:
         Returns:
             str: Success log line in the agreed format.
         """
-        file_name = Path(getfile(self.__class__)).name
         case_name = self.__class__.__name__
         method_name = self._testMethodName
         info_message = self.resolve_info_message()
-        return f"{file_name} - {case_name} - {method_name} - {info_message}"
+        return f"TEST | {case_name} | {method_name} | {info_message}"
 
     def resolve_info_message(self) -> str:
         """ Resolve the log message from the current test method docstring.

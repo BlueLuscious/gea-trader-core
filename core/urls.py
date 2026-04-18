@@ -5,15 +5,18 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.urls import path, include
 from core.adminsites.site_instances import master_admin_site, owner_admin_site
+from core.i18n.views import SetAdminLanguageView
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
+    path("i18n/admin-setlang/", SetAdminLanguageView.as_view(), name="set_admin_language"),
     path("", include("django_components.urls")),
 ]
 
 urlpatterns += i18n_patterns(
     path("admin/", master_admin_site.urls),
     path("owner-admin/", owner_admin_site.urls),
+    path("", include("tenancy.urls")),
     prefix_default_language=False,
 )
 

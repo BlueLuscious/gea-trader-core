@@ -1,6 +1,12 @@
 # Storage Configuration
 
-This document summarizes the supported `media` and `staticfiles` combinations, which environment variables are used in each case, and how to run the real integration tests.
+This document summarizes the supported `media` and `staticfiles` combinations and the environment variables used to wire them.
+
+See also:
+
+- `docs/project.md`
+- `docs/core/config/config.md`
+- `docs/core/config/storage/testing.md`
 
 ## Configuration Structure
 
@@ -9,6 +15,13 @@ Storage configuration lives under:
 - `core/config/storage/common.py`
 - `core/config/storage/media_storage/`
 - `core/config/storage/static_storage/`
+
+Both storage domains expose a resolver entrypoint:
+
+- `MediaStorageAdapterResolver.build_config(...)`
+- `StaticStorageAdapterResolver.build_config(...)`
+
+These resolver boundaries are also the preferred place for operational storage logging.
 
 `media` and `staticfiles` share the same storage namespace, but they keep separate contracts:
 
@@ -26,6 +39,30 @@ Minimal examples for the supported scenarios live in `docs/env-examples/`:
 - `.env.r2.local.example`
 - `.env.r2.whitenoise.example`
 - `.env.r2.r2.example`
+
+## Current Storage Direction
+
+The current storage design intentionally supports multiple deployment shapes without forcing one provider choice across every environment.
+
+Current rules:
+
+- `media` may be local or remote
+- `staticfiles` may be local, WhiteNoise, or remote
+- media is tenant-aware when an active tenant exists at save time
+- static files remain global unless the project introduces a real tenant-specific static surface later
+
+This means storage should be wired per surface and per environment, not by one hardcoded deployment assumption.
+
+## Current Logging Direction
+
+The storage layer should log at configuration and provider-resolution boundaries.
+
+Current direction:
+
+- log which media provider was resolved
+- log which staticfiles provider was resolved
+- log the selected backend class and any extra apps or middleware added by the configuration
+- avoid logging every low-level helper or every derived storage option individually
 
 ## Main Variables
 
@@ -88,6 +125,8 @@ These variables are for `docker-compose.yml`. Django does not need them unless y
 - `MINIO_API_PORT`
 - `MINIO_CONSOLE_PORT`
 - `MINIO_BUCKET_NAME`
+- `MAILHOG_SMTP_PORT`
+- `MAILHOG_UI_PORT`
 
 ## Supported Combinations
 
@@ -169,6 +208,11 @@ Recommendation:
   - `media`
   - `static`
 
+Current tenancy direction:
+
+- media is tenant-aware at runtime and stores uploaded objects under `tenants/<tenant-slug>/...` when one active tenant exists
+- static files remain global unless real per-tenant branding assets are introduced
+
 ### 5. Local Media + WhiteNoise Staticfiles
 
 - `MEDIAFILES_PROVIDER=local`
@@ -206,98 +250,39 @@ Conceptual result:
 - static objects live under `static/...`
 - public delivery can be served through a CDN or custom domain
 
-## Optional Integration Toggle
+With tenant-aware media enabled, the final stored object key becomes:
 
-- `RUN_STORAGE_INTEGRATION_TESTS=True`
+- `media/tenants/<tenant-slug>/...` for remote backends
+- `MEDIA_ROOT/tenants/<tenant-slug>/...` for local media
 
-This enables real tests against a configured S3-compatible backend.
+The tenant prefix is generated through the storage backend `generate_filename()`
+hook. When saving to storage directly instead of going through a Django
+`FileField` or `ImageField`, generate the final object name first and then pass
+that name into `save()`.
 
-Useful for:
+If no active tenant exists during the save operation, media keeps the original relative path unchanged.
 
-- local MinIO
-- S3
-- R2
+## Future Storage Adapter Wiring Process
 
-## Real Integration Tests
+When a new environment or deployment target needs storage wiring, follow this process:
 
-The real integration tests live in:
+1. decide whether `media` and `staticfiles` should be local, WhiteNoise-backed, or remote
+2. choose the provider per surface instead of assuming both must use the same backend
+3. configure the provider-specific environment variables
+4. keep media tenant-aware through the existing filename generation path instead of adding tenant prefixes in views or forms
+5. keep static files global unless the product introduces a real tenant-specific static requirement
+6. validate the selected combination with `manage.py check`
+7. run unit tests and real integration tests when the target uses an S3-compatible backend
 
-- `core/tests/storage/integration/base.py`
-- `core/tests/storage/integration/mixins.py`
-- `core/tests/storage/integration/protocols.py`
-- `core/tests/storage/integration/test_s3_storage_integration.py`
-- `core/tests/storage/integration/test_r2_storage_integration.py`
+## Future Process For Adding One New Storage Adapter
 
-### How They Are Organized
+If the project eventually adds a new storage provider beyond `local`, `s3`, `r2`, or `whitenoise`, the expected process should be:
 
-- `StorageIntegrationMixin` contains shared integration helpers
-- `BaseStorageIntegrationSimpleTestCase` defines the shared real test cases
-- `TestS3StorageIntegration` runs those cases when `MEDIAFILES_PROVIDER=s3`
-- `TestR2StorageIntegration` runs those cases when `MEDIAFILES_PROVIDER=r2`
+1. create the adapter config and backend classes under `core/config/storage/`
+2. wire the provider into the corresponding resolver entrypoint
+3. keep the provider-specific settings isolated from app-level code
+4. add unit coverage for the resolver and backend behavior
+5. add opt-in integration coverage only when real provider access is available
+6. update this document, the storage testing document, and the environment examples
 
-### What They Currently Cover
-
-With `boto3`:
-
-- list bucket contents
-- upload an object
-- delete an object
-
-With `django-storages`:
-
-- save an object
-- verify existence
-- build a URL
-- delete an object
-
-### How To Run Them
-
-#### Full Storage Suite
-
-```powershell
-.\.venv\Scripts\python.exe manage.py test core.tests.storage
-```
-
-This runs:
-
-- adapter unit tests
-- integration tests, which run or skip depending on the provider and `RUN_STORAGE_INTEGRATION_TESTS`
-
-#### R2 Integration Only
-
-```powershell
-.\.venv\Scripts\python.exe manage.py test core.tests.storage.integration.test_r2_storage_integration
-```
-
-Requirements:
-
-- `MEDIAFILES_PROVIDER=r2`
-- `RUN_STORAGE_INTEGRATION_TESTS=True`
-
-#### S3 Integration Only
-
-```powershell
-.\.venv\Scripts\python.exe manage.py test core.tests.storage.integration.test_s3_storage_integration
-```
-
-Requirements:
-
-- `MEDIAFILES_PROVIDER=s3`
-- `RUN_STORAGE_INTEGRATION_TESTS=True`
-
-### Proxy Note
-
-If the environment has `HTTP_PROXY`, `HTTPS_PROXY`, or `ALL_PROXY` configured, `boto3` may try to route through an invalid proxy and fail even when the adapter is correct.
-
-If that happens, clear those variables before running the suite:
-
-```powershell
-Remove-Item Env:HTTP_PROXY -ErrorAction SilentlyContinue
-Remove-Item Env:HTTPS_PROXY -ErrorAction SilentlyContinue
-Remove-Item Env:ALL_PROXY -ErrorAction SilentlyContinue
-Remove-Item Env:http_proxy -ErrorAction SilentlyContinue
-Remove-Item Env:https_proxy -ErrorAction SilentlyContinue
-Remove-Item Env:all_proxy -ErrorAction SilentlyContinue
-$env:NO_PROXY='*'
-$env:no_proxy='*'
-```
+This keeps provider changes inside the storage layer instead of leaking them into domain apps.

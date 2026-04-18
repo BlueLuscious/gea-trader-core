@@ -2,6 +2,16 @@
 
 This document explains the purpose and structure of `core/adminsites/`.
 
+See also:
+
+- `docs/project.md`
+- `docs/core/core.md`
+- `docs/accounts/accounts.md`
+- `docs/tenancy/tenancy.md`
+- `docs/tenancy/runtime.md`
+- `docs/tenancy/access.md`
+- `docs/core/adminsites/owner-managed-apps.md`
+
 ## Goal
 
 `core/adminsites/` contains project-level admin infrastructure shared across apps.
@@ -23,6 +33,7 @@ Current contents:
 - `registry.py`
 - `site_instances.py`
 - `sites/`
+- `services/`
 - `unfold/`
 
 ## Responsibilities
@@ -71,6 +82,24 @@ Rules:
 - keep metadata getters at class level when they only expose site identity
 - prefer instance methods for hooks that depend on the real admin site runtime state such as app registry, app list, or per-instance navigation
 
+### `services/`
+
+Contains small admin-infrastructure services used by site classes.
+
+Current services include:
+
+- active-tenant switch URL building
+- owner tenant dropdown building
+- owner tenant branding resolution
+- owner tenant sidebar navigation building
+
+Rules:
+
+- keep request-aware helper logic here when it does not belong in the ORM model itself
+- avoid pushing Unfold-specific payload shaping into unrelated domain models
+- keep site classes focused on metadata hooks and admin behavior orchestration
+- prefer logging request-aware fallback and builder boundaries here instead of inside trivial site metadata getters
+
 ### `unfold/`
 
 Contains the adapter layer between the custom admin sites and Unfold settings.
@@ -118,7 +147,8 @@ Recommended structure:
 Examples:
 
 - `accounts/admin/master/`
-- `catalog/admin/owner/`
+- `tenancy/admin/owner/`
+- `tenancy/admin/master/`
 
 This keeps:
 
@@ -146,6 +176,17 @@ Characteristics:
 - active staff users
 - guided domain-specific admin experience
 - simpler navigation than the master site
+- tenant-aware metadata such as title and header when an active tenant is resolved
+- compatible with explicit active-tenant switching backed by session state
+- tenant switcher dropdown in the site header when the user belongs to multiple active tenants
+- tenant branding-aware title, header, logo, icon, and favicons through a dedicated adminsite service
+- callable Unfold asset settings such as `SCRIPTS` and `STYLES` are resolved through the shared `BaseAdminSite` adapter so request-aware asset hooks actually reach the rendered template context
+- `Business -> Settings` links directly to the native tenant-scoped `TenantModel` change form with owner-admin helper classes from `tenancy/admin/owner/`
+- tenant switching keeps the tenant settings screen tenant-aware and falls back from other admin change screens to portable destinations
+- owner favicon light and dark variants are finalized with one small admin script because upstream Unfold does not expose a narrow template hook for favicon `media` attributes
+- custom language switching endpoint from `core/i18n/` used by the Unfold language selector to keep the default language unprefixed
+- owner sidebar entries are curated instead of mirroring the full Django app list
+- the current `Accounts` navigation is intentionally owner-only even inside the owner admin site
 
 ## Maintenance Rule
 
@@ -155,3 +196,9 @@ If a concern is shared by all admin sites, place it in:
 - or the `unfold/` adapter layer when it is Unfold-specific
 
 If a concern is specific to one domain app, keep it inside that app instead of growing `core/adminsites/`.
+
+App docs should describe only their own registrations and then link back here for shared site infrastructure.
+
+The future wiring pattern for new owner-managed apps is documented separately in:
+
+- `docs/core/adminsites/owner-managed-apps.md`

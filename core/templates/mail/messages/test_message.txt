@@ -1,0 +1,9 @@
+{% extends "mail/layouts/base.txt" %}
+
+{% block content %}
+{{ mail_body }}
+{% if mail_secondary_body %}
+
+{{ mail_secondary_body }}
+{% endif %}
+{% endblock %}

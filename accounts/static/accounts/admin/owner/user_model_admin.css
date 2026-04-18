@@ -1,0 +1,7 @@
+#usermodel_form .tab-wrapper fieldset.module > .leading-relaxed {
+    padding-inline: 0.75rem;
+}
+
+#tenant_memberships-group .inline-deletelink {
+    display: none !important;
+}

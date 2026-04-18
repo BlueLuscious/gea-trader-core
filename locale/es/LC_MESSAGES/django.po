@@ -1,0 +1,764 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: gea-trader-core\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 19:32-0300\n"
+"PO-Revision-Date: 2026-04-02 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\accounts\admin\owner\group_admin.py:38
+msgid "Team group"
+msgstr "Grupo del equipo"
+
+#: .\accounts\admin\owner\group_admin.py:41
+msgid "Create permission groups for people working in this business."
+msgstr ""
+"Crea grupos de permisos para las personas que trabajan en este negocio."
+
+#: .\accounts\admin\owner\group_admin.py:46
+msgid "Access permissions"
+msgstr "Permisos de acceso"
+
+#: .\accounts\admin\owner\group_admin.py:49
+msgid "This group can include any permissions you already have."
+msgstr "Este grupo puede incluir cualquiera de los permisos que ya tienes."
+
+#: .\accounts\admin\owner\group_admin.py:136
+#, python-format
+msgid "Can add %(name)s"
+msgstr "Puede agregar %(name)s"
+
+#: .\accounts\admin\owner\group_admin.py:137
+#, python-format
+msgid "Can change %(name)s"
+msgstr "Puede cambiar %(name)s"
+
+#: .\accounts\admin\owner\group_admin.py:138
+#, python-format
+msgid "Can delete %(name)s"
+msgstr "Puede eliminar %(name)s"
+
+#: .\accounts\admin\owner\group_admin.py:139
+#, python-format
+msgid "Can view %(name)s"
+msgstr "Puede ver %(name)s"
+
+#: .\accounts\admin\owner\group_admin_form.py:17
+msgid "Group name"
+msgstr "Nombre del grupo"
+
+#: .\accounts\admin\owner\group_admin_form.py:18
+msgid "Granted permissions"
+msgstr "Permisos otorgados"
+
+#: .\accounts\admin\owner\group_admin_form.py:21
+msgid "Use a clear name that describes what this team group is for."
+msgstr "Usa un nombre claro que describa para qué sirve este grupo."
+
+#: .\accounts\admin\owner\group_admin_form.py:22
+msgid "People in this group will receive the permissions selected here."
+msgstr "Las personas de este grupo recibirán los permisos seleccionados aquí."
+
+#: .\accounts\admin\owner\tenant_membership_inline.py:28
+#: .\accounts\admin\owner\tenant_membership_inline.py:29 .\tenancy\apps.py:12
+#: .\tenancy\models\tenant_membership_model.py:73
+#: .\tenancy\models\tenant_membership_model.py:74
+msgid "Business access"
+msgstr "Acceso al negocio"
+
+#: .\accounts\admin\owner\tenant_membership_inline_form.py:18
+#: .\tenancy\models\tenant_membership_model.py:38
+msgid "Business role"
+msgstr "Rol en el negocio"
+
+#: .\accounts\admin\owner\tenant_membership_inline_form.py:19
+#: .\tenancy\models\tenant_membership_model.py:43
+msgid "Access active"
+msgstr "Acceso activo"
+
+#: .\accounts\admin\owner\tenant_membership_inline_form.py:22
+msgid "Choose whether this person manages this business or works on the team."
+msgstr "Elige si esta persona administra este negocio o trabaja en el equipo."
+
+#: .\accounts\admin\owner\tenant_membership_inline_form.py:23
+msgid "Turn off access to this business without deleting the user."
+msgstr "Desactiva el acceso a este negocio sin eliminar el usuario."
+
+#: .\accounts\admin\owner\tenant_membership_inline_formset.py:63
+msgid "This screen requires an active business in context."
+msgstr "Esta pantalla requiere un negocio activo en contexto."
+
+#: .\accounts\admin\owner\tenant_membership_inline_formset.py:72
+msgid "Add one business access entry before saving this user."
+msgstr "Agrega un acceso al negocio antes de guardar este usuario."
+
+#: .\accounts\admin\owner\tenant_membership_inline_formset.py:87
+msgid "Each business must keep at least one active owner account."
+msgstr "Cada negocio debe conservar al menos una cuenta propietaria activa."
+
+#: .\accounts\admin\owner\user_model_admin.py:43
+#: .\accounts\admin\owner\user_model_admin.py:65
+msgid "Profile"
+msgstr "Perfil"
+
+#: .\accounts\admin\owner\user_model_admin.py:46
+msgid "Create a team account your staff can recognize easily."
+msgstr "Crea una cuenta de equipo que tu personal pueda reconocer fácilmente."
+
+#: .\accounts\admin\owner\user_model_admin.py:55
+#: .\accounts\admin\owner\user_model_admin.py:76
+msgid "Access"
+msgstr "Acceso"
+
+#: .\accounts\admin\owner\user_model_admin.py:58
+#: .\accounts\admin\owner\user_model_admin.py:79
+msgid "Control whether this account can sign in and open the business admin."
+msgstr ""
+"Controla si esta cuenta puede iniciar sesión y abrir el admin del negocio."
+
+#: .\accounts\admin\owner\user_model_admin.py:68
+msgid "Keep this team member's profile and contact details up to date."
+msgstr "Mantén actualizados el perfil y los datos de contacto de esta persona."
+
+#: .\accounts\admin\owner\user_model_admin.py:84
+msgid "Activity"
+msgstr "Actividad"
+
+#: .\accounts\admin\owner\user_model_admin.py:87
+msgid "Recent sign-in details for support and auditing."
+msgstr "Detalles recientes de acceso para soporte y auditoría."
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:13
+msgid "Password"
+msgstr "Contraseña"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:16
+msgid "Set a temporary password for this team account."
+msgstr "Define una contraseña temporal para esta cuenta de equipo."
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:19
+msgid "Confirm password"
+msgstr "Confirmar contraseña"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:22
+msgid "Type the same password again to confirm it."
+msgstr "Escribe la misma contraseña otra vez para confirmarla."
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:31
+#: .\accounts\admin\owner\user_model_admin_form.py:17
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:32
+#: .\accounts\admin\owner\user_model_admin_form.py:18
+msgid "First name"
+msgstr "Nombre"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:33
+#: .\accounts\admin\owner\user_model_admin_form.py:19
+msgid "Last name"
+msgstr "Apellido"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:34
+#: .\accounts\admin\owner\user_model_admin_form.py:20
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:35
+#: .\accounts\admin\owner\user_model_admin_form.py:21
+msgid "Active"
+msgstr "Activo"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:36
+#: .\accounts\admin\owner\user_model_admin_form.py:22
+msgid "Can open business admin"
+msgstr "Puede abrir el admin del negocio"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:37
+#: .\accounts\admin\owner\user_model_admin_form.py:23
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:76
+#: .\core\tests\adminsites\test_adminsites.py:72
+msgid "Groups"
+msgstr "Grupos"
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:40
+#: .\accounts\admin\owner\user_model_admin_form.py:26
+msgid "Use a real contact email for notifications and password recovery."
+msgstr "Usa un correo real para notificaciones y recuperación de contraseña."
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:41
+#: .\accounts\admin\owner\user_model_admin_form.py:27
+msgid "Disable this user instead of deleting the account."
+msgstr "Desactiva este usuario en lugar de eliminar la cuenta."
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:42
+#: .\accounts\admin\owner\user_model_admin_form.py:28
+msgid "Keep this enabled so this person can open the business admin."
+msgstr ""
+"Mantén esto habilitado para que esta persona pueda abrir el admin del "
+"negocio."
+
+#: .\accounts\admin\owner\user_model_admin_creation_form.py:43
+#: .\accounts\admin\owner\user_model_admin_form.py:29
+msgid "Only permission groups for the current business can be assigned here."
+msgstr "Aquí solo se pueden asignar grupos de permisos del negocio actual."
+
+#: .\accounts\apps.py:12
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:64
+msgid "Accounts"
+msgstr "Cuentas"
+
+#: .\accounts\models\user_model.py:22 .\tenancy\models\tenant_model.py:70
+msgid "Businesses"
+msgstr "Negocios"
+
+#: .\accounts\models\user_model.py:23
+msgid "Businesses this account can access through business access records."
+msgstr ""
+"Negocios a los que esta cuenta puede acceder mediante sus accesos al negocio."
+
+#: .\accounts\models\user_model.py:32
+#: .\tenancy\models\tenant_membership_model.py:31
+msgid "User"
+msgstr "Usuario"
+
+#: .\accounts\models\user_model.py:33
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:67
+#: .\core\tests\adminsites\test_adminsites.py:72
+msgid "Users"
+msgstr "Usuarios"
+
+#: .\accounts\tests\admin\test_owner_accounts_admin.py:218
+#: .\tenancy\choices\tenant_role.py:11
+msgid "Owner"
+msgstr "Propietario"
+
+#: .\accounts\tests\admin\test_owner_accounts_admin.py:218
+#: .\tenancy\choices\tenant_role.py:12
+msgid "Operator"
+msgstr "Operador"
+
+#: .\core\adminsites\services\owner_tenant_dropdown_builder.py:54
+#: .\core\tests\adminsites\test_owner_admin_site_dropdown.py:47
+msgid "Current"
+msgstr "Actual"
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:51
+#: .\tenancy\admin\owner\owner_tenant_settings_admin.py:34
+#: .\tenancy\models\tenant_branding_model.py:19
+#: .\tenancy\models\tenant_group_model.py:20
+#: .\tenancy\models\tenant_membership_model.py:24
+#: .\tenancy\models\tenant_model.py:69
+msgid "Business"
+msgstr "Negocio"
+
+#: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:54
+#: .\core\tests\adminsites\test_adminsites.py:72
+msgid "Settings"
+msgstr "Configuración"
+
+#: .\core\adminsites\sites\owner_admin_site.py:20
+msgid "Business Administration"
+msgstr "Administración del negocio"
+
+#: .\core\adminsites\sites\owner_admin_site.py:21
+msgid "Business Admin"
+msgstr "Admin del negocio"
+
+#: .\core\adminsites\sites\owner_admin_site.py:23
+msgid "Business operations"
+msgstr "Operaciones del negocio"
+
+#: .\core\i18n\translation_anchors.py:6
+msgid "Welcome back to"
+msgstr "Bienvenido de nuevo a"
+
+#: .\core\i18n\translation_anchors.py:7
+msgid "Return to site"
+msgstr "Volver al sitio"
+
+#: .\core\i18n\translation_anchors.py:8
+msgid "Django site admin"
+msgstr "Administración del sitio"
+
+#: .\core\i18n\translation_anchors.py:9
+msgid "Search apps and models..."
+msgstr "Buscar apps y modelos..."
+
+#: .\core\i18n\translation_anchors.py:10
+msgid "Type to search"
+msgstr "Escribe para buscar"
+
+#: .\core\i18n\translation_anchors.py:11
+msgid "Filters"
+msgstr "Filtros"
+
+#: .\core\i18n\translation_anchors.py:12
+msgid "Filter navigation items"
+msgstr "Filtrar elementos de navegación"
+
+#: .\core\i18n\translation_anchors.py:13
+msgid "Light"
+msgstr "Claro"
+
+#: .\core\i18n\translation_anchors.py:14
+msgid "Dark"
+msgstr "Oscuro"
+
+#: .\core\i18n\translation_anchors.py:15
+msgid "System"
+msgstr "Sistema"
+
+#: .\core\i18n\translation_anchors.py:16
+msgid "After you've created a user, you’ll be able to edit more user options."
+msgstr ""
+"Después de crear un usuario, vas a poder editar más opciones de la cuenta."
+
+#: .\core\i18n\translation_anchors.py:17
+msgid "You have been successfully logged out from the administration"
+msgstr "Cerraste sesión correctamente en la administración"
+
+#: .\core\i18n\translation_anchors.py:18
+msgid "Thanks for spending some quality time with the web site today."
+msgstr "Gracias por pasar un buen rato en el sitio web hoy."
+
+#: .\core\i18n\translation_anchors.py:19
+msgid "Log in again"
+msgstr "Iniciar sesión de nuevo"
+
+#: .\core\i18n\translation_anchors.py:20
+msgid "Authentication and authorization"
+msgstr "Autenticación y autorización"
+
+#: .\core\i18n\translation_anchors.py:21
+msgid "History"
+msgstr "Historial"
+
+#: .\core\i18n\translation_anchors.py:22
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: .\core\i18n\translation_anchors.py:23
+#, python-format
+msgid "Change password: %s"
+msgstr "Cambiar contraseña: %s"
+
+#: .\core\i18n\translation_anchors.py:24
+msgid "View site"
+msgstr "Ver el sitio"
+
+#: .\core\i18n\translation_anchors.py:25
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+#: .\core\i18n\translation_anchors.py:26
+msgid "Log in"
+msgstr "Iniciar sesión"
+
+#: .\core\i18n\translation_anchors.py:27
+msgid "Recent actions"
+msgstr "Acciones recientes"
+
+#: .\core\i18n\translation_anchors.py:28
+msgid "Show counts"
+msgstr "Mostrar recuentos"
+
+#: .\core\i18n\translation_anchors.py:29
+msgid "Save as new"
+msgstr "Guardar como nuevo"
+
+#: .\core\i18n\translation_anchors.py:30
+msgid "Save and add another"
+msgstr "Guardar y agregar otro"
+
+#: .\core\i18n\translation_anchors.py:31
+msgid "Save and continue editing"
+msgstr "Guardar y seguir editando"
+
+#: .\core\i18n\translation_anchors.py:32
+msgid "Delete?"
+msgstr "¿Eliminar?"
+
+#: .\core\i18n\translation_anchors.py:33
+#, python-format
+msgid "Delete selected %(verbose_name_plural)s"
+msgstr "Eliminar %(verbose_name_plural)s seleccionados"
+
+#: .\core\i18n\translation_anchors.py:34
+msgid "Delete multiple objects"
+msgstr "Eliminar varios objetos"
+
+#: .\core\i18n\translation_anchors.py:35
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr "Eliminar %(model)s seleccionados"
+
+#: .\core\i18n\translation_anchors.py:36
+msgid "Clear selection"
+msgstr "Limpiar selección"
+
+#: .\core\i18n\translation_anchors.py:37
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr "Seleccionar los %(total_count)s %(module_name)s"
+
+#: .\core\i18n\translation_anchors.py:38
+msgid "Select all objects on this page for an action"
+msgstr "Seleccionar todos los objetos de esta página para una acción"
+
+#: .\core\i18n\translation_anchors.py:39
+#, python-brace-format
+msgid "Select this object for an action - {}"
+msgstr "Seleccionar este objeto para una acción - {}"
+
+#: .\core\i18n\translation_anchors.py:40
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr "%(full_result_count)s en total"
+
+#: .\core\i18n\translation_anchors.py:41
+msgid "Home"
+msgstr "Inicio"
+
+#: .\core\i18n\translation_anchors.py:42
+msgid "Documentation"
+msgstr "Documentación"
+
+#: .\core\i18n\translation_anchors.py:43
+msgid "Add"
+msgstr "Agregar"
+
+#: .\core\i18n\translation_anchors.py:44
+msgid "Change"
+msgstr "Cambiar"
+
+#: .\core\i18n\translation_anchors.py:45
+#, python-format
+msgid "Add %(name)s"
+msgstr "Agregar %(name)s"
+
+#: .\core\i18n\translation_anchors.py:46
+msgid "Save"
+msgstr "Guardar"
+
+#: .\core\i18n\translation_anchors.py:47
+msgid "Save and view"
+msgstr "Guardar y ver"
+
+#: .\core\i18n\translation_anchors.py:48
+msgid "Close"
+msgstr "Cerrar"
+
+#: .\core\i18n\translation_anchors.py:49
+msgid "Delete"
+msgstr "Eliminar"
+
+#: .\core\i18n\translation_anchors.py:50
+msgid "Hide counts"
+msgstr "Ocultar recuentos"
+
+#: .\core\i18n\translation_anchors.py:51
+msgid "Clear all filters"
+msgstr "Limpiar todos los filtros"
+
+#: .\core\i18n\translation_anchors.py:52
+msgid "Click here to select the objects across all pages"
+msgstr "Haz clic aquí para seleccionar los objetos de todas las páginas"
+
+#: .\core\i18n\translation_anchors.py:53
+msgid "None available"
+msgstr "Nada disponible"
+
+#: .\core\i18n\translation_anchors.py:54
+msgid "Added:"
+msgstr "Agregado:"
+
+#: .\core\i18n\translation_anchors.py:55
+msgid "Changed:"
+msgstr "Cambiado:"
+
+#: .\core\i18n\translation_anchors.py:56
+msgid "Deleted:"
+msgstr "Eliminado:"
+
+#: .\core\i18n\translation_anchors.py:57
+msgid ""
+"This object doesn’t have a change history. It probably wasn’t added via this "
+"admin site."
+msgstr ""
+"Este objeto no tiene historial de cambios. Probablemente no se agregó desde "
+"este sitio de administración."
+
+#: .\core\i18n\translation_anchors.py:58
+msgid "Password change"
+msgstr "Cambio de contraseña"
+
+#: .\core\i18n\translation_anchors.py:59
+msgid "Your password was changed."
+msgstr "Tu contraseña fue cambiada."
+
+#: .\core\i18n\translation_anchors.py:60
+msgid "Change my password"
+msgstr "Cambiar mi contraseña"
+
+#: .\core\i18n\translation_anchors.py:61
+msgid ""
+"Forgotten your password? Enter your email address below, and we’ll email "
+"instructions for setting a new one."
+msgstr ""
+"¿Olvidaste tu contraseña? Ingresa tu correo electrónico aquí abajo y te "
+"enviaremos instrucciones para definir una nueva."
+
+#: .\core\i18n\translation_anchors.py:62
+msgid "Email address:"
+msgstr "Correo electrónico:"
+
+#: .\core\i18n\translation_anchors.py:63
+msgid ""
+"If you don’t receive an email, please make sure you’ve entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+"Si no recibes un correo, asegúrate de haber ingresado la dirección con la "
+"que te registraste y revisa tu carpeta de spam."
+
+#: .\core\i18n\translation_anchors.py:64
+msgid "Show all"
+msgstr "Mostrar todo"
+
+#: .\core\i18n\translation_anchors.py:65
+msgid "result"
+msgstr "resultado"
+
+#: .\core\i18n\translation_anchors.py:66
+msgid "results"
+msgstr "resultados"
+
+#: .\core\i18n\translation_anchors.py:67
+msgid "Choose file to upload"
+msgstr "Elija el archivo para cargar"
+
+#: .\core\i18n\translation_anchors.py:68
+msgid "Select action"
+msgstr "Seleccionar acción"
+
+#: .\core\i18n\translation_anchors.py:69
+msgid "Run"
+msgstr "Ejecutar"
+
+#: .\core\settings.py:153
+msgid "Spanish"
+msgstr "Español"
+
+#: .\core\settings.py:154
+msgid "English"
+msgstr "Inglés"
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:22
+#: .\tenancy\models\tenant_model.py:33
+msgid "Business email"
+msgstr "Correo del negocio"
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:23
+#: .\tenancy\models\tenant_model.py:38
+msgid "Support email"
+msgstr "Correo de soporte"
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:24
+#: .\tenancy\models\tenant_model.py:44
+msgid "Phone number"
+msgstr "Teléfono"
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:25
+#: .\tenancy\models\tenant_model.py:49
+msgid "Website"
+msgstr "Sitio web"
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:28
+#: .\tenancy\models\tenant_model.py:34
+msgid "Main contact email for this business."
+msgstr "Correo principal de contacto de este negocio."
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:29
+#: .\tenancy\models\tenant_model.py:39
+msgid ""
+"Optional support email shown in emails and messages sent for this business."
+msgstr ""
+"Correo de soporte opcional que se muestra en correos y mensajes enviados "
+"para este negocio."
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:30
+#: .\tenancy\models\tenant_model.py:45
+msgid "Optional public phone number for this business."
+msgstr "Número de teléfono público opcional de este negocio."
+
+#: .\tenancy\admin\owner\owner_tenant_settings_form.py:31
+#: .\tenancy\models\tenant_model.py:50
+msgid "Optional public website URL for this business."
+msgstr "URL pública opcional del sitio web de este negocio."
+
+#: .\tenancy\admin\owner\tenant_branding_inline.py:23
+#: .\tenancy\admin\owner\tenant_branding_inline.py:24
+#: .\tenancy\models\tenant_branding_model.py:73
+#: .\tenancy\models\tenant_branding_model.py:74
+msgid "Business branding"
+msgstr "Marca del negocio"
+
+#: .\tenancy\choices\tenant_role.py:10
+msgid "Master"
+msgstr "Maestro"
+
+#: .\tenancy\models\tenant_branding_model.py:20
+msgid "Business that owns this branding configuration."
+msgstr "Negocio que posee esta configuración de branding."
+
+#: .\tenancy\models\tenant_branding_model.py:25
+msgid "Display name"
+msgstr "Nombre visible"
+
+#: .\tenancy\models\tenant_branding_model.py:26
+msgid ""
+"Optional public name used instead of the business name when branding is "
+"shown."
+msgstr ""
+"Nombre público opcional que se usa en lugar del nombre del negocio cuando se "
+"muestra el branding."
+
+#: .\tenancy\models\tenant_branding_model.py:31
+msgid "Light logo"
+msgstr "Logo claro"
+
+#: .\tenancy\models\tenant_branding_model.py:32
+msgid "Logo variant intended for light backgrounds."
+msgstr "Variante del logo pensada para fondos claros."
+
+#: .\tenancy\models\tenant_branding_model.py:37
+msgid "Dark logo"
+msgstr "Logo oscuro"
+
+#: .\tenancy\models\tenant_branding_model.py:38
+msgid "Logo variant intended for dark backgrounds."
+msgstr "Variante del logo pensada para fondos oscuros."
+
+#: .\tenancy\models\tenant_branding_model.py:43
+msgid "Light icon"
+msgstr "Ícono claro"
+
+#: .\tenancy\models\tenant_branding_model.py:44
+msgid "Compact icon variant intended for light backgrounds."
+msgstr "Variante compacta del ícono pensada para fondos claros."
+
+#: .\tenancy\models\tenant_branding_model.py:49
+msgid "Dark icon"
+msgstr "Ícono oscuro"
+
+#: .\tenancy\models\tenant_branding_model.py:50
+msgid "Compact icon variant intended for dark backgrounds."
+msgstr "Variante compacta del ícono pensada para fondos oscuros."
+
+#: .\tenancy\models\tenant_branding_model.py:55
+msgid "Light favicon"
+msgstr "Favicon claro"
+
+#: .\tenancy\models\tenant_branding_model.py:56
+msgid "Favicon variant intended for light browser themes or light backgrounds."
+msgstr ""
+"Variante del favicon pensada para temas claros del navegador o fondos claros."
+
+#: .\tenancy\models\tenant_branding_model.py:61
+msgid "Dark favicon"
+msgstr "Favicon oscuro"
+
+#: .\tenancy\models\tenant_branding_model.py:62
+msgid "Favicon variant intended for dark browser themes or dark backgrounds."
+msgstr ""
+"Variante del favicon pensada para temas oscuros del navegador o fondos "
+"oscuros."
+
+#: .\tenancy\models\tenant_group_model.py:21
+msgid "Business that owns this permission group."
+msgstr "Negocio que posee este grupo de permisos."
+
+#: .\tenancy\models\tenant_group_model.py:27
+msgid "Permission group"
+msgstr "Grupo de permisos"
+
+#: .\tenancy\models\tenant_group_model.py:28
+msgid "Django auth group scoped to the selected business."
+msgstr "Grupo de autenticación de Django asociado al negocio seleccionado."
+
+#: .\tenancy\models\tenant_group_model.py:40
+msgid "Business group"
+msgstr "Grupo del negocio"
+
+#: .\tenancy\models\tenant_group_model.py:41
+msgid "Business groups"
+msgstr "Grupos del negocio"
+
+#: .\tenancy\models\tenant_membership_model.py:25
+msgid "Business where this account receives access."
+msgstr "Negocio en el que esta cuenta recibe acceso."
+
+#: .\tenancy\models\tenant_membership_model.py:32
+msgid "Account that receives this business access."
+msgstr "Cuenta que recibe este acceso al negocio."
+
+#: .\tenancy\models\tenant_membership_model.py:39
+msgid "Role this account will have inside the selected business."
+msgstr "Rol que tendrá esta cuenta dentro del negocio seleccionado."
+
+#: .\tenancy\models\tenant_membership_model.py:44
+msgid ""
+"Uncheck this to keep the access record without allowing day-to-day access."
+msgstr ""
+"Desmarca esta opción para conservar el acceso, pero sin permitir el uso "
+"diario."
+
+#: .\tenancy\models\tenant_membership_model.py:48
+msgid "Primary access"
+msgstr "Acceso principal"
+
+#: .\tenancy\models\tenant_membership_model.py:49
+msgid ""
+"Marks this as the default business access used as a fallback context for the "
+"account."
+msgstr ""
+"Marca este acceso como el predeterminado para usarlo como contexto de "
+"respaldo de la cuenta."
+
+#: .\tenancy\models\tenant_model.py:22
+msgid "Business name"
+msgstr "Nombre del negocio"
+
+#: .\tenancy\models\tenant_model.py:23
+msgid "Public name used to identify this business across the admin."
+msgstr "Nombre visible que identifica este negocio en toda la administración."
+
+#: .\tenancy\models\tenant_model.py:28
+msgid "Business slug"
+msgstr "Slug del negocio"
+
+#: .\tenancy\models\tenant_model.py:29
+msgid "Stable URL-friendly identifier for this business."
+msgstr "Identificador estable y amigable para URLs de este negocio."
+
+#: .\tenancy\models\tenant_model.py:54
+msgid "Business active"
+msgstr "Negocio activo"
+
+#: .\tenancy\models\tenant_model.py:55
+msgid ""
+"Uncheck this to hide the business from active business selection and day-to-"
+"day use."
+msgstr ""
+"Desmarca esta opción para ocultar el negocio de la selección activa y del "
+"uso diario."
+
+#: .\tenancy\switching\active_tenant_switcher.py:35
+msgid "You do not have access to the requested business."
+msgstr "No tienes acceso al negocio solicitado."

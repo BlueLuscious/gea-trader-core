@@ -4,8 +4,8 @@ import os
 from unittest import SkipTest
 from django.conf import settings
 from django.core.files.base import ContentFile
-from core.config.storage import build_media_storage_config
-from core.config.storage.media_storage.base_media_storage_adapter import MediaStorageConfig
+from core.config.storage import MediaStorageAdapterResolver
+from core.config.storage.media_storage.adapters import MediaStorageConfig
 from core.testing.base import LoggedSimpleTestCase
 from core.tests.storage.integration.mixins import StorageIntegrationMixin
 
@@ -33,7 +33,7 @@ class BaseStorageIntegrationSimpleTestCase(StorageIntegrationMixin, LoggedSimple
         if not is_storage_integration_enabled():
             raise SkipTest("Storage integration tests are disabled.")
 
-        cls.storage_config = build_media_storage_config(settings.BASE_DIR)
+        cls.storage_config = MediaStorageAdapterResolver.build_config(settings.BASE_DIR)
         if cls.storage_config.provider != cls.expected_provider:
             raise SkipTest(f"Storage integration tests require MEDIAFILES_PROVIDER={cls.expected_provider}.")
 

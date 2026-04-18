@@ -8,29 +8,25 @@ from core.config.storage.common import (
 )
 from core.config.storage.media_storage import (
     BaseMediaStorageAdapter,
+    MediaStorageAdapterResolver,
     MediaStorageConfig,
-    build_media_storage_config,
-    get_media_storage_adapter
 )
 from core.config.storage.static_storage import (
     BaseStaticStorageAdapter,
+    StaticStorageAdapterResolver,
     StaticStorageConfig,
-    build_static_storage_config,
-    get_static_storage_adapter
 )
 
 __all__ = [
     "BaseMediaStorageAdapter",
+    "MediaStorageAdapterResolver",
     "MediaStorageConfig",
     "BaseStaticStorageAdapter",
+    "StaticStorageAdapterResolver",
     "StaticStorageConfig",
     "build_extra_apps",
     "build_remote_url",
     "build_s3_compatible_storage_options",
     "normalize_location",
     "parse_bool_env",
-    "get_media_storage_adapter",
-    "build_media_storage_config",
-    "get_static_storage_adapter",
-    "build_static_storage_config",
 ]

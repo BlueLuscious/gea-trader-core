@@ -1,6 +1,7 @@
 """ Shared helpers for media and static storage adapters. """
 
 import importlib.util, os
+from typing import Any
 
 
 def build_extra_apps() -> list[str]:
@@ -64,7 +65,7 @@ def build_s3_compatible_storage_options(
     default_location: str,
     default_file_overwrite: bool,
     default_querystring_auth: bool,
-) -> dict[str, object]:
+) -> dict[str, Any]:
     """ Build shared S3-compatible storage options from environment variables.
 
     Args:
@@ -74,7 +75,7 @@ def build_s3_compatible_storage_options(
         default_querystring_auth: Default querystring auth behavior for the backend.
 
     Returns:
-        dict[str, object]: Keyword arguments for S3-compatible backends.
+        dict[str, Any]: Keyword arguments for S3-compatible backends.
     """
     return {
         "bucket_name": os.environ.get("AWS_STORAGE_BUCKET_NAME", ""),

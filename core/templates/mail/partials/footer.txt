@@ -1,0 +1,8 @@
+{% if product_name or support_email or phone_number or website_url %}
+---
+{% if product_name %}Sent via {{ product_name }}
+{% endif %}{% if support_email %}Support: {{ support_email }}
+{% endif %}{% if phone_number %}Phone: {{ phone_number }}
+{% endif %}{% if website_url %}Website: {{ website_url }}
+{% endif %}
+{% endif %}

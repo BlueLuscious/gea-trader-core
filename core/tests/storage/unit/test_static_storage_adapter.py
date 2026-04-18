@@ -3,8 +3,8 @@
 import os
 from pathlib import Path
 from unittest.mock import patch
-from core.config.storage import build_static_storage_config
-from core.config.storage.static_storage.whitenoise import WhiteNoiseStaticStorageAdapter
+from core.config.storage import StaticStorageAdapterResolver
+from core.config.storage.static_storage.adapters import WhiteNoiseStaticStorageAdapter
 from core.testing.base import LoggedSimpleTestCase
 
 
@@ -48,10 +48,13 @@ class TestStaticStorageAdapter(LoggedSimpleTestCase):
         environment.update(overrides)
         return environment
 
-    def test_static_storage_adapter__local_build_static_storage_config_uses_local_backend(self) -> None:
+    def test_static_storage_adapter__resolver_build_config_uses_local_backend(self) -> None:
         """ Verify the local static adapter builds Django staticfiles storage without extra middleware. """
-        with patch.dict(os.environ, self.build_environment(), clear=False):
-            static_storage_config = build_static_storage_config(self.base_dir)
+        with (
+            patch.dict(os.environ, self.build_environment(), clear=False),
+            patch("core.config.storage.static_storage.static_storage_adapter_resolver.logger.info") as logger_info_mock,
+        ):
+            static_storage_config = StaticStorageAdapterResolver.build_config(self.base_dir)
 
         self.assertEqual(static_storage_config.provider, "local")
         self.assertEqual(
@@ -59,12 +62,13 @@ class TestStaticStorageAdapter(LoggedSimpleTestCase):
             "django.contrib.staticfiles.storage.StaticFilesStorage",
         )
         self.assertEqual(static_storage_config.extra_middleware, [])
+        logger_info_mock.assert_called_once()
 
     def test_static_storage_adapter__whitenoise_adds_expected_middleware(self) -> None:
         """ Verify the WhiteNoise adapter adds the expected middleware and backend. """
         with patch("importlib.util.find_spec", return_value=object()):
             with patch.dict(os.environ, self.build_environment(STATICFILES_PROVIDER="whitenoise"), clear=False):
-                static_storage_config = build_static_storage_config(self.base_dir)
+                static_storage_config = StaticStorageAdapterResolver.build_config(self.base_dir)
 
         self.assertEqual(static_storage_config.provider, "whitenoise")
         self.assertEqual(
@@ -84,7 +88,7 @@ class TestStaticStorageAdapter(LoggedSimpleTestCase):
             ),
             clear=False,
         ):
-            static_storage_config = build_static_storage_config(self.base_dir)
+            static_storage_config = StaticStorageAdapterResolver.build_config(self.base_dir)
 
         self.assertEqual(static_storage_config.static_url, "https://cdn.example.com/assets-static/")
 

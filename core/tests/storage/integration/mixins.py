@@ -1,10 +1,11 @@
 """ Shared mixins for storage integration tests. """
 
 import boto3
+from typing import Any
 from importlib import import_module
 from botocore.client import Config as BotoConfig
 from django.core.files.storage import Storage
-from core.config.storage.media_storage.base_media_storage_adapter import MediaStorageConfig
+from core.config.storage.media_storage.adapters import MediaStorageConfig
 from core.tests.storage.integration.protocols import S3ClientProtocol
 
 
@@ -20,7 +21,7 @@ class StorageIntegrationMixin:
         Returns:
             S3ClientProtocol: Configured boto3 S3 client.
         """
-        storage_options: dict[str, object] = self.storage_config.storages["default"]["OPTIONS"]
+        storage_options: dict[str, Any] = self.storage_config.storages["default"]["OPTIONS"]
         client = boto3.client(
             service_name="s3",
             endpoint_url=str(storage_options.get("endpoint_url") or ""),

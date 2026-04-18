@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0; padding:0; background-color:#f5f7fb; color:#172033; font-family:Arial, Helvetica, sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f5f7fb; padding:24px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background-color:#ffffff; border-collapse:collapse; border:1px solid #d9e0eb;">
+                    <tr>
+                        <td style="padding:32px 32px 12px 32px;">
+                            {% if product_name %}
+                            <div style="font-size:12px; line-height:18px; letter-spacing:0.08em; text-transform:uppercase; color:#5b6b86;">
+                                {{ product_name }}
+                            </div>
+                            {% endif %}
+                            <h1 style="margin:12px 0 0 0; font-size:28px; line-height:36px; color:#172033;">
+                                {{ mail_title }}
+                            </h1>
+                        </td>
+                    </tr>
+                    {% if mail_intro %}
+                    <tr>
+                        <td style="padding:0 32px 12px 32px; font-size:16px; line-height:26px; color:#44526b;">
+                            {{ mail_intro }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td style="padding:0 32px 12px 32px; font-size:16px; line-height:26px; color:#172033;">
+                            {% block content %}{% endblock %}
+                        </td>
+                    </tr>
+                    {% if cta_url and cta_label %}
+                    <tr>
+                        <td style="padding:8px 32px 20px 32px;">
+                            {% include "mail/partials/button.html" %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if mail_outro %}
+                    <tr>
+                        <td style="padding:0 32px 24px 32px; font-size:15px; line-height:24px; color:#44526b;">
+                            {{ mail_outro }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td style="padding:0 32px 32px 32px;">
+                            {% include "mail/partials/footer.html" %}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

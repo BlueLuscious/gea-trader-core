@@ -3,9 +3,11 @@
 import dj_database_url, os
 from pathlib import Path
 from django_components import ComponentsSettings
+from django.utils.translation import gettext_lazy as _
 from core.adminsites.admin_namespace import AdminNamespace
 from core.adminsites.unfold import AdminSiteUnfoldSettings
-from core.config.storage import build_media_storage_config, build_static_storage_config
+from core.config.logging import LoggingConfigBuilder
+from core.config.storage import MediaStorageAdapterResolver, StaticStorageAdapterResolver
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,8 +40,17 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Application definition
 
-MEDIA_STORAGE_CONFIG = build_media_storage_config(BASE_DIR)
-STATIC_STORAGE_CONFIG = build_static_storage_config(BASE_DIR)
+MEDIA_STORAGE_CONFIG = MediaStorageAdapterResolver.build_config(BASE_DIR)
+STATIC_STORAGE_CONFIG = StaticStorageAdapterResolver.build_config(BASE_DIR)
+
+PROJECT_APPS = [
+    'core',
+    'accounts',
+    'tenancy',
+    'front',
+]
+
+PROJECT_EXTRA_APPS = list(dict.fromkeys(MEDIA_STORAGE_CONFIG.extra_apps + STATIC_STORAGE_CONFIG.extra_apps))
 
 INSTALLED_APPS = [
     'unfold',
@@ -50,10 +61,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_components',
-    'accounts',
-    'front',
+    *PROJECT_APPS,
+    *PROJECT_EXTRA_APPS,
 ]
-INSTALLED_APPS += list(dict.fromkeys(MEDIA_STORAGE_CONFIG.extra_apps + STATIC_STORAGE_CONFIG.extra_apps))
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'tenancy.middleware.active_tenant_middleware.ActiveTenantMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -147,13 +158,42 @@ USE_I18N = True
 USE_TZ = True
 
 LANGUAGES = [
-    ('es', 'Español'),
-    ('en', 'English'),
+    ('es', _('Spanish')),
+    ('en', _('English')),
 ]
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
+
+
+# Email
+# https://docs.djangoproject.com/en/5.2/topics/email/
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '127.0.0.1')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '1025'))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() in ('1', 'true', 'yes', 'on')
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() in ('1', 'true', 'yes', 'on')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@localhost')
+
+
+# Celery
+# https://docs.celeryq.dev/
+
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/0')
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', REDIS_URL)
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', REDIS_URL)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_TASK_ALWAYS_EAGER = os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False').lower() in ('1', 'true', 'yes', 'on')
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = USE_TZ
 
 
 # Static files (CSS, JavaScript, Images)
@@ -180,6 +220,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.UserModel'
 
 
+# Logging Config
+
+LOGGING = LoggingConfigBuilder.build(debug=DEBUG, project_apps=PROJECT_APPS)
+
+
+# Unfold Settings
+
+MASTER_ADMIN_UNFOLD = AdminSiteUnfoldSettings.for_namespace(AdminNamespace.MASTER).build()
+OWNER_ADMIN_UNFOLD = AdminSiteUnfoldSettings.for_namespace(AdminNamespace.OWNER).build()
+
+
 # Django Components
 
 COMPONENTS = ComponentsSettings(
@@ -188,8 +239,3 @@ COMPONENTS = ComponentsSettings(
         'components',
     ],
 )
-
-
-# Unfold Settings
-MASTER_ADMIN_UNFOLD = AdminSiteUnfoldSettings.for_namespace(AdminNamespace.MASTER).build()
-OWNER_ADMIN_UNFOLD = AdminSiteUnfoldSettings.for_namespace(AdminNamespace.OWNER).build()

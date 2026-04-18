@@ -3,8 +3,8 @@
 import os
 from pathlib import Path
 from unittest.mock import patch
-from core.config.storage import build_media_storage_config
-from core.config.storage.media_storage.s3 import S3MediaStorageAdapter
+from core.config.storage import MediaStorageAdapterResolver
+from core.config.storage.media_storage.adapters.s3_media_storage_adapter import S3MediaStorageAdapter
 from core.testing.base import LoggedSimpleTestCase
 
 
@@ -48,17 +48,24 @@ class TestS3StorageAdapter(LoggedSimpleTestCase):
         environment.update(overrides)
         return environment
 
-    def test_s3_storage_adapter__build_media_storage_config_keeps_explicit_endpoint(self) -> None:
+    def test_s3_storage_adapter__resolver_build_config_keeps_explicit_endpoint(self) -> None:
         """ Verify the S3 adapter keeps the configured endpoint inside media storage options. """
-        with patch.dict(os.environ, self.build_environment(), clear=False):
-            storage_config = build_media_storage_config(self.base_dir)
+        with (
+            patch.dict(os.environ, self.build_environment(), clear=False),
+            patch("core.config.storage.media_storage.media_storage_adapter_resolver.logger.info") as logger_info_mock,
+        ):
+            storage_config = MediaStorageAdapterResolver.build_config(self.base_dir)
 
         self.assertEqual(storage_config.provider, "s3")
-        self.assertEqual(storage_config.storages["default"]["BACKEND"], "storages.backends.s3.S3Storage")
+        self.assertEqual(
+            storage_config.storages["default"]["BACKEND"],
+            "core.config.storage.media_storage.backends.tenant_s3_storage.TenantS3Storage",
+        )
         self.assertEqual(
             storage_config.storages["default"]["OPTIONS"]["endpoint_url"],
             "https://s3.amazonaws.com",
         )
+        logger_info_mock.assert_called_once()
 
     def test_s3_storage_adapter__custom_domain_builds_media_url_with_media_location(self) -> None:
         """ Verify the S3 adapter builds a public media URL from the custom domain and media location. """
@@ -70,7 +77,7 @@ class TestS3StorageAdapter(LoggedSimpleTestCase):
             ),
             clear=False,
         ):
-            storage_config = build_media_storage_config(self.base_dir)
+            storage_config = MediaStorageAdapterResolver.build_config(self.base_dir)
 
         self.assertEqual(storage_config.media_url, "https://cdn.example.com/assets-media/")
 

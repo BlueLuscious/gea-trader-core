@@ -41,8 +41,22 @@ class AdminSiteUnfoldSettings:
         return {
             "SITE_TITLE": AdminSiteUnfoldCallbacks.site_title,
             "SITE_HEADER": AdminSiteUnfoldCallbacks.site_header,
+            "SITE_SUBHEADER": AdminSiteUnfoldCallbacks.site_subheader,
+            "SITE_LOGO": AdminSiteUnfoldCallbacks.site_logo,
+            "SITE_ICON": AdminSiteUnfoldCallbacks.site_icon,
             "SITE_SYMBOL": AdminSiteUnfoldCallbacks.site_symbol,
+            "SITE_FAVICONS": AdminSiteUnfoldCallbacks.site_favicons,
             "SITE_URL": AdminSiteUnfoldCallbacks.site_url,
+            "ENVIRONMENT": AdminSiteUnfoldCallbacks.environment,
+            "LOGIN": {
+                "image": AdminSiteUnfoldCallbacks.login_image,
+            },
+            "SHOW_LANGUAGES": AdminSiteUnfoldCallbacks.show_languages,
+            "LANGUAGES": {
+                "action": AdminSiteUnfoldCallbacks.languages_action,
+                "navigation": AdminSiteUnfoldCallbacks.languages_navigation,
+            },
+            "SITE_DROPDOWN": AdminSiteUnfoldCallbacks.site_dropdown,
             "SIDEBAR": {
                 "show_search": AdminSiteUnfoldCallbacks.show_search,
                 "show_all_applications": AdminSiteUnfoldCallbacks.show_all_applications,
