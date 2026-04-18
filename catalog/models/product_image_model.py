@@ -1,3 +1,5 @@
+""" Product-image persistence model for shared and variant-specific visuals. """
+
 from typing import TYPE_CHECKING
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -63,6 +65,8 @@ class ProductImageModel(models.Model):
     variant_id: int | None
 
     class Meta:
+        """ Declarative admin-facing metadata for product-image persistence. """
+
         ordering = ("product_id", "sort_order", "id")
         constraints = [
             models.UniqueConstraint(

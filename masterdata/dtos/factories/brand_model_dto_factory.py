@@ -1,3 +1,5 @@
+""" Factory helpers for transforming brands into DTOs. """
+
 from collections.abc import Iterable
 from masterdata.dtos.brand_model_dto import BrandModelDTO
 from masterdata.models import BrandModel

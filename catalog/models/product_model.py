@@ -1,3 +1,5 @@
+""" Product persistence model for catalog identity and merchandising state. """
+
 from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
@@ -111,6 +113,8 @@ class ProductModel(models.Model):
     images: "RelatedManager[ProductImageModelQuerySet]"
 
     class Meta:
+        """ Declarative admin-facing metadata for product persistence. """
+
         ordering = ("name",)
         indexes = [models.Index(fields=["tenant", "is_active", "is_featured"])]
         constraints = [

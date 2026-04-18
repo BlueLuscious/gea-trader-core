@@ -1,3 +1,5 @@
+""" Factory helpers for transforming quote items into DTOs. """
+
 from collections.abc import Iterable
 from quotation.dtos.quote_item_model_dto import QuoteItemModelDTO
 from quotation.models import QuoteItemModel

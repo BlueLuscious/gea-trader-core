@@ -1,3 +1,5 @@
+""" Factory helpers for transforming categories into DTOs. """
+
 from collections.abc import Iterable
 from masterdata.dtos.category_model_dto import CategoryModelDTO
 from masterdata.models import CategoryModel

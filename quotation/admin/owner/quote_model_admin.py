@@ -87,7 +87,7 @@ class QuoteModelAdmin(ModelAdmin):
             },
         ),
     )
-    
+
     def get_queryset(self, request: HttpRequest) -> "QuoteModelQuerySet":
         """ Return only quotes that belong to the active tenant.
 
@@ -181,7 +181,7 @@ class QuoteModelAdmin(ModelAdmin):
             return QuotationAccessPolicy.can_access_quotation(request)
 
         return QuotationAccessPolicy.can_change_quote(request, obj)
-    
+
     def has_delete_permission(self, request: HttpRequest, obj: QuoteModel | None = None) -> bool:
         """ Disable hard delete for quotes in owner admin.
 

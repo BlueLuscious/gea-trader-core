@@ -1,3 +1,5 @@
+""" Cart persistence model for tenant-scoped runtime basket state. """
+
 from typing import TYPE_CHECKING
 from uuid import UUID
 from django.conf import settings
@@ -63,12 +65,14 @@ class CartModel(models.Model):
     )
 
     objects: CartModelManager = CartModelManager()
-    
+
     id: int
     tenant_id: UUID
     user_id: int | None
 
     class Meta:
+        """ Declarative admin-facing metadata for cart persistence. """
+
         ordering = ("-updated_at", "-created_at")
         constraints = [
             models.CheckConstraint(

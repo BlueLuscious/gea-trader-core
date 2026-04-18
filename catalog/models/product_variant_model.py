@@ -1,3 +1,5 @@
+""" Product-variant persistence model for concrete catalog commercial options. """
+
 from typing import TYPE_CHECKING
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -81,6 +83,8 @@ class ProductVariantModel(models.Model):
     images: "RelatedManager[ProductImageModelQuerySet]"
 
     class Meta:
+        """ Declarative admin-facing metadata for product-variant persistence. """
+
         ordering = ("product_id", "sort_order", "name", "id")
         constraints = [
             models.UniqueConstraint(

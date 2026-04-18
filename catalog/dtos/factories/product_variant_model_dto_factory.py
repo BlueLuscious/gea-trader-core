@@ -1,3 +1,5 @@
+""" Factory helpers for transforming catalog variants into DTOs. """
+
 from collections.abc import Iterable
 from catalog.dtos.product_variant_model_dto import ProductVariantModelDTO
 from catalog.models import ProductVariantModel

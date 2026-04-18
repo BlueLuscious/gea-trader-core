@@ -1,3 +1,5 @@
+""" Quote-item persistence model for catalog snapshots captured inside a quote. """
+
 from typing import TYPE_CHECKING
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -89,6 +91,8 @@ class QuoteItemModel(models.Model):
     objects: QuoteItemModelManager = QuoteItemModelManager()
 
     class Meta:
+        """ Declarative admin-facing metadata for quote-item persistence. """
+
         ordering = ("created_at", "id")
         verbose_name = _("Quote item")
         verbose_name_plural = _("Quote items")

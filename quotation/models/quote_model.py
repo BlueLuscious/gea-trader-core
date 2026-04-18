@@ -1,3 +1,5 @@
+""" Quote persistence model for tenant-scoped internal workflow tracking. """
+
 from typing import TYPE_CHECKING
 from uuid import UUID
 from django.conf import settings
@@ -120,6 +122,8 @@ class QuoteModel(models.Model):
     user_id: int | None
 
     class Meta:
+        """ Declarative admin-facing metadata for quote persistence. """
+
         ordering = ("-created_at",)
         verbose_name = _("Quote")
         verbose_name_plural = _("Quotes")
@@ -133,24 +137,26 @@ class QuoteModel(models.Model):
         return f"Quote {self.pk}"
 
     def clean(self) -> None:
-        """ Validate optional source cart ownership before persistence.
+        """ Validate source-cart scope and workflow progression before persistence.
 
         Raises:
-            ValidationError: When the selected source cart belongs to another tenant.
+            ValidationError: When the selected source cart belongs to another tenant
+                or the workflow transition is invalid.
         """
         super().clean()
         self._validate_source_cart_scope()
         self._validate_workflow_transition()
 
     def save(self, *args: object, **kwargs: object) -> None:
-        """ Persist the quote after validating source cart ownership.
+        """ Persist the quote after validating scope and deriving workflow timestamps.
 
         Args:
             *args: Positional save arguments.
             **kwargs: Keyword save arguments.
 
         Raises:
-            ValidationError: When the selected source cart belongs to another tenant.
+            ValidationError: When the selected source cart belongs to another tenant
+                or the workflow transition is invalid.
         """
         self._validate_source_cart_scope()
         self._validate_workflow_transition()
@@ -184,7 +190,8 @@ class QuoteModel(models.Model):
         """ Keep workflow transitions monotonic through the internal quote flow.
 
         Raises:
-            ValidationError: When one workflow transition moves backward.
+            ValidationError: When one workflow transition moves backward or tries
+                to change a terminal resolution.
         """
         previous_status = self._get_previous_workflow_status()
         if previous_status is None:
@@ -206,7 +213,11 @@ class QuoteModel(models.Model):
             )
 
     def _apply_workflow_timestamps(self) -> None:
-        """ Derive internal workflow timestamps from the current workflow status. """
+        """ Derive internal workflow timestamps from the current workflow status.
+
+        The first transition into ``requested`` or beyond sets ``requested_at``.
+        The first transition into a terminal workflow status sets ``resolved_at``.
+        """
         workflow_order = self._get_workflow_order()
         now = timezone.now()
         current_order = workflow_order[self.workflow_status]

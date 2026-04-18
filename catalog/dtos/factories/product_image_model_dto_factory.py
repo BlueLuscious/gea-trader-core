@@ -1,3 +1,5 @@
+""" Factory helpers for transforming catalog images into DTOs. """
+
 from collections.abc import Iterable
 from catalog.dtos.product_image_model_dto import ProductImageModelDTO
 from catalog.models import ProductImageModel

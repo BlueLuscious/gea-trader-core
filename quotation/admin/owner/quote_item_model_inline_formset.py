@@ -65,11 +65,12 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
         """ Populate snapshot fields for a newly created quote item.
 
         Args:
-            form: Inline form containing product and optional variant selections.
+            form: Inline form containing product selection and an optional explicit variant.
             commit: Whether to persist the instance immediately.
 
         Returns:
-            QuoteItemModel: Newly created quote item with snapshot fields populated.
+            QuoteItemModel: Newly created quote item with snapshot fields populated
+                from the selected or resolved default variant.
         """
         instance: QuoteItemModel = super().save_new(form, commit=False)
         product = form.get_selected_product()

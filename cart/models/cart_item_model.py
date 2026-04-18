@@ -1,3 +1,5 @@
+""" Cart-item persistence model for concrete catalog selections in runtime baskets. """
+
 from typing import TYPE_CHECKING
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -59,13 +61,15 @@ class CartItemModel(models.Model):
     )
 
     objects: CartItemModelManager = CartItemModelManager()
-    
+
     id: int
     cart_id: int
     product_id: int
     variant_id: int | None
 
     class Meta:
+        """ Declarative admin-facing metadata for cart-item persistence. """
+
         ordering = ("created_at", "id")
         constraints = [
             models.UniqueConstraint(

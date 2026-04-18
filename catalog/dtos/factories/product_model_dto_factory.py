@@ -1,3 +1,5 @@
+""" Factory helpers for transforming catalog products into DTOs. """
+
 from collections.abc import Iterable
 from catalog.dtos.product_model_dto import ProductModelDTO
 from catalog.models import ProductModel

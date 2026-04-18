@@ -1,3 +1,5 @@
+""" DTO used to expose catalog variant data outside the ORM layer. """
+
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal

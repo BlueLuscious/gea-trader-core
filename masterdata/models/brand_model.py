@@ -1,3 +1,5 @@
+""" Brand persistence model for tenant-scoped catalog reference data. """
+
 from typing import TYPE_CHECKING
 from uuid import UUID
 from django.db import models
@@ -51,6 +53,8 @@ class BrandModel(models.Model):
     tenant_id: UUID
 
     class Meta:
+        """ Declarative admin-facing metadata for brand persistence. """
+
         ordering = ("name",)
         constraints = [
             models.UniqueConstraint(

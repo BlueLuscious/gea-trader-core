@@ -1,3 +1,5 @@
+""" Category persistence model for tenant-scoped catalog structure. """
+
 from typing import TYPE_CHECKING
 from uuid import UUID
 from django.core.exceptions import ValidationError
@@ -68,6 +70,8 @@ class CategoryModel(models.Model):
     children: CategoryModelManager
 
     class Meta:
+        """ Declarative admin-facing metadata for category persistence. """
+
         ordering = ("sort_order", "name")
         constraints = [
             models.UniqueConstraint(

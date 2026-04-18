@@ -1,3 +1,5 @@
+""" Factory helpers for transforming carts into DTOs. """
+
 from collections.abc import Iterable
 from cart.dtos.cart_model_dto import CartModelDTO
 from cart.models import CartModel
