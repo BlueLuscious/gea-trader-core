@@ -28,7 +28,7 @@ It should:
 Current policies:
 
 - `TenantAccessPolicy`
-- `TenantAccountsAccessPolicy`
+- `AccountsAccessPolicy`
 
 ## `TenantAccessPolicy`
 
@@ -42,9 +42,9 @@ Current responsibilities:
 
 This policy should stay generic and reusable across apps that need tenant membership checks.
 
-## `TenantAccountsAccessPolicy`
+## `AccountsAccessPolicy`
 
-This is the `accounts/`-specific tenant policy.
+This is the `accounts/`-specific policy now owned by `accounts/`.
 
 Current responsibilities:
 
@@ -52,7 +52,7 @@ Current responsibilities:
 - decide whether one user is visible inside owner `Users`
 - decide whether one group is visible inside owner `Groups`
 
-This keeps the reusable tenant-role checks in the base policy while keeping tenant-scoped authorization inside `tenancy/`, even when the current consumer surface is `accounts/`.
+This keeps the reusable tenant-role checks in the base tenancy policy while moving `accounts`-specific authorization into the `accounts/` domain that actually consumes it.
 
 ## Policy Direction For Future Apps
 
@@ -79,7 +79,7 @@ For the concrete owner-admin wiring checklist for future apps, see:
 `accounts/` consumes tenant authorization through these two layers:
 
 - `TenantAccessPolicy` for base tenant-membership and role checks
-- `TenantAccountsAccessPolicy` for `accounts`-specific visibility and management rules
+- `AccountsAccessPolicy` for `accounts`-specific visibility and management rules
 
 This stricter owner-only rule is intentional for `accounts`.
 

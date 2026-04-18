@@ -130,10 +130,10 @@ Current logging direction for the owner flow:
 - log membership inline saves when the owner flow creates or updates one tenant membership
 - log delegable-permission resolution as one bounded service event rather than logging each permission option
 
-The current owner admin flow consumes tenant authorization through two policy layers owned by `tenancy/`:
+The current owner admin flow consumes tenant authorization through two policy layers:
 
 - `TenantAccessPolicy` for base tenant-membership and role checks
-- `TenantAccountsAccessPolicy` for `accounts`-specific visibility and management rules
+- `AccountsAccessPolicy` for `accounts`-specific visibility and management rules
 
 This stricter owner-only rule is intentional for `accounts`.
 
