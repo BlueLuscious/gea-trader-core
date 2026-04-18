@@ -8,6 +8,11 @@ from tenancy.models.managers.tenant_model_manager import TenantModelManager
 
 if TYPE_CHECKING:
     from accounts.models.managers.user_model_manager import UserModelManager
+    from django.db.models.manager import RelatedManager
+    from cart.models import CartModel
+    from catalog.models import ProductModel
+    from masterdata.models import BrandModel, CategoryModel
+    from quotation.models import QuoteModel
     from tenancy.models import TenantBrandingModel
     from tenancy.models.managers.tenant_group_model_manager import TenantGroupModelManager
     from tenancy.models.managers.tenant_membership_model_manager import TenantMembershipModelManager
@@ -63,6 +68,11 @@ class TenantModel(models.Model):
     branding: "TenantBrandingModel"
     tenant_groups: "TenantGroupModelManager"
     users: "UserModelManager"
+    brands: "RelatedManager[BrandModel]"
+    categories: "RelatedManager[CategoryModel]"
+    products: "RelatedManager[ProductModel]"
+    carts: "RelatedManager[CartModel]"
+    quotes: "RelatedManager[QuoteModel]"
 
     class Meta:
         ordering = ("name",)
