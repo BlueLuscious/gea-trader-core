@@ -1,0 +1,47 @@
+{% load component_tags %}
+
+<span
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-theme-switch {{ class_name }}"
+  data-theme-switch
+  data-theme-switch-id="{{ id }}"
+  data-theme-light-label="{{ light_label }}"
+  data-theme-dark-label="{{ dark_label }}"
+  data-theme-light-icon="{{ light_icon }}"
+  data-theme-dark-icon="{{ dark_icon }}"
+>
+  {% component "switch"
+    id=switch_id
+    class_name="gc-theme-switch__switch"
+    size=size
+    font_size=font_size
+    aria_label=aria_label
+    peer_label=peer_label
+    icon_only=icon_only
+  %}
+    {% fill "track_start" %}
+      <span class="gc-theme-switch__track-content gc-theme-switch__track-content--left" aria-hidden="true">
+        <span data-theme-switch-light-icon>
+          {% component "icon" name=light_icon %}{% endcomponent %}
+        </span>
+        {% if light_label and not icon_only %}<span data-theme-switch-light-label>{{ light_label }}</span>{% endif %}
+      </span>
+    {% endfill %}
+    {% fill "track_end" %}
+      <span class="gc-theme-switch__track-content gc-theme-switch__track-content--right" aria-hidden="true">
+        {% if dark_label and not icon_only %}<span data-theme-switch-dark-label>{{ dark_label }}</span>{% endif %}
+        <span data-theme-switch-dark-icon>
+          {% component "icon" name=dark_icon %}{% endcomponent %}
+        </span>
+      </span>
+    {% endfill %}
+  {% endcomponent %}
+</span>
+
+<script>
+  window.GeaThemeSwitchQueue = window.GeaThemeSwitchQueue || [];
+  window.GeaThemeSwitchQueue.push("{{ id|escapejs }}");
+  if (window.GeaThemeSwitch && typeof window.GeaThemeSwitch.initById === "function") {
+    window.GeaThemeSwitch.initById("{{ id|escapejs }}");
+  }
+</script>

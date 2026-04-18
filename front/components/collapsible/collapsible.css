@@ -1,0 +1,57 @@
+.gc-collapsible {
+  position: relative;
+}
+
+.gc-collapsible__summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.gc-collapsible__summary::-webkit-details-marker {
+  display: none;
+}
+
+.gc-collapsible--sm .gc-collapsible__summary {
+  min-width: 2rem;
+  min-height: 2rem;
+}
+
+.gc-collapsible--md .gc-collapsible__summary {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+
+.gc-collapsible--lg .gc-collapsible__summary {
+  min-width: 3rem;
+  min-height: 3rem;
+}
+
+.gc-collapsible__panel {
+  min-width: 0;
+  max-width: calc(100vw - 2rem);
+}
+
+.gc-collapsible--panel-auto .gc-collapsible__panel {
+  width: fit-content;
+  min-width: 100%;
+}
+
+.gc-collapsible--panel-sm .gc-collapsible__panel {
+  width: min(12rem, calc(100vw - 2rem));
+}
+
+.gc-collapsible--panel-md .gc-collapsible__panel {
+  width: min(16rem, calc(100vw - 2rem));
+}
+
+.gc-collapsible--panel-lg .gc-collapsible__panel {
+  width: min(20rem, calc(100vw - 2rem));
+}
+
+.gc-collapsible--panel-xl .gc-collapsible__panel {
+  width: min(24rem, calc(100vw - 2rem));
+}
+
+.gc-collapsible--panel-full .gc-collapsible__panel {
+  width: min(24rem, calc(100vw - 2rem));
+}

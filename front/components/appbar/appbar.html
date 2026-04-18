@@ -1,0 +1,34 @@
+{% load component_tags %}
+
+<div
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-appbar {{ class_name }}"
+  aria-label="{{ aria_label }}"
+>
+  {% component "topbar"
+    id=topbar_id
+    variant="appbar"
+    sticky=sticky
+    bordered=bordered
+    shadow=shadow
+    class_name="gc-appbar__topbar"
+  %}
+    {% fill "start" %}
+      <div class="gc-appbar__leading {% if not has_leading %}gc-appbar__leading--empty{% endif %}">
+        {% if has_leading %}{% slot "leading" %}{% endslot %}{% endif %}
+      </div>
+    {% endfill %}
+
+    {% fill "center" %}
+      <div class="gc-appbar__title {% if not has_title %}gc-appbar__title--empty{% endif %}">
+        {% if has_title %}{% slot "title" %}{% endslot %}{% endif %}
+      </div>
+    {% endfill %}
+
+    {% fill "end" %}
+      <div class="gc-appbar__actions {% if not has_actions %}gc-appbar__actions--empty{% endif %}">
+        {% if has_actions %}{% slot "actions" %}{% endslot %}{% endif %}
+      </div>
+    {% endfill %}
+  {% endcomponent %}
+</div>

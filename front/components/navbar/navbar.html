@@ -1,0 +1,74 @@
+{% load component_tags %}
+
+<nav
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-navbar gc-navbar--links-{{ links_position }} {{ class_name }}"
+  aria-label="{{ aria_label }}"
+>
+  {% component "topbar"
+    id=topbar_id
+    variant="navbar"
+    sticky=sticky
+    bordered=bordered
+    shadow=shadow
+    class_name="gc-navbar__topbar"
+  %}
+    {% if has_brand %}
+      {% fill "start" %}
+        <div class="gc-navbar__brand">
+          {% slot "brand" %}{% endslot %}
+        </div>
+      {% endfill %}
+    {% endif %}
+
+    {% if has_links and links_position == "center" %}
+      {% fill "center" %}
+        <div class="gc-navbar__links gc-navbar__links--desktop">
+          {% slot "links" %}{% endslot %}
+        </div>
+      {% endfill %}
+    {% endif %}
+
+    {% fill "end" %}
+      <div class="gc-navbar__end">
+        {% if has_links and links_position == "end" %}
+        <div class="gc-navbar__links gc-navbar__links--desktop gc-navbar__links--end">
+          {% slot "links" %}{% endslot %}
+        </div>
+        {% endif %}
+
+        {% if has_actions %}
+        <div class="gc-navbar__actions">
+          {% slot "actions" %}{% endslot %}
+        </div>
+        {% endif %}
+
+        {% if has_links %}
+        <div class="gc-navbar__menu">
+          {% component "collapsible"
+            id=menu_id
+            size="lg"
+            panel_width="sm"
+            class_name="gc-navbar__collapsible"
+            summary_class_name="gc-navbar__menu-trigger"
+            panel_class_name="gc-navbar__menu-panel"
+            aria_label=menu_aria_label
+            close_on_outside=True
+            close_on_escape=True
+            close_on_link_click=True
+          %}
+            {% fill "trigger" %}
+              {% component "icon" name="bars" style="solid" size="md" %}{% endcomponent %}
+            {% endfill %}
+            {% fill "content" %}
+              <div class="gc-navbar__links gc-navbar__links--mobile">
+                {% slot "links" %}{% endslot %}
+              </div>
+            {% endfill %}
+          {% endcomponent %}
+        </div>
+        {% endif %}
+      </div>
+    {% endfill %}
+  {% endcomponent %}
+</nav>

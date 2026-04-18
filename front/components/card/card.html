@@ -1,0 +1,31 @@
+{% load component_tags %}
+
+
+<{% if href %}a{% else %}article{% endif %}
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-card gc-card--shadow-{{ shadow }} {% if elevated %}is-elevated{% endif %} {% if clickable %}is-clickable{% endif %} {{ class_name }}"
+  {% if href %}href="{{ href }}"{% endif %}
+  {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+>
+  {% if badge_text %}
+    {% component "badge" label=badge_text variant=badge_variant class_name="gc-card__badge" %}{% endcomponent %}
+  {% else %}
+    {% slot "badge" %}{% endslot %}
+  {% endif %}
+
+  {% if slots.header %}
+  <header class="gc-card__header {% if header_divider %}gc-card__section--divider{% endif %}">
+    {% slot "header" %}{% endslot %}
+  </header>
+  {% endif %}
+
+  <div class="gc-card__content">
+    {% slot "content" required %}{% endslot %}
+  </div>
+
+  {% if slots.footer %}
+  <footer class="gc-card__footer {% if footer_divider %}gc-card__section--divider{% endif %}">
+    {% slot "footer" %}{% endslot %}
+  </footer>
+  {% endif %}
+{% if href %}</a>{% else %}</article>{% endif %}

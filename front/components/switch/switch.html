@@ -1,0 +1,50 @@
+{% load component_tags %}
+
+<label class="gc-switch gc-switch--{{ size }} gc-switch--font-{{ font_size }} {% if icon_only %}gc-switch--icon-only{% endif %} {{ class_name }}" data-switch data-switch-id="{{ id }}">
+  <input
+    {% if id %}id="{{ id }}"{% endif %}
+    class="gc-switch__input"
+    type="checkbox"
+    data-switch-input
+    {% if name %}name="{{ name }}"{% endif %}
+    {% if checked %}checked{% endif %}
+    {% if disabled %}disabled{% endif %}
+    {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}
+  >
+
+  <span class="gc-switch__track" aria-hidden="true" data-switch-track>
+    <span class="gc-switch__pane gc-switch__pane--left">
+      {% if icon_left %}
+      <span class="gc-switch__icon" aria-hidden="true">
+        {% component "icon" name=icon_left size="sm" %}{% endcomponent %}
+      </span>
+      {% endif %}
+      {% if label_left and not icon_only %}<span>{{ label_left }}</span>{% endif %}
+      {% slot "track_start" %}{% endslot %}
+    </span>
+
+    <span class="gc-switch__pane gc-switch__pane--right">
+      {% slot "track_end" %}{% endslot %}
+      {% if label_right and not icon_only %}<span>{{ label_right }}</span>{% endif %}
+      {% if icon_right %}
+      <span class="gc-switch__icon" aria-hidden="true">
+        {% component "icon" name=icon_right size="sm" %}{% endcomponent %}
+      </span>
+      {% endif %}
+    </span>
+
+    <span class="gc-switch__thumb"></span>
+  </span>
+
+  {% if peer_label %}
+  <span class="gc-switch__peer">{{ peer_label }}</span>
+  {% endif %}
+</label>
+
+<script>
+  window.GeaSwitchQueue = window.GeaSwitchQueue || [];
+  window.GeaSwitchQueue.push("{{ id|escapejs }}");
+  if (window.GeaSwitch && typeof window.GeaSwitch.initById === "function") {
+    window.GeaSwitch.initById("{{ id|escapejs }}");
+  }
+</script>

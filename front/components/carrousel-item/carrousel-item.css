@@ -1,0 +1,5 @@
+.gc-carrousel-item {
+  display: block;
+  min-width: 0;
+  min-height: 100%;
+}

@@ -1,0 +1,26 @@
+{% load component_tags %}
+
+<header
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-topbar gc-topbar--{{ variant }} gc-topbar--shadow-{{ shadow }} {% if sticky %}is-sticky{% endif %} {% if bordered %}is-bordered{% endif %} {{ class_name }}"
+>
+  <div class="gc-topbar__inner {% if container %}gc-topbar__inner--container{% endif %}">
+    {% if slots.start %}
+    <div class="gc-topbar__section gc-topbar__section--start">
+      {% slot "start" %}{% endslot %}
+    </div>
+    {% endif %}
+
+    {% if slots.center %}
+    <div class="gc-topbar__section gc-topbar__section--center">
+      {% slot "center" %}{% endslot %}
+    </div>
+    {% endif %}
+
+    {% if slots.end %}
+    <div class="gc-topbar__section gc-topbar__section--end">
+      {% slot "end" %}{% endslot %}
+    </div>
+    {% endif %}
+  </div>
+</header>

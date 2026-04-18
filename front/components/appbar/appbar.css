@@ -1,0 +1,44 @@
+.gc-appbar {
+  position: relative;
+}
+
+.gc-appbar__leading,
+.gc-appbar__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.gc-appbar__title {
+  min-width: 0;
+  text-align: center;
+}
+
+.gc-appbar__leading--empty,
+.gc-appbar__actions--empty {
+  min-width: 2.5rem;
+  min-height: 1px;
+}
+
+.gc-appbar__actions {
+  justify-content: flex-end;
+}
+
+.gc-appbar__title--empty {
+  min-height: 1px;
+}
+
+.gc-appbar__title > * {
+  margin: 0;
+}
+
+.gc-appbar__title h1,
+.gc-appbar__title h2,
+.gc-appbar__title h3,
+.gc-appbar__title p,
+.gc-appbar__title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
