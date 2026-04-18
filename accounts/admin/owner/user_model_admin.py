@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
+from accounts.access import AccountsAccessPolicy
 from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm
 from accounts.admin.owner.tenant_membership_inline import TenantMembershipInline
@@ -14,7 +15,6 @@ from accounts.admin.owner.user_model_admin_creation_form import OwnerUserModelAd
 from accounts.admin.owner.user_model_admin_form import OwnerUserModelAdminForm
 from accounts.models import UserModel
 from core.adminsites.site_instances import owner_admin_site
-from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
 from tenancy.choices import TenantRole
 
 logger = logging.getLogger(__name__)
@@ -106,7 +106,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         queryset = super().get_queryset(request).filter(is_superuser=False)
         tenant = getattr(request, "tenant", None)
 
-        if not TenantAccountsAccessPolicy.can_manage_accounts(request) or tenant is None:
+        if not AccountsAccessPolicy.can_manage_accounts(request) or tenant is None:
             logger.info(
                 "Returned no owner-visible users because the request cannot manage accounts tenant_id=%s",
                 getattr(tenant, "pk", None),
@@ -198,7 +198,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         Returns:
             bool: ``True`` when the current user may manage accounts for the active tenant.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request) and super().has_module_permission(request)
+        return AccountsAccessPolicy.can_access_users(request) and super().has_module_permission(request)
 
     def has_add_permission(self, request: HttpRequest) -> bool:
         """ Require an active owner membership before allowing user creation.
@@ -209,7 +209,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         Returns:
             bool: ``True`` when the current user may add tenant-scoped support users.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request) and super().has_add_permission(request)
+        return AccountsAccessPolicy.can_add_user(request) and super().has_add_permission(request)
 
     def has_view_permission(self, request: HttpRequest, obj: UserModel | None = None) -> bool:
         """ Restrict user visibility to owner memberships for the active tenant.
@@ -221,7 +221,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         Returns:
             bool: ``True`` when the current user may view the module and target user.
         """
-        if not TenantAccountsAccessPolicy.can_manage_accounts(request):
+        if not AccountsAccessPolicy.can_access_users(request):
             return False
 
         if not super().has_view_permission(request, obj):
@@ -230,7 +230,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         if obj is None:
             return True
 
-        return TenantAccountsAccessPolicy.can_view_user(request, obj)
+        return AccountsAccessPolicy.can_view_user(request, obj)
 
     def has_change_permission(self, request: HttpRequest, obj: UserModel | None = None) -> bool:
         """ Restrict user editing to owner memberships for the active tenant.
@@ -242,7 +242,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         Returns:
             bool: ``True`` when the current user may edit the module and target user.
         """
-        if not TenantAccountsAccessPolicy.can_manage_accounts(request):
+        if not AccountsAccessPolicy.can_access_users(request):
             return False
 
         if not super().has_change_permission(request, obj):
@@ -251,7 +251,7 @@ class OwnerUserModelAdmin(BaseUserAdmin, ModelAdmin):
         if obj is None:
             return True
 
-        return TenantAccountsAccessPolicy.can_view_user(request, obj)
+        return AccountsAccessPolicy.can_view_user(request, obj)
 
     def has_delete_permission(self, request: HttpRequest, obj: UserModel | None = None) -> bool:
         """ Disable hard delete in favor of deactivation.

@@ -9,12 +9,12 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy as _
+from accounts.access import AccountsAccessPolicy
 from unfold.admin import ModelAdmin
 from accounts.admin.owner.group_admin_form import OwnerGroupAdminForm
 from accounts.services.owner_delegable_permission_resolver import OwnerDelegablePermissionResolver
 from core.adminsites.site_instances import owner_admin_site
 from tenancy.models import TenantGroupModel
-from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
 
 logger = logging.getLogger(__name__)
 
@@ -194,7 +194,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         Returns:
             bool: True when the request has an active tenant and base permissions.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request) and super().has_module_permission(request)
+        return AccountsAccessPolicy.can_access_groups(request) and super().has_module_permission(request)
 
     def has_add_permission(self, request: HttpRequest) -> bool:
         """ Require an active tenant before allowing group creation.
@@ -205,7 +205,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         Returns:
             bool: True when the request has an active tenant and base permissions.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request) and super().has_add_permission(request)
+        return AccountsAccessPolicy.can_add_group(request) and super().has_add_permission(request)
 
     def has_view_permission(self, request: HttpRequest, obj: Group | None = None) -> bool:
         """ Restrict group visibility to the active tenant scope.
@@ -217,7 +217,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         Returns:
             bool: True when the group belongs to the active tenant and base permissions pass.
         """
-        if not TenantAccountsAccessPolicy.can_manage_accounts(request):
+        if not AccountsAccessPolicy.can_access_groups(request):
             return False
 
         if not super().has_view_permission(request, obj):
@@ -226,7 +226,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         if obj is None:
             return True
 
-        return TenantAccountsAccessPolicy.can_view_group(request, obj)
+        return AccountsAccessPolicy.can_view_group(request, obj)
 
     def has_change_permission(self, request: HttpRequest, obj: Group | None = None) -> bool:
         """ Restrict group editing to the active tenant scope.
@@ -238,7 +238,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         Returns:
             bool: True when the group belongs to the active tenant and base permissions pass.
         """
-        if not TenantAccountsAccessPolicy.can_manage_accounts(request):
+        if not AccountsAccessPolicy.can_access_groups(request):
             return False
 
         if not super().has_change_permission(request, obj):
@@ -247,7 +247,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         if obj is None:
             return True
 
-        return TenantAccountsAccessPolicy.can_view_group(request, obj)
+        return AccountsAccessPolicy.can_view_group(request, obj)
 
     def has_delete_permission(self, request: HttpRequest, obj: Group | None = None) -> bool:
         """ Restrict group deletion to the active tenant scope.
@@ -259,7 +259,7 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         Returns:
             bool: True when the group belongs to the active tenant and base permissions pass.
         """
-        if not TenantAccountsAccessPolicy.can_manage_accounts(request):
+        if not AccountsAccessPolicy.can_access_groups(request):
             return False
 
         if not super().has_delete_permission(request, obj):
@@ -268,4 +268,4 @@ class OwnerGroupAdmin(BaseGroupAdmin, ModelAdmin):
         if obj is None:
             return True
 
-        return TenantAccountsAccessPolicy.can_view_group(request, obj)
+        return AccountsAccessPolicy.can_view_group(request, obj)

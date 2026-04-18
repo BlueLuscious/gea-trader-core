@@ -3,11 +3,11 @@
 from typing import TYPE_CHECKING
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
+from accounts.access import AccountsAccessPolicy
 from unfold.admin import TabularInline
 from accounts.admin.owner.tenant_membership_inline_form import TenantMembershipInlineForm
 from accounts.admin.owner.tenant_membership_inline_formset import TenantMembershipInlineFormSet
 from tenancy.models import TenantMembershipModel
-from tenancy.access.tenant_accounts_access_policy import TenantAccountsAccessPolicy
 
 if TYPE_CHECKING:
     from accounts.models.user_model import UserModel
@@ -38,7 +38,7 @@ class TenantMembershipInline(TabularInline):
         Returns:
             bool: ``True`` when the current user may view the tenant membership inline.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request)
+        return AccountsAccessPolicy.can_manage_accounts(request)
 
     def has_change_permission(self, request: HttpRequest, obj=None) -> bool:
         """ Allow inline edits when the current user may manage the active tenant.
@@ -50,7 +50,7 @@ class TenantMembershipInline(TabularInline):
         Returns:
             bool: ``True`` when the current user may change the tenant membership inline.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request)
+        return AccountsAccessPolicy.can_manage_accounts(request)
 
     def has_add_permission(self, request: HttpRequest, obj=None) -> bool:
         """ Allow inline adds when the current user may manage the active tenant.
@@ -62,7 +62,7 @@ class TenantMembershipInline(TabularInline):
         Returns:
             bool: ``True`` when the current user may add the tenant membership inline.
         """
-        return TenantAccountsAccessPolicy.can_manage_accounts(request)
+        return AccountsAccessPolicy.can_manage_accounts(request)
 
     def get_queryset(self, request: HttpRequest) -> "TenantMembershipModelQuerySet":
         """ Return only memberships that belong to the active tenant.
