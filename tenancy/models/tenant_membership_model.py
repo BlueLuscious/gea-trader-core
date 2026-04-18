@@ -1,4 +1,4 @@
-""" Tenant membership persistence model. """
+""" Tenant-membership persistence model for user access inside one business. """
 
 from typing import TYPE_CHECKING
 from uuid import UUID
@@ -58,6 +58,8 @@ class TenantMembershipModel(models.Model):
     tenant_id: UUID
 
     class Meta:
+        """ Declarative admin-facing metadata for tenant-membership persistence. """
+
         ordering = ("tenant__name", "user__username", "id")
         constraints = [
             models.UniqueConstraint(

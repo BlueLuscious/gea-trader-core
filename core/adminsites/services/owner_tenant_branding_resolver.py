@@ -23,7 +23,7 @@ class OwnerTenantBrandingResolver:
             request: Current admin request.
 
         Returns:
-            Any | None: Tenant branding object or ``None``.
+            TenantBrandingModel | None: Tenant branding object or ``None``.
         """
         tenant: "TenantModel | None" = getattr(request, "tenant", None)
         if tenant is None:

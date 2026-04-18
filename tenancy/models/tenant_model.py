@@ -1,4 +1,4 @@
-""" Tenant persistence model. """
+""" Tenant persistence model for business roots and cross-domain scoping. """
 
 from typing import TYPE_CHECKING
 from uuid import uuid4

@@ -33,7 +33,7 @@ class LoggedTestMixin:
             after: Counter snapshot after the test run.
 
         Returns:
-            bool: True when the test passed without failures, errors or skips.
+            bool: ``True`` when the test passed without failures, errors or skips.
         """
         return (
             after["failures"] == before["failures"]

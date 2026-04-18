@@ -1,4 +1,4 @@
-""" Tenant-branding persistence model. """
+""" Tenant-branding persistence model for business visual identity assets. """
 
 from typing import TYPE_CHECKING
 from django.db import models

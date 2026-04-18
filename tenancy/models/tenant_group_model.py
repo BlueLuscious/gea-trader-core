@@ -1,4 +1,4 @@
-""" Tenant-group persistence model. """
+""" Tenant-group persistence model for tenant-scoped auth-group bindings. """
 
 from typing import TYPE_CHECKING
 from django.contrib.auth.models import Group
@@ -36,6 +36,8 @@ class TenantGroupModel(models.Model):
     group_id: int
 
     class Meta:
+        """ Declarative admin-facing metadata for tenant-group persistence. """
+
         ordering = ("tenant__name", "group__name", "id")
         verbose_name = _("Business group")
         verbose_name_plural = _("Business groups")
