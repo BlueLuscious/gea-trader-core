@@ -72,8 +72,10 @@ class TestMasterdataModel(LoggedTestCase):
         brand_name_field = BrandModel._meta.get_field("name")
         brand_slug_field = BrandModel._meta.get_field("slug")
         category_name_field = CategoryModel._meta.get_field("name")
+        category_banner_field = CategoryModel._meta.get_field("banner")
         category_parent_field = CategoryModel._meta.get_field("parent")
         category_sort_order_field = CategoryModel._meta.get_field("sort_order")
+        category_is_featured_field = CategoryModel._meta.get_field("is_featured")
 
         with override("en"):
             self.assertEqual("Brand name", str(brand_name_field.verbose_name))
@@ -82,5 +84,7 @@ class TestMasterdataModel(LoggedTestCase):
                 str(brand_slug_field.help_text),
             )
             self.assertEqual("Category name", str(category_name_field.verbose_name))
+            self.assertEqual("Banner", str(category_banner_field.verbose_name))
             self.assertEqual("Parent category", str(category_parent_field.verbose_name))
             self.assertEqual("Display order", str(category_sort_order_field.verbose_name))
+            self.assertEqual("Featured on the site", str(category_is_featured_field.verbose_name))

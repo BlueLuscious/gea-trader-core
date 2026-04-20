@@ -135,6 +135,7 @@ Check:
 - typed managers and querysets
 - tenant-owned reference-data roots with tenant-scoped slug uniqueness
 - category hierarchy validation for same-tenant parenting, no self-parenting, and no cycles
+- category banner and featured-surface metadata for future storefront curation
 - brand-specific and category-specific access policies for owner-managed reference-data flows
 - DTOs and DTO factories
 - master and tenant-scoped owner admin flows

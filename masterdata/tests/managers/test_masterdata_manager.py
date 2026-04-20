@@ -50,3 +50,25 @@ class TestMasterdataManager(LoggedTestCase):
         CategoryModel.objects.create(tenant=other_tenant, name="Lubricacion", slug="lubricacion")
 
         self.assertQuerySetEqual(CategoryModel.objects.for_tenant(tenant), [root], transform=lambda instance: instance)
+
+    def test_category_featured_returns_only_featured_categories(self) -> None:
+        """ Verify the featured category manager helper filters non-featured rows. """
+        tenant = self._create_tenant("featured-category-manager")
+        featured_root = CategoryModel.objects.create(
+            tenant=tenant,
+            name="Industrial",
+            slug="industrial",
+            is_featured=True,
+        )
+        CategoryModel.objects.create(
+            tenant=tenant,
+            name="Lubricacion",
+            slug="lubricacion",
+            is_featured=False,
+        )
+
+        self.assertQuerySetEqual(
+            CategoryModel.objects.featured(),
+            [featured_root],
+            transform=lambda instance: instance,
+        )

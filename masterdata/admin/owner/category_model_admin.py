@@ -34,8 +34,8 @@ class CategoryModelAdmin(ModelAdmin):
 
     form = CategoryModelAdminForm
     inlines = (CategoryChildModelInline,)
-    list_display = ("name", "parent", "sort_order", "is_active", "updated_at")
-    list_filter = ("is_active", "created_at", "updated_at")
+    list_display = ("name", "parent", "is_featured", "sort_order", "is_active", "updated_at")
+    list_filter = ("is_featured", "is_active", "created_at", "updated_at")
     search_fields = ("name", "slug")
     readonly_fields = ("created_at", "updated_at")
     ordering = ("sort_order", "name")
@@ -50,6 +50,28 @@ class CategoryModelAdmin(ModelAdmin):
                 "fields": (
                     ("name", "slug"),
                     "description",
+                ),
+            },
+        ),
+        (
+            _("Storefront presentation"),
+            {
+                "classes": ("tab",),
+                "description": _(
+                    "Control how this category should appear on public category pages and curated storefront sections."
+                ),
+                "fields": (
+                    "banner",
+                    "is_featured",
+                ),
+            },
+        ),
+        (
+            _("Catalog organization"),
+            {
+                "classes": ("tab",),
+                "description": _("Set the parent relationship, display order, and availability for this category."),
+                "fields": (
                     ("parent", "sort_order"),
                     "is_active",
                 ),

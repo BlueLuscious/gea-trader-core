@@ -33,9 +33,11 @@ class TestMasterdataDTO(LoggedSimpleTestCase):
             name="Lubricacion",
             slug="lubricacion",
             description="",
+            banner_name="masterdata/categories/banners/lubricacion.jpg",
             parent_id=1,
             sort_order=10,
             is_active=True,
+            is_featured=True,
             created_at=now,
             updated_at=now,
         )
@@ -43,3 +45,5 @@ class TestMasterdataDTO(LoggedSimpleTestCase):
         self.assertEqual(dto.parent_id, 1)
         self.assertEqual(dto.tenant_id, "tenant-2")
         self.assertEqual(dto.sort_order, 10)
+        self.assertEqual(dto.banner_name, "masterdata/categories/banners/lubricacion.jpg")
+        self.assertTrue(dto.is_featured)

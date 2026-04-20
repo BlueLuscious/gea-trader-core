@@ -13,8 +13,10 @@ class CategoryModelDTO:
     name: str
     slug: str
     description: str
+    banner_name: str
     parent_id: int | None
     sort_order: int
     is_active: bool
+    is_featured: bool
     created_at: datetime
     updated_at: datetime

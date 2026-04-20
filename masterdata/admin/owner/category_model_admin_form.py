@@ -35,14 +35,18 @@ class CategoryModelAdminForm(forms.ModelForm):
             "name": _("Category name"),
             "slug": _("URL slug"),
             "description": _("Description"),
+            "banner": _("Banner"),
             "parent": _("Parent category"),
             "sort_order": _("Display order"),
             "is_active": _("Available for products"),
+            "is_featured": _("Featured on the site"),
         }
         help_texts = {
             "slug": _("Usually created from the category name. Adjust it only when you need a custom URL."),
             "description": _("Optional. Add short guidance so your team understands when to use this category."),
+            "banner": _("Optional public banner image for category pages and featured category cards."),
             "parent": _("Optional. Leave empty to keep this category at the root level of the business catalog."),
             "sort_order": _("Lower values appear first when categories are listed."),
             "is_active": _("Disable this category when you want to stop offering it without deleting its history."),
+            "is_featured": _("Highlight this root category when building curated public storefront sections."),
         }

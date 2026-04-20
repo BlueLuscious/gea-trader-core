@@ -60,3 +60,23 @@ class TestMasterdataQuerySet(LoggedTestCase):
         queryset = CategoryModel.objects.get_queryset().for_tenant(tenant)
 
         self.assertQuerySetEqual(queryset, [active_root], transform=lambda instance: instance)
+
+    def test_category_featured_filters_non_featured_rows(self) -> None:
+        """ Verify CategoryModelQuerySet.featured keeps only featured categories. """
+        tenant = self._create_tenant("featured-category-queryset")
+        featured_root = CategoryModel.objects.create(
+            tenant=tenant,
+            name="Industrial",
+            slug="industrial",
+            is_featured=True,
+        )
+        CategoryModel.objects.create(
+            tenant=tenant,
+            name="Lubricacion",
+            slug="lubricacion",
+            is_featured=False,
+        )
+
+        queryset = CategoryModel.objects.get_queryset().featured()
+
+        self.assertQuerySetEqual(queryset, [featured_root], transform=lambda instance: instance)

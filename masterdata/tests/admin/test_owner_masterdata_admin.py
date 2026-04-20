@@ -5,6 +5,7 @@ from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import Client, RequestFactory
 from django.urls import reverse
+from django.utils.translation import override
 from accounts.models import UserModel
 from core.adminsites.site_instances import owner_admin_site
 from core.testing.base import LoggedTestCase
@@ -293,11 +294,31 @@ class TestOwnerMasterdataAdmin(LoggedTestCase):
                 "parent": str(self.in_scope_category.pk),
                 "sort_order": "0",
                 "is_active": "on",
+                "is_featured": "on",
             }
         )
 
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(self.tenant, form.instance.tenant)
+        self.assertTrue(form.instance.is_featured)
+
+    def test_category_admin_splits_storefront_and_organization_fields(self) -> None:
+        """ Verify the owner category admin keeps storefront fields separate from hierarchy controls. """
+        with override("en"):
+            fieldsets = self.category_admin.get_fieldsets(self.build_request(self.operator, self.tenant))
+
+            self.assertEqual(
+                [fieldset[0] for fieldset in fieldsets],
+                [
+                    "Category details",
+                    "Storefront presentation",
+                    "Catalog organization",
+                    "Advanced details",
+                ],
+            )
+            self.assertEqual(fieldsets[0][1]["fields"], (("name", "slug"), "description"))
+            self.assertEqual(fieldsets[1][1]["fields"], ("banner", "is_featured"))
+            self.assertEqual(fieldsets[2][1]["fields"], (("parent", "sort_order"), "is_active"))
 
     def test_owner_category_add_view_can_create_parent_and_subcategory_in_one_post(self) -> None:
         """ Verify the owner add view can persist one category and one inline child together. """

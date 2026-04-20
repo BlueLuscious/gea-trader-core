@@ -10,8 +10,8 @@ from masterdata.models import CategoryModel
 class CategoryModelAdmin(ModelAdmin):
     """ Unfold-compatible category admin for the master admin site. """
 
-    list_display = ("name", "parent", "sort_order", "is_active", "updated_at")
-    list_filter = ("is_active", "created_at", "updated_at")
+    list_display = ("name", "parent", "is_featured", "sort_order", "is_active", "updated_at")
+    list_filter = ("is_featured", "is_active", "created_at", "updated_at")
     search_fields = ("name", "slug")
     autocomplete_fields = ("parent",)
     readonly_fields = ("created_at", "updated_at")

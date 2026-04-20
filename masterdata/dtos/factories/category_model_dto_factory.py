@@ -24,9 +24,11 @@ class CategoryModelDTOFactory:
             name=instance.name,
             slug=instance.slug,
             description=instance.description,
+            banner_name=instance.banner.name if instance.banner else "",
             parent_id=instance.parent_id,
             sort_order=instance.sort_order,
             is_active=instance.is_active,
+            is_featured=instance.is_featured,
             created_at=instance.created_at,
             updated_at=instance.updated_at,
         )

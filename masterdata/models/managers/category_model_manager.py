@@ -34,6 +34,14 @@ class CategoryModelManager(models.Manager["CategoryModel"]):
         """
         return self.get_queryset().roots()
 
+    def featured(self) -> "CategoryModelQuerySet":
+        """ Return categories marked for curated storefront placement.
+
+        Returns:
+            CategoryModelQuerySet: Featured categories queryset.
+        """
+        return self.get_queryset().featured()
+
     def for_tenant(self, tenant: "TenantModel") -> "CategoryModelQuerySet":
         """ Return categories that belong to one tenant.
 

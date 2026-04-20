@@ -82,9 +82,11 @@ Current fields cover:
 - mandatory business ownership through `tenant`
 - category naming and slug
 - optional internal description
+- optional public banner image for storefront category surfaces
 - optional self-referential parent
 - manual ordering
 - active flag
+- optional featured flag for curated storefront placement
 - audit timestamps
 
 Current hierarchy rules:
@@ -101,6 +103,9 @@ Current owner-admin direction:
 - current and descendant categories are excluded from parent choices on change views
 - direct child categories can be created inline from the category screen
 - the add flow can persist one parented category together with inline child categories in one submission
+- categories can expose one optional banner image for future public category pages
+- categories can be curated explicitly through `is_featured` for future storefront sections
+- the category screen separates core details, storefront presentation, and catalog organization into distinct sections
 
 Current admin-facing metadata direction:
 
@@ -150,6 +155,7 @@ Current factories:
 Current DTO direction:
 
 - both DTOs include `tenant_id` so higher layers can keep ownership explicit
+- category DTOs also expose `banner_name` and `is_featured` for future storefront assembly
 
 ## Admin
 

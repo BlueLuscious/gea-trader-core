@@ -8,6 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from masterdata.models.managers.category_model_manager import CategoryModelManager
 
 if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
+    from masterdata.models.querysets.category_model_queryset import CategoryModelQuerySet
     from tenancy.models import TenantModel
 
 
@@ -40,6 +42,12 @@ class CategoryModel(models.Model):
         verbose_name=_("Description"),
         help_text=_("Optional. Add short guidance so your team understands when to use this category."),
     )
+    banner = models.ImageField(
+        upload_to="masterdata/categories/banners/",
+        blank=True,
+        verbose_name=_("Banner"),
+        help_text=_("Optional public banner image for category pages and featured category cards."),
+    )
     parent: "CategoryModel | None" = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
@@ -59,6 +67,11 @@ class CategoryModel(models.Model):
         verbose_name=_("Available for products"),
         help_text=_("Disable this category when you want to stop offering it without deleting its history."),
     )
+    is_featured = models.BooleanField(
+        default=False,
+        verbose_name=_("Featured on the site"),
+        help_text=_("Highlight this root category when building curated public storefront sections."),
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created at"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated at"))
 
@@ -67,7 +80,7 @@ class CategoryModel(models.Model):
     id: int
     tenant_id: UUID
     parent_id: int | None
-    children: CategoryModelManager
+    children: "RelatedManager[CategoryModelQuerySet]"
 
     class Meta:
         """ Declarative admin-facing metadata for category persistence. """
