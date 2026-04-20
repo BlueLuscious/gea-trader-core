@@ -2,6 +2,12 @@
   position: relative;
 }
 
+.gc-appbar.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
 .gc-appbar__leading,
 .gc-appbar__actions {
   display: inline-flex;

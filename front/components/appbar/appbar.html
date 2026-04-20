@@ -2,13 +2,13 @@
 
 <div
   {% if id %}id="{{ id }}"{% endif %}
-  class="gc-appbar {{ class_name }}"
+  class="gc-appbar {% if sticky %}is-sticky{% endif %} {{ class_name }}"
   aria-label="{{ aria_label }}"
 >
   {% component "topbar"
     id=topbar_id
     variant="appbar"
-    sticky=sticky
+    sticky=False
     bordered=bordered
     shadow=shadow
     class_name="gc-appbar__topbar"

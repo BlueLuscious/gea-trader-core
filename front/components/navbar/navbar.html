@@ -2,13 +2,13 @@
 
 <nav
   {% if id %}id="{{ id }}"{% endif %}
-  class="gc-navbar gc-navbar--links-{{ links_position }} {{ class_name }}"
+  class="gc-navbar gc-navbar--links-{{ links_position }} {% if sticky %}is-sticky{% endif %} {{ class_name }}"
   aria-label="{{ aria_label }}"
 >
   {% component "topbar"
     id=topbar_id
     variant="navbar"
-    sticky=sticky
+    sticky=False
     bordered=bordered
     shadow=shadow
     class_name="gc-navbar__topbar"

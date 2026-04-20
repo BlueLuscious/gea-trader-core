@@ -2,6 +2,12 @@
   position: relative;
 }
 
+.gc-navbar.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
 .gc-navbar__brand {
   display: flex;
   align-items: center;
