@@ -6,12 +6,14 @@
   position: sticky;
   top: 0;
   z-index: 40;
+  width: 100%;
 }
 
 .gc-navbar.is-sticky .gc-navbar__topbar {
   position: sticky;
   top: 0;
   z-index: 40;
+  width: 100%;
 }
 
 .gc-navbar__brand {

@@ -1,0 +1,99 @@
+{% load component_tags %}
+
+<div
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-product-card-shell {{ class_name }}"
+  data-product-card
+  data-product-card-id="{{ id }}"
+  data-product-id="{{ product_id }}"
+  data-product-title="{{ title }}"
+  data-product-brand="{{ brand_name }}"
+  data-product-image-url="{{ image_url }}"
+  data-product-price="{{ price_value }}"
+  data-product-href="{{ href }}"
+>
+  {% component "card"
+    class_name="gc-product-card"
+    elevated=True
+    shadow="md"
+    badge_text=badge_text
+    badge_variant="warning"
+    footer_divider=True
+  %}
+    {% fill "content" %}
+      <div class="gc-product-card__body">
+        {% if href %}
+          <a id="{{ visual_id }}" href="{{ href }}" class="gc-product-card__visual-link" aria-label="{{ title }}">
+            <div class="gc-product-card__visual">
+              {% if image_url %}
+                <img
+                  src="{{ image_url }}"
+                  alt="{{ image_alt }}"
+                  class="gc-product-card__image"
+                />
+              {% else %}
+                <div class="gc-product-card__fallback">No image</div>
+              {% endif %}
+            </div>
+          </a>
+        {% else %}
+          <div id="{{ visual_id }}" class="gc-product-card__visual">
+            {% if image_url %}
+              <img
+                src="{{ image_url }}"
+                alt="{{ image_alt }}"
+                class="gc-product-card__image"
+              />
+            {% else %}
+              <div class="gc-product-card__fallback">No image</div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="gc-product-card__meta">
+          {% if brand_name %}
+            <span class="gc-product-card__brand">{{ brand_name }}</span>
+          {% endif %}
+          {% if price_text %}
+            <span class="gc-product-card__price">{{ price_text }}</span>
+          {% endif %}
+        </div>
+
+        <div class="gc-product-card__content">
+          {% if href %}
+            <a href="{{ href }}" class="gc-product-card__title-link">
+              <h3 class="gc-product-card__title">{{ title }}</h3>
+            </a>
+          {% else %}
+            <h3 class="gc-product-card__title">{{ title }}</h3>
+          {% endif %}
+          <p class="gc-product-card__description">{{ description }}</p>
+        </div>
+      </div>
+    {% endfill %}
+
+    {% fill "footer" %}
+      <div class="gc-product-card__footer">
+        <span class="gc-product-card__availability">{{ availability_text }}</span>
+        {% component "button"
+          id=action_id
+          size="sm"
+          icon_left_name="cart-shopping"
+          class_name="gc-product-card__add-button"
+          aria_label=action_label
+          data_attrs={"product-card-add":"true"}
+        %}
+          {% fill "content" %}{{ action_label }}{% endfill %}
+        {% endcomponent %}
+      </div>
+    {% endfill %}
+  {% endcomponent %}
+</div>
+
+<script>
+  window.GeaProductCardQueue = window.GeaProductCardQueue || [];
+  window.GeaProductCardQueue.push("{{ id|escapejs }}");
+  if (window.GeaProductCard && typeof window.GeaProductCard.initById === "function") {
+    window.GeaProductCard.initById("{{ id|escapejs }}");
+  }
+</script>
