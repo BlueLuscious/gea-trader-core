@@ -207,6 +207,7 @@ class PublicSiteViewMixin(ContextMixin):
         """
         product_dto = ProductModelDTOFactory.build(product)
         return {
+            "product_id": str(product.id),
             "dto": product_dto,
             "name": product_dto.name,
             "slug": product_dto.slug,
@@ -219,6 +220,7 @@ class PublicSiteViewMixin(ContextMixin):
             "url": "#",
             "requires_quote": product_dto.requires_quote,
             "public_price": product_dto.public_price,
+            "price_value": str(product_dto.public_price) if product_dto.public_price is not None else "",
         }
 
     def build_category_card_data(self, category: CategoryModel) -> dict[str, object]:

@@ -95,6 +95,12 @@ body {
   grid-template-rows: auto 1fr auto;
 }
 
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
 .site-main,
 .site-footer {
   width: min(var(--site-max-width), calc(100% - (var(--site-gutter) * 2)));
