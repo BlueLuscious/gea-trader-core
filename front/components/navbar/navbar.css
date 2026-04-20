@@ -8,6 +8,12 @@
   z-index: 40;
 }
 
+.gc-navbar.is-sticky .gc-navbar__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
 .gc-navbar__brand {
   display: flex;
   align-items: center;
