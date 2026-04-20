@@ -1,0 +1,105 @@
+﻿{% extends "simple.html" %}
+{% load static component_tags %}
+
+{% block simple_heads %}
+    <script>
+        (function () {
+            var THEME_KEY = "site-theme";
+            var root = document.documentElement;
+            var selected = "system";
+
+            try {
+                selected = localStorage.getItem(THEME_KEY) || "system";
+            } catch (error) {
+                selected = "system";
+            }
+
+            var resolved = selected;
+            if (selected !== "dark" && selected !== "light") {
+                resolved = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+
+            root.setAttribute("data-theme", resolved);
+            root.setAttribute("data-theme-selected", selected);
+            root.style.colorScheme = resolved;
+        })();
+    </script>
+    <script src="{% static 'js/theme-controller.js' %}"></script>
+    <script src="{% static 'js/cart-controller.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="https://kit.fontawesome.com/a24cbee618.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block page_heads %}{% block extra_heads %}{% endblock %}{% endblock %}
+
+{% block body %}
+    <div class="site-shell">
+        <header class="site-header">
+            {% component "navbar" id="site-navbar" sticky=True links_position="center"
+                aria_label="Navegación principal" menu_aria_label="Abrir menú principal"
+            %}
+                {% fill "brand" %}
+                    <a href="{{ site_home_url }}" class="brand">
+                        {% if site_logo_light_url and site_logo_dark_url %}
+                            {% if site_logo_light_url %}
+                            <img src="{{ site_logo_light_url }}" alt="{{ site_brand_name }}" class="brand__logo brand__logo--light" />
+                            {% endif %}
+                            {% if site_logo_dark_url %}
+                            <img src="{{ site_logo_dark_url }}" alt="{{ site_brand_name }}" class="brand__logo brand__logo--dark" />
+                            {% endif %}
+                        {% else %}
+                        <span class="brand__name">{{ site_brand_name }}</span>
+                        {% endif %}
+                    </a>
+                {% endfill %}
+
+                {% fill "links" %}
+                    {% component "button" href=site_home_url variant="ghost" size="md" font_size="xl" class_name="gc-navbar__link" %}
+                        {% fill "content" %}Inicio{% endfill %}
+                    {% endcomponent %}
+                    {% component "button" href=site_products_url variant="ghost" size="md" font_size="xl" class_name="gc-navbar__link" %}
+                        {% fill "content" %}Productos{% endfill %}
+                    {% endcomponent %}
+                    {% component "button" href=site_categories_url variant="ghost" size="md" font_size="xl" class_name="gc-navbar__link" %}
+                        {% fill "content" %}Categorías{% endfill %}
+                    {% endcomponent %}
+                {% endfill %}
+
+                {% fill "actions" %}
+                    {% component "theme_button" id="theme-button-icon-toggle" intent="toggle" size="lg"
+                        variant="outline" icon_only=True aria_label="Cambiar tema"
+                    %}{% endcomponent %}
+                    {% component "cart_button" id="site-cart-button" size="lg"
+                        variant="outline" icon_only=True aria_label="Abrir carrito de cotización"
+                        class_name="site-cart-button site-cart-button--desktop"
+                    %}{% endcomponent %}
+                {% endfill %}
+            {% endcomponent %}
+        </header>
+
+        <main class="site-main" id="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer site-footer--mobile" aria-label="Bottom navigation">
+            <nav class="bottom-tabs">
+                {% component "button" href=site_home_url variant="ghost" size="md" class_name="bottom-tabs__item" %}
+                    {% fill "content" %}Inicio{% endfill %}
+                {% endcomponent %}
+                {% component "button" href=site_products_url variant="ghost" size="md" class_name="bottom-tabs__item" %}
+                    {% fill "content" %}Productos{% endfill %}
+                {% endcomponent %}
+                {% component "cart_button" id="site-cart-button-mobile" variant="ghost" size="md"
+                    class_name="bottom-tabs__item site-cart-button site-cart-button--mobile"
+                %}{% endcomponent %}
+            </nav>
+        </footer>
+
+        {% component "cart_sidebar" id="site-cart-sidebar" title="Carrito de cotización" %}{% endcomponent %}
+    </div>
+{% endblock %}
+
+{% block page_scripts %}
+    <script src="{% static 'js/base.js' %}" defer></script>
+    {% block extra_scripts %}{% endblock %}
+{% endblock %}

@@ -17,6 +17,7 @@ urlpatterns += i18n_patterns(
     path("admin/", master_admin_site.urls),
     path("owner-admin/", owner_admin_site.urls),
     path("", include("tenancy.urls")),
+    path("", include("front.urls")),
     prefix_default_language=False,
 )
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GEA Trader{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/simple.css' %}">
+    {% block simple_heads %}{% endblock %}
+    {% block page_heads %}{% endblock %}
+    {% component_css_dependencies %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    {% block body %}{% endblock %}
+
+    {% component_js_dependencies %}
+    {% block page_scripts %}{% endblock %}
+</body>
+</html>
