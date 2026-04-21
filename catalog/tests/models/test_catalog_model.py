@@ -192,6 +192,21 @@ class TestCatalogModel(LoggedTestCase):
         self.assertIsNone(product.get_default_variant())
         self.assertIsNone(product.get_public_price())
 
+    def test_product_helpers_expose_active_variant_count_semantics(self) -> None:
+        """ Return active-variant metrics used by public product cards. """
+        tenant = self._create_tenant("variant-count")
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name="Compressor Kit",
+            slug="compressor-kit",
+        )
+        ProductVariantModel.objects.create(product=product, sku="COMP-001", is_active=True)
+        ProductVariantModel.objects.create(product=product, sku="COMP-002", is_active=True)
+        ProductVariantModel.objects.create(product=product, sku="COMP-003", is_active=False)
+
+        self.assertEqual(2, product.get_active_variant_count())
+        self.assertTrue(product.has_multiple_active_variants())
+
     def test_default_variant_must_stay_active(self) -> None:
         """ Verify one default variant cannot be saved as inactive. """
         tenant = self._create_tenant("variant-default-active")

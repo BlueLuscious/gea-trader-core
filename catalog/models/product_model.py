@@ -150,6 +150,22 @@ class ProductModel(models.Model):
         """
         return self.variants.filter(is_default=True).order_by("sort_order", "name", "id").first()
 
+    def get_active_variant_count(self) -> int:
+        """ Return the amount of active variants for this product.
+
+        Returns:
+            int: Number of active variants available for selection.
+        """
+        return self.variants.filter(is_active=True).count()
+
+    def has_multiple_active_variants(self) -> bool:
+        """ Return whether this product exposes more than one active variant.
+
+        Returns:
+            bool: ``True`` when at least two active variants exist.
+        """
+        return self.get_active_variant_count() > 1
+
     def get_public_price(self) -> Decimal | None:
         """ Return the public price resolved from the default variant.
 

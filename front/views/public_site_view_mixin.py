@@ -221,6 +221,12 @@ class PublicSiteViewMixin(ContextMixin):
             "requires_quote": product_dto.requires_quote,
             "public_price": product_dto.public_price,
             "price_value": str(product_dto.public_price) if product_dto.public_price is not None else "",
+            "variant_count": product_dto.active_variant_count,
+            "variant_badge_text": (
+                f"{product_dto.active_variant_count} variantes"
+                if product_dto.has_multiple_active_variants
+                else ""
+            ),
         }
 
     def build_category_card_data(self, category: CategoryModel) -> dict[str, object]:

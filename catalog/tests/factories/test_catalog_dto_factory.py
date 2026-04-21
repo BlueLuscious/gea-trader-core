@@ -44,6 +44,38 @@ class TestCatalogDTOFactory(LoggedTestCase):
         self.assertEqual(dto.sku_base, 'BOM')
         self.assertTrue(dto.is_featured)
         self.assertEqual(dto.public_price, Decimal('20.00'))
+        self.assertEqual(dto.active_variant_count, 1)
+        self.assertFalse(dto.has_multiple_active_variants)
+
+    def test_product_model_dto_factory_maps_active_variant_count_fields(self) -> None:
+        """ Verify ProductModelDTOFactory exposes active-variant count semantics. """
+        tenant = self._create_tenant("variants")
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name='Valve Pack',
+            slug='valve-pack',
+            requires_quote=True,
+        )
+        ProductVariantModel.objects.create(
+            product=product,
+            sku='VAL-001',
+            is_active=True,
+        )
+        ProductVariantModel.objects.create(
+            product=product,
+            sku='VAL-002',
+            is_active=True,
+        )
+        ProductVariantModel.objects.create(
+            product=product,
+            sku='VAL-003',
+            is_active=False,
+        )
+
+        dto = ProductModelDTOFactory.build(product)
+
+        self.assertEqual(dto.active_variant_count, 2)
+        self.assertTrue(dto.has_multiple_active_variants)
 
     def test_product_model_dto_factory_hides_public_price_for_quote_only_products(self) -> None:
         """ Verify ProductModelDTOFactory keeps quote-only product prices internal. """

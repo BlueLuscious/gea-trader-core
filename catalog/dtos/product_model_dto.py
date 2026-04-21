@@ -20,6 +20,8 @@ class ProductModelDTO:
     is_active: bool
     is_featured: bool
     requires_quote: bool
+    active_variant_count: int
+    has_multiple_active_variants: bool
     public_price: Decimal | None
     created_at: datetime
     updated_at: datetime
