@@ -115,12 +115,24 @@ class PublicSiteViewMixin(ContextMixin):
             if branding is not None and getattr(branding, "logo_dark", None)
             else logo_light_url
         )
+        favicon_light_url = (
+            branding.favicon_light.url
+            if branding is not None and getattr(branding, "favicon_light", None)
+            else None
+        )
+        favicon_dark_url = (
+            branding.favicon_dark.url
+            if branding is not None and getattr(branding, "favicon_dark", None)
+            else favicon_light_url
+        )
         contact_email = self.get_contact_email(tenant)
         return {
             self.tenant_context_name: tenant,
             "site_brand_name": self.get_brand_name(tenant),
             "site_logo_light_url": logo_light_url,
             "site_logo_dark_url": logo_dark_url,
+            "site_favicon_light_url": favicon_light_url,
+            "site_favicon_dark_url": favicon_dark_url,
             "site_contact_email": contact_email,
             "site_phone_number": tenant.phone_number,
             "site_whatsapp_url": self.build_whatsapp_url(tenant.phone_number),

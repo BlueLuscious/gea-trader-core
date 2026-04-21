@@ -198,11 +198,12 @@ Check:
 - `docs/tenancy/resolution.md`
 - `docs/front/front.md`
 
-### Front App As Future UI Surface
+### Front App Public Route Base
 
-- `front/` already exists as the intended home for reusable components and future frontend routes
-- it is not part of the current runtime app scope wired by `core/settings.py`
-- the project already defines how tenant-aware frontend routing should be wired once the first real surface appears
+- `front/` is now the active home for reusable components and public frontend routes
+- the public site currently runs in single-tenant mode with tenant resolution handled implicitly for the whole site
+- the public home route exists as the current storefront entrypoint
+- the current public front is being built incrementally from that first page instead of exposing the full catalog surface prematurely
 
 Check:
 
@@ -230,16 +231,6 @@ Check:
 
 Check:
 
-- `docs/tenancy/resolution.md`
-
-### Path-Based Tenant-Aware Frontend Surface
-
-- the route contract and wiring direction are documented
-- no real frontend tenant-aware flow is active yet
-
-Check:
-
-- `docs/front/front.md`
 - `docs/tenancy/resolution.md`
 
 ### New Storage Adapter Onboarding

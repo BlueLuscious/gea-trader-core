@@ -11,16 +11,16 @@ See also:
 
 ## Current Status
 
-`front/` exists as the intended home for reusable UI components, pages, and future frontend routes.
+`front/` is now the active home for reusable UI components and public pages.
 
 At the moment:
 
-- it is not the primary documented runtime surface of the project
-- it is not part of the current runtime app scope wired by `core/settings.py`
-- it should remain decoupled from owner-admin concerns
-- it should only become tenant-aware when a real tenant-aware frontend flow exists
+- it is part of the runtime URL graph wired by `core/urls.py`
+- it remains decoupled from owner-admin concerns
+- the current public site assumes one active tenant for the whole website
+- the visual storefront implementation is still being phased in on top of that single-tenant public mode
 
-This means the project should not pre-emptively force tenant awareness into every frontend page.
+This means the current public surface does not force tenant identity into the route.
 
 ## Future Frontend Surface Types
 
@@ -35,7 +35,7 @@ These should stay explicit. One frontend surface should not silently adopt the r
 
 ## Future Tenant-Aware Frontend By Path
 
-When the first tenant-aware frontend flow appears, the preferred direction is path-based tenant identity.
+Path-based tenant identity remains the preferred future direction when the public site needs to support more than one tenant.
 
 Example patterns:
 
@@ -43,7 +43,7 @@ Example patterns:
 - `/t/<tenant-slug>/quotes/`
 - `/t/<tenant-slug>/checkout/`
 
-Recommended process:
+Future process:
 
 1. define one stable path convention for tenant-aware frontend routes
 2. resolve tenant identity from the URL before page-specific business logic runs
@@ -51,27 +51,52 @@ Recommended process:
 4. validate tenant membership or tenant visibility after resolution, not inside the path parser
 5. keep non-tenant-aware frontend routes outside that path contract
 
-The preferred backend support for this future flow is already described in `docs/tenancy/resolution.md` through the planned `PathTenantResolutionStrategy`.
+The current public front does not use this path contract yet.
+If path-based tenant resolution later becomes active, the resolution implementation should move down into `tenancy/` while the route contract stays explicit.
 
-## Recommended Wiring For Future Tenant-Aware Frontend Pages
+## Current Wiring For The Single-Tenant Public Site
 
-When a new tenant-aware frontend page is introduced, the expected wiring should be:
+The current public-site wiring follows this shape:
 
-1. route includes a stable tenant identifier, preferably the tenant slug
-2. tenant is resolved from the route by the dedicated resolution strategy
-3. page access checks are applied after tenant resolution
-4. data queries are scoped to the resolved tenant
-5. links generated inside that surface preserve the tenant path contract
-6. shared components remain agnostic and should not embed tenant-resolution rules by themselves
+1. public routes stay tenant-agnostic in shape
+2. the site resolves one active tenant in the view layer
+3. data queries are scoped to that resolved tenant
+4. links generated inside the surface stay tenant-agnostic
+5. shared components remain agnostic and do not embed tenant-resolution rules by themselves
 
 This keeps:
 
-- resolution in the resolution layer
-- authorization in the access layer
+- single-tenant public-site assumptions in the front layer for now
 - data scoping in the app layer
 - rendering concerns in the frontend layer
 
-## Recommended Wiring For Future Non-Tenant-Aware Frontend Pages
+## Current Public Storefront Surface
+
+The current single-tenant public site now exposes:
+
+1. one real public home page
+2. one public product list page
+3. one public category index page
+4. one public category detail page with subcategory filtering and pagination
+5. one product detail page with active-variant selection for quote cart flow
+6. one sandbox page for component work
+
+The current home page is no longer limited to the first hero block.
+It now includes:
+
+- one hero section with featured products and highlighted root categories
+- one recent-products section
+- one root-categories section
+- one public footer with branding, contact details, social links, and a WhatsApp shortcut when configured
+- one favicon wired from tenant branding with light and dark variants when available
+
+This keeps the public site:
+
+- incremental
+- iteration-friendly
+- grounded in one real storefront shell rather than isolated mock sections
+
+## Current Non-Tenant-Aware And Public Pages
 
 When a frontend page is not tenant-aware:
 
@@ -79,12 +104,25 @@ When a frontend page is not tenant-aware:
 - do not depend on tenant-scoped query filters
 - do not import tenant-aware policies unless the page explicitly transitions into a tenant-aware flow
 
-Examples:
+Current examples:
 
-- landing pages
-- marketing pages
-- generic sign-in flows
-- documentation or support pages
+- `/`
+- `/productos/`
+- `/productos/<slug>/`
+- `/categorias/`
+- `/categorias/<slug>/`
+- `/sandbox/`
+
+## Current Single-Tenant Storefront Wiring
+
+The current public storefront resolves one active tenant in the view layer and uses that tenant to provide:
+
+- storefront branding such as display name, logos, and favicons
+- public contact channels such as email, phone number, WhatsApp, and social links
+- product and category query scoping for all public catalog routes
+- shared navigation links that stay tenant-agnostic in route shape
+
+This means the current storefront is still public and tenant-agnostic in its URLs, while remaining tenant-scoped in its data and branding.
 
 ## Design Rules
 
@@ -94,4 +132,4 @@ When wiring future frontend routes:
 - do not infer tenant context inside reusable UI components
 - do not let owner-admin routing rules leak into frontend pages
 - keep path-based tenant resolution and tenant access policy as separate steps
-- only extract reusable frontend tenant helpers after at least one real tenant-aware surface exists
+- keep the current single-tenant public mode small and explicit instead of pretending it is already multi-tenant

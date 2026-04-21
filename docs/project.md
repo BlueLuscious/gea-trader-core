@@ -19,7 +19,8 @@ The runtime code currently documented here is centered on:
 
 Current status of the other app folders:
 
-- `front/` exists as the intended UI surface for future reusable components and tenant-aware routes, but it is not part of the current runtime app scope wired by `core/settings.py`
+- `front/` is now the active public UI surface for reusable components and the current single-tenant storefront home
+- `front/` currently exposes the public home entrypoint and is being built incrementally from that base
 - `catalog/` and `quotation/` already define documented domain and owner-admin flows in this branch
 - `masterdata/` now defines documented tenant-owned reference-data and owner-admin flows in this branch
 - `cart/` is part of the runtime app scope wired by `core/settings.py` and now defines documented tenant-aware runtime behavior without owner-admin CRUD

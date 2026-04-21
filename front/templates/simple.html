@@ -5,6 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}GEA Trader{% endblock %}</title>
+    {% if site_favicon_light_url or site_favicon_dark_url %}
+    <link rel="icon" href="{{ site_favicon_light_url|default:site_favicon_dark_url }}">
+    <link
+        rel="icon"
+        href="{{ site_favicon_light_url|default:site_favicon_dark_url }}"
+        media="(prefers-color-scheme: light)"
+    >
+    <link
+        rel="icon"
+        href="{{ site_favicon_dark_url|default:site_favicon_light_url }}"
+        media="(prefers-color-scheme: dark)"
+    >
+    {% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
