@@ -1,0 +1,85 @@
+<section class="home-hero" aria-labelledby="home-hero-title">
+    <div class="home-hero__inner">
+        <div class="home-hero__copy">
+            {% component "badge" label="Soluciones para operación industrial" variant="warning" size="xl" class_name="home-hero__badge" %}{% endcomponent %}
+            <h1 id="home-hero-title" class="home-hero__title">
+                En Gea Trader trabajamos junto a vos para que las cosas pasen
+            </h1>
+            <p class="home-hero__lead">
+                Hablemos de tu operación, de tus tiempos y de lo que necesitás mover para encontrar una respuesta comercial concreta.
+            </p>
+
+            {% if featured_root_category_cards %}
+                <div class="home-hero__categories" aria-label="Categorías destacadas">
+                    {% for category in featured_root_category_cards %}
+                        <div class="home-hero__category-chip">
+                            {% component "button" href=category.url variant="ghost" size="md" %}
+                                {% fill "content" %}{{ category.name }}{% endfill %}
+                            {% endcomponent %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="home-hero__showcase" id="productos-destacados">
+            {% component "card" class_name="home-hero__showcase-shell" elevated=True shadow="md" %}
+                {% fill "header" %}
+                    <div class="home-hero__showcase-header">
+                        <h2 class="home-hero__showcase-title">Productos destacados</h2>
+                        <p class="home-hero__showcase-copy">
+                            Referencias activas para arrancar rápido con líneas que ya tienen contexto comercial claro.
+                        </p>
+                    </div>
+                {% endfill %}
+
+                {% fill "content" %}
+                    {% if featured_product_cards %}
+                        {% component "carrousel"
+                            id="home-featured-products"
+                            class_name="home-hero__carrousel"
+                            aria_label="Productos destacados"
+                            kind="article"
+                            slides_per_view=3
+                            slides_per_view_tablet=2
+                            slides_per_view_mobile=1
+                            gap=18
+                            show_dots=False
+                            autoplay_ms=5200
+                            autoplay_mode="bounce"
+                        %}
+                            {% fill "items" %}
+                                {% for product in featured_product_cards %}
+                                    {% component "carrousel_item" aria_label=product.name %}
+                                        {% fill "content" %}
+                                            {% component "product_card"
+                                                product_id=product.product_id
+                                                href=product.url
+                                                badge_text=product.category_name|default:"Destacado"
+                                                variant_count=product.variant_count
+                                                image_url=product.image_url
+                                                image_alt=product.image_alt
+                                                brand_name=product.brand_name
+                                                price_value=product.price_value
+                                                price_text=product.public_price|default:"Cotización"
+                                                title=product.name
+                                                description=product.short_description|default:product.description|default:"Revisá este producto y su variante comercial más conveniente."|truncatechars:96
+                                                availability_text=""
+                                                action_label="Agregar"
+                                                class_name="home-hero__product-card"
+                                            %}{% endcomponent %}
+                                        {% endfill %}
+                                    {% endcomponent %}
+                                {% endfor %}
+                            {% endfill %}
+                        {% endcomponent %}
+                    {% else %}
+                        <div class="home-empty-state">
+                            Los productos destacados aparecerán acá cuando el catálogo tenga registros activos para mostrar.
+                        </div>
+                    {% endif %}
+                {% endfill %}
+            {% endcomponent %}
+        </div>
+    </div>
+</section>
