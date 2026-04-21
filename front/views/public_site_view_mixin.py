@@ -189,6 +189,11 @@ class PublicSiteViewMixin(ContextMixin):
             "requires_quote": product_dto.requires_quote,
             "public_price": product_dto.public_price,
             "price_value": str(product_dto.public_price) if product_dto.public_price is not None else "",
+            "price_text": (
+                f"ARS {product_dto.public_price:.2f}"
+                if product_dto.public_price is not None
+                else "Cotización"
+            ),
             "variant_count": product_dto.active_variant_count,
             "variant_badge_text": (
                 f"{product_dto.active_variant_count} variantes"
@@ -213,6 +218,6 @@ class PublicSiteViewMixin(ContextMixin):
             "slug": category_dto.slug,
             "description": category_dto.description,
             "banner_url": category.banner.url if category.banner else "",
-            "url": "#",
+            "url": reverse("category_product_list", kwargs={"slug": category_dto.slug}),
             "is_featured": category_dto.is_featured,
         }
