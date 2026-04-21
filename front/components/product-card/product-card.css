@@ -199,7 +199,7 @@
   gap: 0.35rem;
 }
 
-@media (max-width: 72rem) {
+@media (width < 80rem) {
   .gc-product-card {
     padding: 0.72rem;
   }
@@ -213,7 +213,7 @@
   }
 }
 
-@media (max-width: 40rem) {
+@media (width < 40rem) {
   .gc-button.gc-product-card__add-button {
     width: auto;
     align-self: flex-end;

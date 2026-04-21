@@ -109,13 +109,13 @@
   grid-auto-columns: 100%;
 }
 
-@media (max-width: 1024px) {
+@media (width < 64rem) {
   .gc-carrousel {
     --slides-per-view: var(--slides-per-view-tablet, 1);
   }
 }
 
-@media (max-width: 768px) {
+@media (width < 48rem) {
   .gc-carrousel {
     --slides-per-view: var(--slides-per-view-mobile, 1);
   }
