@@ -19,4 +19,7 @@ class TenantBrandingInlineForm(forms.ModelForm):
             "icon_dark",
             "favicon_light",
             "favicon_dark",
+            "instagram_url",
+            "facebook_url",
+            "linkedin_url",
         )

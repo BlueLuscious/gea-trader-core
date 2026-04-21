@@ -81,21 +81,15 @@
             {% block content %}{% endblock %}
         </main>
 
-        <footer class="site-footer site-footer--mobile" aria-label="Bottom navigation">
-            <nav class="bottom-tabs">
-                {% component "button" href=site_home_url variant="ghost" size="md" class_name="bottom-tabs__item" %}
-                    {% fill "content" %}Inicio{% endfill %}
-                {% endcomponent %}
-                {% component "button" href=site_products_url variant="ghost" size="md" class_name="bottom-tabs__item" %}
-                    {% fill "content" %}Productos{% endfill %}
-                {% endcomponent %}
-                {% component "cart_button" id="site-cart-button-mobile" variant="ghost" size="md"
-                    class_name="bottom-tabs__item site-cart-button site-cart-button--mobile"
-                %}{% endcomponent %}
-            </nav>
-        </footer>
-
         {% component "cart_sidebar" id="site-cart-sidebar" title="Carrito de cotización" %}{% endcomponent %}
+        
+        {% if site_whatsapp_url %}
+        <a href="{{ site_whatsapp_url }}" class="site-whatsapp-fab"
+            target="_blank" rel="noreferrer" aria-label="Abrir WhatsApp"
+        >
+            {% component "icon" name="whatsapp" style="brands" size="2xl" %}{% endcomponent %}
+        </a>
+        {% endif %}
     </div>
 {% endblock %}
 

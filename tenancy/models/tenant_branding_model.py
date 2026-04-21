@@ -61,6 +61,21 @@ class TenantBrandingModel(models.Model):
         verbose_name=_("Dark favicon"),
         help_text=_("Favicon variant intended for dark browser themes or dark backgrounds."),
     )
+    instagram_url = models.URLField(
+        blank=True,
+        verbose_name=_("Instagram URL"),
+        help_text=_("Public Instagram profile used in the storefront footer and contact surfaces."),
+    )
+    facebook_url = models.URLField(
+        blank=True,
+        verbose_name=_("Facebook URL"),
+        help_text=_("Public Facebook page used in the storefront footer and contact surfaces."),
+    )
+    linkedin_url = models.URLField(
+        blank=True,
+        verbose_name=_("LinkedIn URL"),
+        help_text=_("Public LinkedIn profile or company page used in the storefront footer and contact surfaces."),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

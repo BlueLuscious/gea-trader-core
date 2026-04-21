@@ -32,6 +32,8 @@ class TenantBrandingInline(StackedInline):
                     ("logo_light", "logo_dark",),
                     ("icon_light", "icon_dark",),
                     ("favicon_light", "favicon_dark",),
+                    ("instagram_url", "facebook_url",),
+                    ("linkedin_url",),
                 ),
             },
         ),

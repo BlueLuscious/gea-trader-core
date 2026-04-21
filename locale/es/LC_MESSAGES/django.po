@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-20 00:25-0300\n"
+"POT-Creation-Date: 2026-04-21 10:58-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -667,7 +667,8 @@ msgstr "Elige exactamente una variante predeterminada para este producto."
 #: .\catalog\admin\owner\product_variant_model_inline_formset.py:140
 #: .\catalog\models\product_variant_model.py:108
 msgid "The default variant must stay available for selection."
-msgstr "La variante predeterminada debe permanecer disponible para su selección."
+msgstr ""
+"La variante predeterminada debe permanecer disponible para su selección."
 
 #: .\catalog\admin\owner\product_variant_model_inline_formset.py:144
 msgid "Purchasable products require a price on the default variant."
@@ -1778,8 +1779,8 @@ msgstr "URL pública opcional del sitio web de este negocio."
 
 #: .\tenancy\admin\owner\tenant_branding_inline.py:23
 #: .\tenancy\admin\owner\tenant_branding_inline.py:24
-#: .\tenancy\models\tenant_branding_model.py:73
-#: .\tenancy\models\tenant_branding_model.py:74
+#: .\tenancy\models\tenant_branding_model.py:88
+#: .\tenancy\models\tenant_branding_model.py:89
 msgid "Business branding"
 msgstr "Marca del negocio"
 
@@ -1853,6 +1854,40 @@ msgid "Favicon variant intended for dark browser themes or dark backgrounds."
 msgstr ""
 "Variante del favicon pensada para temas oscuros del navegador o fondos "
 "oscuros."
+
+#: .\tenancy\models\tenant_branding_model.py:66
+msgid "Instagram URL"
+msgstr "URL de Instagram"
+
+#: .\tenancy\models\tenant_branding_model.py:67
+msgid ""
+"Public Instagram profile used in the storefront footer and contact surfaces."
+msgstr ""
+"Perfil público de Instagram que se usa en el pie del sitio y en las "
+"superficies de contacto."
+
+#: .\tenancy\models\tenant_branding_model.py:71
+msgid "Facebook URL"
+msgstr "URL de Facebook"
+
+#: .\tenancy\models\tenant_branding_model.py:72
+msgid ""
+"Public Facebook page used in the storefront footer and contact surfaces."
+msgstr ""
+"Página pública de Facebook que se usa en el pie del sitio y en las "
+"superficies de contacto."
+
+#: .\tenancy\models\tenant_branding_model.py:76
+msgid "LinkedIn URL"
+msgstr "URL de LinkedIn"
+
+#: .\tenancy\models\tenant_branding_model.py:77
+msgid ""
+"Public LinkedIn profile or company page used in the storefront footer and "
+"contact surfaces."
+msgstr ""
+"Perfil público o página de empresa de LinkedIn que se usa en el pie del "
+"sitio y en las superficies de contacto."
 
 #: .\tenancy\models\tenant_group_model.py:21
 msgid "Business that owns this permission group."

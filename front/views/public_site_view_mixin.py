@@ -1,5 +1,6 @@
 """ Shared single-tenant public view helpers for the front app. """
 
+import re
 from typing import Any
 from django.http import Http404
 from django.urls import reverse
@@ -46,6 +47,54 @@ class PublicSiteViewMixin(ContextMixin):
 
         return tenant.name
 
+    def get_contact_email(self, tenant: TenantModel) -> str:
+        """ Return the best public contact email for the current tenant.
+
+        Args:
+            tenant: Active public tenant.
+
+        Returns:
+            str: Business email first, then support email, or an empty string.
+        """
+        return tenant.business_email or tenant.support_email or ""
+
+    def build_whatsapp_url(self, phone_number: str) -> str:
+        """ Build a WhatsApp deep link from a public phone number.
+
+        Args:
+            phone_number: Tenant public phone number.
+
+        Returns:
+            str: WhatsApp deep link or an empty string when no valid digits exist.
+        """
+        normalized_phone = re.sub(r"\D+", "", phone_number)
+        if not normalized_phone:
+            return ""
+        return f"https://wa.me/{normalized_phone}"
+
+    def build_social_links(self, branding: TenantBrandingModel | None) -> list[dict[str, str]]:
+        """ Build storefront social-link payloads from tenant branding.
+
+        Args:
+            branding: Tenant branding record when one exists.
+
+        Returns:
+            list[dict[str, str]]: Ordered social-link payloads ready for template rendering.
+        """
+        if branding is None:
+            return []
+
+        social_candidates: tuple[tuple[str, str, str], ...] = (
+            ("Instagram", "instagram", branding.instagram_url),
+            ("Facebook", "facebook-f", branding.facebook_url),
+            ("LinkedIn", "linkedin-in", branding.linkedin_url),
+        )
+        return [
+            {"label": label, "icon": icon, "url": url}
+            for label, icon, url in social_candidates
+            if url
+        ]
+
     def build_layout_context(self, tenant: TenantModel) -> dict[str, object]:
         """ Build the shared navigation context for public pages.
 
@@ -66,11 +115,16 @@ class PublicSiteViewMixin(ContextMixin):
             if branding is not None and getattr(branding, "logo_dark", None)
             else logo_light_url
         )
+        contact_email = self.get_contact_email(tenant)
         return {
             self.tenant_context_name: tenant,
             "site_brand_name": self.get_brand_name(tenant),
             "site_logo_light_url": logo_light_url,
             "site_logo_dark_url": logo_dark_url,
+            "site_contact_email": contact_email,
+            "site_phone_number": tenant.phone_number,
+            "site_whatsapp_url": self.build_whatsapp_url(tenant.phone_number),
+            "site_social_links": self.build_social_links(branding),
             "site_home_url": "/",
             "site_products_url": reverse("product_list"),
             "site_categories_url": reverse("category_list"),
