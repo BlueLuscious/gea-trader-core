@@ -17,6 +17,8 @@ class ProductCardController(Component):
         product_id: str = ""
         href: str = ""
         badge_text: str = ""
+        variant_count: int = 0
+        variant_badge_text: str = ""
         image_url: str = ""
         image_alt: str = ""
         brand_name: str = ""
@@ -27,7 +29,7 @@ class ProductCardController(Component):
         availability_text: str = "Available"
         action_label: str = "Add"
 
-    def get_template_data(self, args, kwargs: Kwargs, slots, context) -> dict[str, str]:
+    def get_template_data(self, args, kwargs: Kwargs, slots, context) -> dict[str, object]:
         """ Normalize the public product-card data.
 
         Args:
@@ -37,11 +39,13 @@ class ProductCardController(Component):
             context: Parent render context.
 
         Returns:
-            dict[str, str]: Normalized template data for the product card.
+            dict[str, object]: Normalized template data for the product card.
         """
         component_id = kwargs.id or f"gc-product-card-{uuid4().hex[:8]}"
         visual_id = f"{component_id}__visual"
         action_id = f"{component_id}__action"
+        variant_count = max(int(kwargs.variant_count or 0), 0)
+        variant_badge_text = (kwargs.variant_badge_text or "").strip() or f"{variant_count} variantes"
 
         return {
             "id": component_id,
@@ -51,6 +55,9 @@ class ProductCardController(Component):
             "product_id": kwargs.product_id,
             "href": kwargs.href,
             "badge_text": kwargs.badge_text,
+            "variant_count": variant_count,
+            "variant_badge_text": variant_badge_text,
+            "show_variant_badge": variant_count > 1,
             "image_url": kwargs.image_url,
             "image_alt": kwargs.image_alt or kwargs.title,
             "brand_name": kwargs.brand_name,

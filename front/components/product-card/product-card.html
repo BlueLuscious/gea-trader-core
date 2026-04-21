@@ -59,6 +59,17 @@
           {% endif %}
         </div>
 
+        {% if show_variant_badge %}
+          <div class="gc-product-card__variant-row" aria-label="Variantes disponibles">
+            {% component "badge"
+              label=variant_badge_text
+              variant="info"
+              size="sm"
+              class_name="gc-product-card__variant-badge"
+            %}{% endcomponent %}
+          </div>
+        {% endif %}
+
         <div class="gc-product-card__content">
           {% if href %}
             <a href="{{ href }}" class="gc-product-card__title-link">
@@ -74,7 +85,9 @@
 
     {% fill "footer" %}
       <div class="gc-product-card__footer">
+        {% if availability_text %}
         <span class="gc-product-card__availability">{{ availability_text }}</span>
+        {% endif %}
         {% component "button"
           id=action_id
           size="sm"
@@ -83,7 +96,7 @@
           aria_label=action_label
           data_attrs={"product-card-add":"true"}
         %}
-          {% fill "content" %}{{ action_label }}{% endfill %}
+          {% fill "content" %}<span class="gc-product-card__add-label">{{ action_label }}</span>{% endfill %}
         {% endcomponent %}
       </div>
     {% endfill %}

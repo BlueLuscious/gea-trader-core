@@ -3,6 +3,7 @@ from .content import ContentKind, normalize_kind
 from .theme import ThemeIntent, ThemeMode
 from .ui import (
     AutoplayMode,
+    BadgeSize,
     BadgeVariant,
     ButtonRadius,
     ButtonSize,
@@ -28,6 +29,7 @@ __all__ = [
     "ThemeIntent",
     "ThemeMode",
     "AutoplayMode",
+    "BadgeSize",
     "BadgeVariant",
     "ButtonRadius",
     "ButtonSize",

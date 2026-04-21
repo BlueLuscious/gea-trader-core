@@ -11,6 +11,13 @@ class BadgeVariant(StrEnum):
     INVERSE = "inverse"
 
 
+class BadgeSize(StrEnum):
+    SM = "sm"
+    MD = "md"
+    LG = "lg"
+    XL = "xl"
+
+
 class AutoplayMode(StrEnum):
     STOP = "stop"
     LOOP = "loop"
@@ -41,7 +48,6 @@ class Size(StrEnum):
     MD = "md"
     LG = "lg"
     FULL = "full"
-
 
 ButtonSize = Size
 SwitchSize = Size

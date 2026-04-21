@@ -2,13 +2,35 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 1.25rem;
-  padding: 0.2rem 0.5rem;
   border-radius: var(--radius-full);
-  font-size: 0.72rem;
   line-height: 1;
   font-weight: 600;
   white-space: nowrap;
+}
+
+.gc-badge--sm {
+  min-height: 1.25rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.72rem;
+}
+
+.gc-badge--md {
+  min-height: 1.5rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+}
+
+.gc-badge--lg {
+  min-height: 1.9rem;
+  padding: 0.38rem 0.85rem;
+  font-size: 0.86rem;
+}
+
+.gc-badge--xl {
+  min-height: 2.2rem;
+  padding: 0.48rem 1rem;
+  font-size: 0.94rem;
+  letter-spacing: 0.04em;
 }
 
 .gc-badge--neutral {
