@@ -1,0 +1,40 @@
+<section class="home-categories" aria-labelledby="home-categories-title" id="categorias-destacadas">
+    <div class="home-categories__inner">
+        <div class="home-categories__header">
+            <div class="home-categories__copy">
+                <h2 id="home-categories-title" class="home-categories__title">Categorías</h2>
+                <p class="home-categories__lead">
+                    Líneas principales del catálogo para entrar rápido al rubro que te interesa.
+                </p>
+            </div>
+        </div>
+
+        {% if home_root_category_cards %}
+        <div class="home-categories__grid">
+            {% for category in home_root_category_cards %}
+            <a
+                href="{{ category.url }}"
+                class="home-categories__card {% if category.banner_url %}has-banner{% else %}is-fallback{% endif %}"
+                {% if category.banner_url %}style="background-image: linear-gradient(180deg, rgba(10, 23, 44, 0.08), rgba(10, 23, 44, 0.62)), url('{{ category.banner_url }}');"{% endif %}
+                aria-label="{{ category.name }}"
+            >
+                <div class="home-categories__card-overlay">
+                    <span class="home-categories__card-kicker">Categoría</span>
+                    <span class="home-categories__card-name">{{ category.name }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="home-empty-state">
+            Las categorías destacadas aparecerán acá cuando el catálogo tenga líneas activas para mostrar.
+        </div>
+        {% endif %}
+
+        <div class="home-categories__button-more">
+            {% component "button" href=site_categories_url variant="primary" size="md" radius="sm" font_size="2xl" %}
+                {% fill "content" %}Ver todas{% endfill %}
+            {% endcomponent %}
+        </div>
+    </div>
+</section>

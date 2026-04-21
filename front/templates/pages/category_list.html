@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static component_tags %}
+
+{% block title %}Categorías | {{ site_brand_name }}{% endblock %}
+
+{% block extra_heads %}
+    <link rel="stylesheet" href="{% static 'css/pages/category-list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="categories-page" aria-labelledby="categories-page-title">
+    <div class="categories-page__shell">
+        <div class="categories-page__hero">
+            <div class="categories-page__hero-copy">
+                <h1 id="categories-page-title" class="categories-page__title">Categorías</h1>
+                <p class="categories-page__lead">
+                    Explorá las líneas principales del catálogo y entrá desde ahí a cada familia de productos.
+                </p>
+            </div>
+
+            <div class="categories-page__hero-stats" aria-label="Resumen del catálogo">
+                {% component "badge" label=root_category_count_text|add:" categorías" variant="accent" size="lg" %}{% endcomponent %}
+                {% component "badge" label=child_category_count_text|add:" subcategorías" variant="warning" size="lg" %}{% endcomponent %}
+            </div>
+        </div>
+
+        {% if category_groups %}
+        <div class="categories-page__groups">
+            {% for group in category_groups %}
+            <section class="categories-page__group" aria-labelledby="category-group-{{ group.root.slug }}">
+                <a
+                    id="category-group-{{ group.root.slug }}"
+                    href="{{ group.root.url }}"
+                    class="categories-page__root-card {% if group.root.banner_url %}has-banner{% else %}is-fallback{% endif %}"
+                    {% if group.root.banner_url %}style="background-image: linear-gradient(180deg, rgba(10, 23, 44, 0.08), rgba(10, 23, 44, 0.62)), url('{{ group.root.banner_url }}');"{% endif %}
+                >
+                    <div class="categories-page__root-overlay">
+                        <span class="categories-page__root-kicker">Categoría</span>
+                        <span class="categories-page__root-name">{{ group.root.name }}</span>
+                    </div>
+                </a>
+
+                <div class="categories-page__group-body">
+                    <div class="categories-page__group-head">
+                        <div class="categories-page__group-copy">
+                            <h2 class="categories-page__group-title">
+                                <a href="{{ group.root.url }}">{{ group.root.name }}</a>
+                            </h2>
+                            {% if group.root.description %}
+                            <p class="categories-page__group-description">{{ group.root.description }}</p>
+                            {% else %}
+                            <p class="categories-page__group-description">
+                                Entrá a esta línea para ver sus productos y navegar sus subcategorías.
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <div class="categories-page__group-meta">
+                            {% component "badge" label=group.children_count_text|add:" subcategorías" variant="info" size="md" %}{% endcomponent %}
+                        </div>
+                    </div>
+
+                    {% if group.children %}
+                    <div class="categories-page__children" aria-label="Subcategorías de {{ group.root.name }}">
+                        {% for child in group.children %}
+                            {% component "button"
+                                href=child.url
+                                variant="outline"
+                                size="sm"
+                                class_name="categories-page__child-chip"
+                            %}
+                                {% fill "content" %}{{ child.name }}{% endfill %}
+                            {% endcomponent %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="categories-page__group-actions">
+                        {% component "button"
+                            href=group.root.url
+                            variant="primary"
+                            size="md"
+                        %}
+                            {% fill "content" %}Ver línea{% endfill %}
+                        {% endcomponent %}
+                    </div>
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="categories-page__pagination" aria-label="Paginación de categorías">
+            {% if pagination_prev_url %}
+                {% component "button"
+                    href=pagination_prev_url
+                    variant="outline"
+                    size="sm"
+                    class_name="categories-page__pagination-button"
+                %}
+                    {% fill "content" %}Anterior{% endfill %}
+                {% endcomponent %}
+            {% endif %}
+
+            <div class="categories-page__pagination-pages">
+                {% for link in pagination_links %}
+                    {% if link.is_current %}
+                        {% component "button"
+                            href=link.url
+                            variant="outline"
+                            size="sm"
+                            class_name="categories-page__pagination-button is-current"
+                        %}
+                            {% fill "content" %}{{ link.number }}{% endfill %}
+                        {% endcomponent %}
+                    {% else %}
+                        {% component "button"
+                            href=link.url
+                            variant="outline"
+                            size="sm"
+                            class_name="categories-page__pagination-button"
+                        %}
+                            {% fill "content" %}{{ link.number }}{% endfill %}
+                        {% endcomponent %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% if pagination_next_url %}
+                {% component "button"
+                    href=pagination_next_url
+                    variant="outline"
+                    size="sm"
+                    class_name="categories-page__pagination-button"
+                %}
+                    {% fill "content" %}Siguiente{% endfill %}
+                {% endcomponent %}
+            {% endif %}
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="categories-page__empty">
+            No hay categorías activas en el catálogo por ahora.
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -17,6 +17,9 @@
                     Explorá todo el catálogo disponible y avanzá hacia la variante que mejor encaja con tu operación.
                 </p>
             </div>
+            <div class="products-page__hero-stats" aria-label="Resumen del catálogo">
+                {% component "badge" label=product_count_text|add:" productos" variant="accent" size="lg" %}{% endcomponent %}
+            </div>
         </div>
 
         {% if product_cards %}

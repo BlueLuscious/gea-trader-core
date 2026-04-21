@@ -321,8 +321,199 @@
   color: #f3f7ff;
 }
 
+.home-categories {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-block: clamp(1.25rem, 3vw, 2.4rem) clamp(2.5rem, 5vw, 4rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.34)),
+    linear-gradient(180deg, #e4ecfb 0%, #eef3fc 100%);
+}
+
+:root[data-theme="dark"] .home-categories {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.04)),
+    linear-gradient(180deg, #132746 0%, #10233f 100%);
+}
+
+.home-categories__inner {
+  width: min(var(--site-max-width), calc(100% - (var(--site-gutter) * 2)));
+  margin-inline: auto;
+  display: grid;
+  justify-items: stretch;
+  gap: 1.5rem;
+}
+
+.home-categories__header {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.home-categories__copy {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: center;
+}
+
+.home-categories__title,
+.home-categories__lead {
+  margin: 0;
+}
+
+.home-categories__title {
+  color: #223657;
+  font-size: clamp(1.65rem, 2vw, 2.2rem);
+}
+
+.home-categories__lead {
+  color: #6f83a3;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+:root[data-theme="dark"] .home-categories__title {
+  color: #f3f7ff;
+}
+
+:root[data-theme="dark"] .home-categories__lead {
+  color: rgba(233, 242, 255, 0.72);
+}
+
+.home-categories__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-categories__card {
+  position: relative;
+  display: grid;
+  min-height: 12rem;
+  padding: 1rem;
+  border: 1px solid rgba(126, 153, 210, 0.16);
+  border-radius: 1.35rem;
+  overflow: hidden;
+  text-decoration: none;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 16px 32px rgba(96, 129, 194, 0.14);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.home-categories__card.has-banner {
+  align-items: stretch;
+}
+
+.home-categories__card.is-fallback {
+  background:
+    radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--color-secondary) 28%, transparent), transparent 20%),
+    linear-gradient(145deg, #d9e6fa 0%, #c7daf7 48%, #b8cff3 100%);
+}
+
+.home-categories__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 36px rgba(57, 83, 129, 0.18);
+}
+
+.home-categories__card-overlay {
+  display: grid;
+  align-content: end;
+  gap: 0.35rem;
+  width: 100%;
+  height: 100%;
+}
+
+.home-categories__card.is-fallback .home-categories__card-overlay {
+  place-items: center;
+  text-align: center;
+}
+
+.home-categories__card-kicker {
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.home-categories__card-name {
+  position: relative;
+  z-index: 1;
+  max-width: 14ch;
+  color: #fff;
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  font-weight: 700;
+  line-height: 0.98;
+  text-wrap: balance;
+  text-shadow: 0 8px 18px rgba(12, 23, 45, 0.32);
+}
+
+:root[data-theme="dark"] .home-categories__card-kicker {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.home-categories__card.is-fallback .home-categories__card-kicker {
+  background: rgba(255, 255, 255, 0.46);
+  color: #5f7eaf;
+}
+
+.home-categories__card.is-fallback .home-categories__card-name {
+  color: #223657;
+  text-shadow: none;
+}
+
+:root[data-theme="dark"] .home-categories__card.is-fallback {
+  background:
+    radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--color-secondary) 16%, transparent), transparent 20%),
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.06), transparent 24%),
+    linear-gradient(145deg, rgba(34, 60, 104, 0.96), rgba(24, 45, 82, 0.98));
+  border-color: rgba(143, 172, 232, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 18px 32px rgba(0, 0, 0, 0.24);
+}
+
+:root[data-theme="dark"] .home-categories__card.is-fallback .home-categories__card-name {
+  color: #edf4ff;
+}
+
+:root[data-theme="dark"] .home-categories__card.is-fallback .home-categories__card-kicker {
+  background: rgba(255, 255, 255, 0.08);
+  color: #b9cff9;
+}
+
+.home-categories__button-more {
+  justify-self: center;
+}
+
 @media (width >= 64rem) {
   .home-hero__inner {
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .home-categories__header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (width >= 48rem) {
+  .home-categories__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 64rem) {
+  .home-categories__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

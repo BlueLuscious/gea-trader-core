@@ -10,7 +10,7 @@ class ProductListView(PublicSiteViewMixin, TemplateView):
     """ Render the public product catalog with pagination. """
 
     template_name = "pages/product_list.html"
-    paginate_by = 12
+    paginate_by = 24
 
     def get_product_queryset(self):
         """ Return the tenant-scoped active product queryset for the storefront.
@@ -64,10 +64,12 @@ class ProductListView(PublicSiteViewMixin, TemplateView):
             dict[str, object]: Public catalog context.
         """
         context = super().get_context_data(**kwargs)
-        product_cards, page_obj = self.paginate_product_cards(self.get_product_queryset())
+        product_queryset = self.get_product_queryset()
+        product_cards, page_obj = self.paginate_product_cards(product_queryset)
 
         context.update(
             product_cards=product_cards,
+            product_count_text=str(product_queryset.count()),
             page_obj=page_obj,
             is_paginated=page_obj.paginator.num_pages > 1,
             pagination_links=[
