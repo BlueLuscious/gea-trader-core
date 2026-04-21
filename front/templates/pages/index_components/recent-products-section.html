@@ -1,0 +1,64 @@
+<section class="home-recent-products" aria-labelledby="home-recent-products-title">
+    <div class="home-recent-products__inner">
+        <div class="home-recent-products__header">
+            <div class="home-recent-products__copy">
+                <h2 id="home-recent-products-title" class="home-recent-products__title">Productos nuevos</h2>
+                <p class="home-recent-products__lead">
+                    Lo último que se cargó al catálogo para que puedas revisar novedades y avanzar rápido.
+                </p>
+            </div>
+        </div>
+
+        {% if recent_product_cards %}
+            {% component "card" class_name="home-recent-products__shell" elevated=True shadow="md" %}
+                {% fill "content" %}
+                    {% component "carrousel"
+                        id="home-recent-products-carrousel"
+                        class_name="home-recent-products__carrousel"
+                        aria_label="Productos nuevos"
+                        kind="article"
+                        slides_per_view=4
+                        slides_per_view_tablet=2
+                        slides_per_view_mobile=1
+                        gap=18
+                        show_dots=False
+                        autoplay_ms=5200
+                        autoplay_mode="bounce"
+                    %}
+                        {% fill "items" %}
+                            {% for product in recent_product_cards %}
+                                {% component "carrousel_item" aria_label=product.name %}
+                                    {% fill "content" %}
+                                        {% component "product_card"
+                                            product_id=product.product_id
+                                            href=product.url
+                                            badge_text=product.category_name|default:"Nuevo"
+                                            variant_count=product.variant_count
+                                            image_url=product.image_url
+                                            image_alt=product.image_alt
+                                            brand_name=product.brand_name
+                                            price_value=product.price_value
+                                            price_text=product.public_price|default:"Cotización"
+                                            title=product.name
+                                            description=product.short_description|default:product.description|default:"Revisá este producto y su variante comercial más conveniente."|truncatechars:96
+                                            action_label="Agregar"
+                                            class_name="home-recent-products__product-card"
+                                        %}{% endcomponent %}
+                                    {% endfill %}
+                                {% endcomponent %}
+                            {% endfor %}
+                        {% endfill %}
+                    {% endcomponent %}
+                {% endfill %}
+            {% endcomponent %}
+        {% else %}
+            <div class="home-empty-state">
+                Los productos nuevos aparecerán acá cuando el catálogo tenga registros activos para mostrar.
+            </div>
+        {% endif %}
+
+        {% component "button" href=site_products_url variant="primary" size="md" radius="sm" font_size="2xl" %}
+            {% fill "content" %}Ver más{% endfill %}
+        {% endcomponent %}
+    </div>
+</section>

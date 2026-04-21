@@ -11,6 +11,24 @@ class IndexView(PublicSiteViewMixin, TemplateView):
 
     template_name = "pages/index.html"
 
+    def get_recent_products(self, tenant: object, limit: int = 8) -> list[ProductModel]:
+        """ Return the newest active products for the public home page.
+
+        Args:
+            tenant: Active public tenant.
+            limit: Maximum number of products to return.
+
+        Returns:
+            list[ProductModel]: Newest active products ordered from newest to oldest.
+        """
+        return list(
+            ProductModel.objects.for_tenant(tenant)
+            .active()
+            .with_related()
+            .prefetch_related("images")
+            .order_by("-created_at", "-id")[:limit]
+        )
+
     def get_context_data(self, **kwargs: object) -> dict[str, object]:
         """ Return the public home context.
 
@@ -38,6 +56,7 @@ class IndexView(PublicSiteViewMixin, TemplateView):
             .order_by("sort_order", "name")[:3]
         )
         featured_root_categories = list(featured_root_categories_queryset)
+        recent_products = self.get_recent_products(tenant)
         if len(featured_root_categories) < 3:
             fallback_root_categories_queryset = (
                 CategoryModel.objects.for_tenant(tenant)
@@ -52,6 +71,7 @@ class IndexView(PublicSiteViewMixin, TemplateView):
             featured_products=self.get_featured_products(tenant),
             featured_root_categories=self.get_featured_root_categories(tenant),
             featured_product_cards=[self.build_product_card_data(product) for product in featured_products_queryset],
+            recent_product_cards=[self.build_product_card_data(product) for product in recent_products],
             featured_root_category_cards=[
                 self.build_category_card_data(category) for category in featured_root_categories
             ],

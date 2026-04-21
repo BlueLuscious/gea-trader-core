@@ -1,7 +1,12 @@
 :root {
+  --font-display: "Space Grotesk", Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-body: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --color-primary: #77a9ff;
   --color-primary-soft: #dce8ff;
   --color-primary-contrast: #ffffff;
+  --color-button-primary: #5b86c2;
+  --color-button-primary-hover: #4e78b2;
+  --color-button-primary-contrast: #ffffff;
   --color-secondary: #ee8c36;
   --color-secondary-soft: #fde6cc;
   --color-secondary-contrast: #ffffff;
@@ -49,6 +54,9 @@
   --color-primary: #77a9ff;
   --color-primary-soft: #264976;
   --color-primary-contrast: #ffffff;
+  --color-button-primary: #6883bb;
+  --color-button-primary-hover: #7892c8;
+  --color-button-primary-contrast: #ffffff;
   --color-secondary: #f3a661;
   --color-secondary-soft: #6a451f;
   --color-secondary-contrast: #10233f;
@@ -99,8 +107,30 @@ body {
     radial-gradient(circle at top left, color-mix(in srgb, var(--color-surface-soft) 74%, transparent) 0, transparent 38%),
     linear-gradient(180deg, var(--color-bg-start), var(--color-bg-end));
   color: var(--color-text);
-  font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
 }
 
 .site-shell {
