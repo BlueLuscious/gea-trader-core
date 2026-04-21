@@ -4,18 +4,18 @@
   margin-left: calc(50% - 50vw);
   padding-block: clamp(2.4rem, 5.5vw, 4.25rem);
   background:
-    radial-gradient(circle at 14% 18%, rgba(255, 175, 92, 0.14), transparent 18%),
-    radial-gradient(circle at 78% 22%, rgba(102, 145, 255, 0.2), transparent 26%),
-    radial-gradient(circle at 52% 72%, rgba(123, 171, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-secondary) 24%, transparent), transparent 18%),
+    radial-gradient(circle at 78% 22%, color-mix(in srgb, var(--color-primary) 28%, transparent), transparent 26%),
+    radial-gradient(circle at 52% 72%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 28%),
     linear-gradient(135deg, #e8edf9 0%, #dbe5fb 40%, #d3def8 100%);
   overflow: hidden;
 }
 
 :root[data-theme="dark"] .home-hero {
   background:
-    radial-gradient(circle at 14% 18%, rgba(255, 175, 92, 0.16), transparent 18%),
-    radial-gradient(circle at 78% 22%, rgba(102, 145, 255, 0.24), transparent 26%),
-    radial-gradient(circle at 52% 72%, rgba(123, 171, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-secondary) 26%, transparent), transparent 18%),
+    radial-gradient(circle at 78% 22%, color-mix(in srgb, var(--color-primary) 34%, transparent), transparent 26%),
+    radial-gradient(circle at 52% 72%, color-mix(in srgb, var(--color-primary) 24%, transparent), transparent 28%),
     linear-gradient(135deg, #0e1f39 0%, #15294c 42%, #18315a 100%);
 }
 
@@ -42,39 +42,22 @@
   margin-inline: auto;
   display: grid;
   gap: 2rem;
-  align-items: center;
+  align-items: start;
 }
 
 .home-hero__copy {
   display: grid;
   gap: 1rem;
-  max-width: 32rem;
 }
 
-.home-hero__eyebrow {
-  display: inline-flex;
+.home-hero__badge {
   width: fit-content;
-  align-items: center;
-  padding: 0.35rem 0.7rem;
-  border-radius: var(--radius-full);
-  background: rgba(255, 170, 87, 0.18);
-  color: #d77936;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-:root[data-theme="dark"] .home-hero__eyebrow {
-  background: rgba(255, 170, 87, 0.12);
-  color: #ffbe8a;
 }
 
 .home-hero__title {
-  max-width: 12ch;
   margin: 0;
   color: #1f2f4b;
-  font-size: clamp(2.6rem, 5.5vw, 4.75rem);
+  font-size: clamp(2.45rem, 5.25vw, 4.5rem);
   line-height: 0.94;
   letter-spacing: -0.055em;
   text-wrap: balance;
@@ -104,8 +87,8 @@
 }
 
 .home-hero__category-chip .gc-button {
-  border-color: rgba(112, 138, 193, 0.2);
-  color: #284063;
+  border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  color: color-mix(in srgb, var(--color-primary) 45%, var(--color-text) 55%);
   background: rgba(255, 255, 255, 0.38);
   backdrop-filter: blur(10px);
 }
@@ -129,15 +112,13 @@
 }
 
 .home-hero__showcase-shell {
-  display: grid;
-  gap: 1rem;
   padding: 1.2rem;
-  border: 1px solid rgba(120, 155, 228, 0.34);
+  border: 1px solid rgba(146, 174, 230, 0.34);
   border-radius: 1.6rem;
   background:
-    linear-gradient(160deg, rgba(92, 146, 255, 0.2), rgba(61, 110, 216, 0.08)),
-    rgba(255, 255, 255, 0.24);
-  box-shadow: 0 18px 42px rgba(78, 115, 195, 0.18);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(244, 248, 255, 0.82)),
+    rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 42px rgba(116, 145, 206, 0.14);
   backdrop-filter: blur(12px);
 }
 
@@ -149,18 +130,14 @@
   box-shadow: 0 22px 48px rgba(0, 0, 0, 0.22);
 }
 
+.home-hero__showcase-shell .gc-card__header,
+.home-hero__showcase-shell .gc-card__content {
+  min-width: 0;
+}
+
 .home-hero__showcase-header {
   display: grid;
   gap: 0.5rem;
-}
-
-.home-hero__showcase-eyebrow {
-  margin: 0;
-  color: #5e83cf;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .home-hero__showcase-title {
@@ -175,10 +152,6 @@
   font-size: 0.95rem;
 }
 
-:root[data-theme="dark"] .home-hero__showcase-eyebrow {
-  color: #95b6ff;
-}
-
 :root[data-theme="dark"] .home-hero__showcase-title {
   color: #f3f7ff;
 }
@@ -189,10 +162,7 @@
 
 .home-hero__carrousel {
   min-width: 0;
-}
-
-.home-hero__carrousel .gc-carrousel__viewport {
-  overflow-x: hidden;
+  --carrousel-edge-padding: 1rem;
 }
 
 .home-hero__carrousel .gc-carrousel__slide {
