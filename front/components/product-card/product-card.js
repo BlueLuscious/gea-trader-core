@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     "use strict";
 
     class ProductCardController {
@@ -9,11 +9,9 @@
         }
 
         init() {
-            if (!this.addButton) {
-                return;
+            if (this.addButton) {
+                this.addButton.addEventListener("click", this.handleAdd);
             }
-
-            this.addButton.addEventListener("click", this.handleAdd);
         }
 
         handleAdd(event) {

@@ -1,4 +1,4 @@
-﻿from typing import NamedTuple
+from typing import NamedTuple
 from uuid import uuid4
 from django_components import Component, register
 
@@ -26,7 +26,6 @@ class ProductCardController(Component):
         price_text: str = ""
         title: str = ""
         description: str = ""
-        availability_text: str = "Available"
         action_label: str = "Add"
 
     def get_template_data(self, args, kwargs: Kwargs, slots, context) -> dict[str, object]:
@@ -53,7 +52,7 @@ class ProductCardController(Component):
             "action_id": action_id,
             "class_name": kwargs.class_name,
             "product_id": kwargs.product_id,
-            "href": kwargs.href,
+            "product_href": kwargs.href,
             "badge_text": kwargs.badge_text,
             "variant_count": variant_count,
             "variant_badge_text": variant_badge_text,
@@ -65,6 +64,5 @@ class ProductCardController(Component):
             "price_text": kwargs.price_text,
             "title": kwargs.title,
             "description": kwargs.description,
-            "availability_text": kwargs.availability_text,
             "action_label": kwargs.action_label,
         }

@@ -10,7 +10,7 @@
   data-product-brand="{{ brand_name }}"
   data-product-image-url="{{ image_url }}"
   data-product-price="{{ price_value }}"
-  data-product-href="{{ href }}"
+  data-product-href="{{ product_href }}"
 >
   {% component "card"
     class_name="gc-product-card"
@@ -22,8 +22,8 @@
   %}
     {% fill "content" %}
       <div class="gc-product-card__body">
-        {% if href %}
-          <a id="{{ visual_id }}" href="{{ href }}" class="gc-product-card__visual-link" aria-label="{{ title }}">
+        {% if product_href %}
+          <a id="{{ visual_id }}" href="{{ product_href }}" class="gc-product-card__visual-link" aria-label="{{ title }}">
             <div class="gc-product-card__visual">
               {% if image_url %}
                 <img
@@ -71,8 +71,8 @@
         {% endif %}
 
         <div class="gc-product-card__content">
-          {% if href %}
-            <a href="{{ href }}" class="gc-product-card__title-link">
+          {% if product_href %}
+            <a href="{{ product_href }}" class="gc-product-card__title-link">
               <h3 class="gc-product-card__title">{{ title }}</h3>
             </a>
           {% else %}
@@ -85,9 +85,6 @@
 
     {% fill "footer" %}
       <div class="gc-product-card__footer">
-        {% if availability_text %}
-        <span class="gc-product-card__availability">{{ availability_text }}</span>
-        {% endif %}
         {% component "button"
           id=action_id
           size="sm"
