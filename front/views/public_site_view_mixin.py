@@ -72,7 +72,7 @@ class PublicSiteViewMixin(ContextMixin):
             "site_logo_light_url": logo_light_url,
             "site_logo_dark_url": logo_dark_url,
             "site_home_url": "/",
-            "site_products_url": "/#productos-destacados",
+            "site_products_url": reverse("product_list"),
             "site_categories_url": "/#categorias-destacadas",
             "carrousel_prev_attrs": {"carousel-prev": "true"},
             "carrousel_next_attrs": {"carousel-next": "true"},

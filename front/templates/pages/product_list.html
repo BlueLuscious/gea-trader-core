@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static component_tags %}
+
+{% block title %}Productos | {{ site_brand_name }}{% endblock %}
+
+{% block extra_heads %}
+    <link rel="stylesheet" href="{% static 'css/pages/product-list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="products-page" aria-labelledby="products-page-title">
+    <div class="products-page__shell">
+        <div class="products-page__hero">
+            <div class="products-page__hero-copy">
+                <h1 id="products-page-title" class="products-page__title">Productos</h1>
+                <p class="products-page__lead">
+                    Explorá todo el catálogo disponible y avanzá hacia la variante que mejor encaja con tu operación.
+                </p>
+            </div>
+        </div>
+
+        {% if product_cards %}
+        <div class="products-page__grid">
+            {% for product in product_cards %}
+                {% component "product_card"
+                    class_name="products-page__product-card"
+                    product_id=product.product_id
+                    href=product.url
+                    badge_text=product.category_name
+                    variant_count=product.variant_count
+                    variant_badge_text=product.variant_badge_text
+                    image_url=product.image_url
+                    image_alt=product.image_alt
+                    brand_name=product.brand_name
+                    price_value=product.price_value
+                    price_text=product.price_text
+                    title=product.name
+                    description=product.short_description
+                    action_label="Agregar"
+                %}{% endcomponent %}
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <nav class="products-page__pagination" aria-label="Paginación de productos">
+            {% if pagination_prev_url %}
+                {% component "button"
+                    href=pagination_prev_url
+                    variant="outline"
+                    size="sm"
+                    class_name="products-page__pagination-button"
+                %}
+                    {% fill "content" %}Anterior{% endfill %}
+                {% endcomponent %}
+            {% endif %}
+
+            <div class="products-page__pagination-pages">
+                {% for link in pagination_links %}
+                    {% if link.is_current %}
+                        {% component "button"
+                            href=link.url
+                            variant="outline"
+                            size="sm"
+                            class_name="products-page__pagination-button is-current"
+                        %}
+                            {% fill "content" %}{{ link.number }}{% endfill %}
+                        {% endcomponent %}
+                    {% else %}
+                        {% component "button"
+                            href=link.url
+                            variant="outline"
+                            size="sm"
+                            class_name="products-page__pagination-button"
+                        %}
+                            {% fill "content" %}{{ link.number }}{% endfill %}
+                        {% endcomponent %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% if pagination_next_url %}
+                {% component "button"
+                    href=pagination_next_url
+                    variant="outline"
+                    size="sm"
+                    class_name="products-page__pagination-button"
+                %}
+                    {% fill "content" %}Siguiente{% endfill %}
+                {% endcomponent %}
+            {% endif %}
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="products-page__empty">
+            No hay productos activos en el catálogo por ahora.
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
