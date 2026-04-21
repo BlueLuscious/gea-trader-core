@@ -122,6 +122,15 @@
   transform: none;
 }
 
+.gc-button--primary {
+  background: var(--color-button-primary);
+  color: var(--color-button-primary-contrast);
+}
+
+.gc-button--primary:hover {
+  background: var(--color-button-primary-hover);
+}
+
 .gc-button--solid {
   background: var(--color-accent);
   color: var(--color-accent-contrast);

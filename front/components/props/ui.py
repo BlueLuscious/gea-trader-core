@@ -37,6 +37,7 @@ class IconStyle(StrEnum):
 
 
 class ButtonVariant(StrEnum):
+    PRIMARY = "primary"
     SOLID = "solid"
     SOFT = "soft"
     OUTLINE = "outline"
