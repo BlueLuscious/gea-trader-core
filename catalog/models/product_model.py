@@ -10,7 +10,7 @@ from catalog.models.managers.product_model_manager import ProductModelManager
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager
     from masterdata.models import BrandModel, CategoryModel
-    from catalog.models import ProductVariantModel
+    from catalog.models import ProductImageModel, ProductVariantModel
     from catalog.models.querysets import ProductImageModelQuerySet, ProductVariantModelQuerySet
     from tenancy.models import TenantModel
 
@@ -181,3 +181,69 @@ class ProductModel(models.Model):
             return None
 
         return default_variant.price
+
+    def get_preferred_image(self) -> "ProductImageModel | None":
+        """ Return the preferred image for public rendering.
+
+        Returns:
+            ProductImageModel | None: Primary root image, root fallback, any
+            fallback image, or ``None`` when no image exists.
+        """
+        primary_root_image = self.images.filter(variant__isnull=True, is_primary=True).order_by("sort_order", "id").first()
+        fallback_root_image = self.images.filter(variant__isnull=True).order_by("sort_order", "id").first()
+        fallback_any_image = self.images.order_by("sort_order", "id").first()
+        return primary_root_image or fallback_root_image or fallback_any_image
+
+    def get_preferred_image_url(self) -> str:
+        """ Return the preferred image URL for public rendering.
+
+        Returns:
+            str: Preferred image URL or empty string.
+        """
+        image = self.get_preferred_image()
+        if image is not None and image.image:
+            return image.image.url
+        return ""
+
+    def get_preferred_image_alt(self) -> str:
+        """ Return the preferred image alt text for public rendering.
+
+        Returns:
+            str: Preferred image alt text or fallback product name.
+        """
+        image = self.get_preferred_image()
+        if image is not None and image.alt_text:
+            return image.alt_text
+        return self.name
+
+    def get_variant_image_url(self, variant: "ProductVariantModel") -> str:
+        """ Return the preferred image URL for one variant.
+
+        Args:
+            variant: Product variant whose image should be resolved.
+
+        Returns:
+            str: Variant image URL or product fallback URL.
+        """
+        variant_primary_image = self.images.filter(variant=variant, is_primary=True).order_by("sort_order", "id").first()
+        variant_fallback_image = self.images.filter(variant=variant).order_by("sort_order", "id").first()
+        image = variant_primary_image or variant_fallback_image
+        if image is not None and image.image:
+            return image.image.url
+        return self.get_preferred_image_url()
+
+    def get_variant_image_alt(self, variant: "ProductVariantModel") -> str:
+        """ Return the preferred image alt text for one variant.
+
+        Args:
+            variant: Product variant whose image alt should be resolved.
+
+        Returns:
+            str: Variant image alt text or fallback variant label.
+        """
+        variant_primary_image = self.images.filter(variant=variant, is_primary=True).order_by("sort_order", "id").first()
+        variant_fallback_image = self.images.filter(variant=variant).order_by("sort_order", "id").first()
+        image = variant_primary_image or variant_fallback_image
+        if image is not None and image.alt_text:
+            return image.alt_text
+        return variant.name or variant.sku

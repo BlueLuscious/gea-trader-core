@@ -2,6 +2,7 @@
 
 from typing import Any
 from django.http import Http404
+from django.urls import reverse
 from django.views.generic.base import ContextMixin
 from catalog.dtos.factories import ProductModelDTOFactory
 from catalog.models import ProductModel
@@ -163,39 +164,6 @@ class PublicSiteViewMixin(ContextMixin):
 
         return self.build_category_dtos(featured_categories)
 
-    def get_product_image_url(self, product: ProductModel) -> str:
-        """ Return the preferred public image URL for one product.
-
-        Args:
-            product: Product whose public image should be resolved.
-
-        Returns:
-            str: Preferred image URL or an empty string when no image exists.
-        """
-        primary_root_image = product.images.filter(variant__isnull=True, is_primary=True).order_by("sort_order", "id").first()
-        fallback_root_image = product.images.filter(variant__isnull=True).order_by("sort_order", "id").first()
-        fallback_any_image = product.images.order_by("sort_order", "id").first()
-        image = primary_root_image or fallback_root_image or fallback_any_image
-        return image.image.url if image is not None and image.image else ""
-
-    def get_product_image_alt(self, product: ProductModel) -> str:
-        """ Return the preferred public alt text for one product image.
-
-        Args:
-            product: Product whose public image alt text should be resolved.
-
-        Returns:
-            str: Preferred alt text or fallback product name.
-        """
-        primary_root_image = product.images.filter(variant__isnull=True, is_primary=True).order_by("sort_order", "id").first()
-        fallback_root_image = product.images.filter(variant__isnull=True).order_by("sort_order", "id").first()
-        fallback_any_image = product.images.order_by("sort_order", "id").first()
-        image = primary_root_image or fallback_root_image or fallback_any_image
-        if image is None:
-            return product.name
-
-        return image.alt_text or product.name
-
     def build_product_card_data(self, product: ProductModel) -> dict[str, object]:
         """ Build one product card payload for public storefront templates.
 
@@ -213,11 +181,11 @@ class PublicSiteViewMixin(ContextMixin):
             "slug": product_dto.slug,
             "short_description": product_dto.short_description,
             "description": product_dto.description,
-            "image_url": self.get_product_image_url(product),
-            "image_alt": self.get_product_image_alt(product),
-            "brand_name": product.brand.name if product.brand is not None else "",
-            "category_name": product.category.name if product.category is not None else "",
-            "url": "#",
+            "image_url": product_dto.image_url,
+            "image_alt": product_dto.image_alt,
+            "brand_name": product_dto.brand_name,
+            "category_name": product_dto.category_name,
+            "url": reverse("product_detail", kwargs={"slug": product_dto.slug}),
             "requires_quote": product_dto.requires_quote,
             "public_price": product_dto.public_price,
             "price_value": str(product_dto.public_price) if product_dto.public_price is not None else "",

@@ -1,0 +1,162 @@
+﻿{% extends "base.html" %}
+{% load static component_tags %}
+
+{% block title %}{{ product_dto.name }} | {{ site_brand_name }}{% endblock %}
+
+{% block extra_heads %}
+    <link rel="stylesheet" href="{% static 'css/pages/product-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="product-detail-page" aria-labelledby="product-detail-title">
+    <div class="product-detail-page__layout">
+        <div class="product-detail-page__identity">
+            {% component "card" class_name="product-detail-page__identity-card" elevated=True shadow="md" %}
+                {% fill "content" %}
+                    <div class="product-detail-page__summary">
+                        <h1 id="product-detail-title" class="product-detail-page__title">{{ product_dto.name }}</h1>
+
+                        <div class="product-detail-page__media">
+                            {% if product_dto.image_url %}
+                            <img
+                                src="{{ product_dto.image_url }}"
+                                alt="{{ product_dto.image_alt }}"
+                                class="product-detail-page__image"
+                            />
+                            {% endif %}
+                        </div>
+
+                        {% if product_dto.brand_name or product_dto.category_name %}
+                        <div class="product-detail-page__identity-badges">
+                            {% if product_dto.brand_name %}
+                            {% component "badge" label="Marca: "|add:product_dto.brand_name variant="accent" size="lg" %}{% endcomponent %}
+                            {% endif %}
+                            {% if product_dto.category_name %}
+                            {% component "badge" label="Categoría: "|add:product_dto.category_name variant="warning" size="lg" %}{% endcomponent %}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        {% if product_dto.short_description %}
+                        <p class="product-detail-page__lead">{{ product_dto.short_description }}</p>
+                        {% endif %}
+
+                        {% if product_dto.description and product_dto.description != product_dto.short_description %}
+                        <p class="product-detail-page__description">{{ product_dto.description }}</p>
+                        {% endif %}
+
+                        <div class="product-detail-page__identity-chips">
+                            {% if product_dto.sku_base %}
+                            {% component "badge" label="SKU base: "|add:product_dto.sku_base variant="neutral" size="md" %}{% endcomponent %}
+                            {% endif %}
+
+                            {% if product_dto.default_variant_name %}
+                            {% component "badge" label="Variante predeterminada: "|add:product_dto.default_variant_name variant="success" size="md" %}{% endcomponent %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfill %}
+            {% endcomponent %}
+        </div>
+
+        <div class="product-detail-page__variants">
+            {% component "card" class_name="product-detail-page__variants-card" elevated=True shadow="md" %}
+            {% fill "header" %}
+                <div class="product-detail-page__variants-header">
+                    <h2>Variantes disponibles</h2>
+                    <p>Seleccioná la opción comercial que querés sumar al carrito de cotización.</p>
+                </div>
+            {% endfill %}
+
+            {% fill "content" %}
+                {% if product_variants %}
+                {% component "carrousel"
+                    id="product-detail-variants"
+                    class_name="product-detail-page__variants-carrousel"
+                    aria_label="Variantes del producto"
+                    kind="article"
+                    slides_per_view=1
+                    gap=14
+                    show_dots=False
+                %}
+                    {% fill "items" %}
+                        {% for variant in product_variants %}
+                            {% component "carrousel_item" aria_label=variant.display_name %}
+                                {% fill "content" %}
+                                <article
+                                    class="product-detail-page__variant-item"
+                                    data-variant-item
+                                    data-variant-id="{{ variant.id }}"
+                                    data-product-id="{{ product_dto.id }}"
+                                    data-product-name="{{ product_dto.name }}"
+                                    data-variant-name="{{ variant.display_name }}"
+                                    data-variant-sku="{{ variant.sku }}"
+                                    data-variant-price="{{ variant.price_value }}"
+                                    data-variant-image-url="{{ variant.image_url }}"
+                                    data-variant-href="{% url 'product_detail' slug=product_dto.slug %}"
+                                >
+                                    <div class="product-detail-page__variant-main">
+                                        <div class="product-detail-page__variant-head">
+                                            <h3>{{ variant.display_name }}</h3>
+                                            {% if variant.is_default %}
+                                            {% component "badge" label="Predeterminada" variant="success" size="sm" %}{% endcomponent %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="product-detail-page__variant-body">
+                                            {% if variant.image_url %}
+                                            <div class="product-detail-page__variant-media">
+                                                <img
+                                                    src="{{ variant.image_url }}"
+                                                    alt="{{ variant.image_alt }}"
+                                                    class="product-detail-page__variant-image"
+                                                />
+                                            </div>
+                                            {% endif %}
+                                            <div class="product-detail-page__variant-content">
+                                                <p class="product-detail-page__variant-sku">SKU: {{ variant.sku }}</p>
+                                                {% if variant.attributes_display %}
+                                                <ul class="product-detail-page__variant-attributes">
+                                                    {% for attribute in variant.attributes_display %}
+                                                    <li>{{ attribute }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
+                                                {% if variant.price_value %}
+                                                <p class="product-detail-page__variant-price">{{ variant.price_text }}</p>
+                                                {% endif %}
+                                                <div class="product-detail-page__variant-actions">
+                                                    {% component "button"
+                                                        size="md"
+                                                        icon_left_name="cart-shopping"
+                                                        class_name="product-detail-page__variant-add"
+                                                        aria_label="Agregar variante"
+                                                        data_attrs={"product-variant-add":"true"}
+                                                    %}
+                                                        {% fill "content" %}Agregar{% endfill %}
+                                                    {% endcomponent %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                {% endfill %}
+                            {% endcomponent %}
+                        {% endfor %}
+                    {% endfill %}
+                {% endcomponent %}
+                {% else %}
+                <div class="product-detail-page__empty">
+                    Este producto no tiene variantes activas por ahora.
+                </div>
+                {% endif %}
+            {% endfill %}
+            {% endcomponent %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'js/pages/product-detail.js' %}" defer></script>
+{% endblock %}

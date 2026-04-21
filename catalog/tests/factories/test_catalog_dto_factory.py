@@ -46,6 +46,9 @@ class TestCatalogDTOFactory(LoggedTestCase):
         self.assertEqual(dto.public_price, Decimal('20.00'))
         self.assertEqual(dto.active_variant_count, 1)
         self.assertFalse(dto.has_multiple_active_variants)
+        self.assertEqual(dto.brand_name, "")
+        self.assertEqual(dto.category_name, "")
+        self.assertEqual(dto.default_variant_name, "BOM-001")
 
     def test_product_model_dto_factory_maps_active_variant_count_fields(self) -> None:
         """ Verify ProductModelDTOFactory exposes active-variant count semantics. """
@@ -107,7 +110,10 @@ class TestCatalogDTOFactory(LoggedTestCase):
         variant.attributes_json['viscosidad'] = '68'
 
         self.assertEqual(dto.attributes_json['viscosidad'], '46')
+        self.assertEqual(dto.attributes_display, ['Viscosidad: 46'])
         self.assertEqual(dto.price, Decimal('15.00'))
+        self.assertEqual(dto.price_value, '15.00')
+        self.assertEqual(dto.price_text, 'ARS 15.00')
 
     def test_image_factory_build_many_returns_expected_names(self) -> None:
         """ Verify ProductImageModelDTOFactory.build_many keeps image metadata. """

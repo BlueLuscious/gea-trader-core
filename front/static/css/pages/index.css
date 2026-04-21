@@ -1,4 +1,4 @@
-﻿.home-hero {
+.home-hero {
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
@@ -213,4 +213,3 @@
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   }
 }
-

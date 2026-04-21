@@ -18,10 +18,13 @@ class ProductModelDTOFactory:
         Returns:
             ProductModelDTO: Serialized product.
         """
+        default_variant = instance.get_default_variant()
         return ProductModelDTO(
             id=instance.id,
             brand_id=instance.brand_id,
             category_id=instance.category_id,
+            brand_name=instance.brand.name if instance.brand is not None else "",
+            category_name=instance.category.name if instance.category is not None else "",
             name=instance.name,
             slug=instance.slug,
             short_description=instance.short_description,
@@ -32,6 +35,13 @@ class ProductModelDTOFactory:
             requires_quote=instance.requires_quote,
             active_variant_count=instance.get_active_variant_count(),
             has_multiple_active_variants=instance.has_multiple_active_variants(),
+            default_variant_name=(
+                default_variant.name or default_variant.sku
+                if default_variant is not None
+                else ""
+            ),
+            image_url=instance.get_preferred_image_url(),
+            image_alt=instance.get_preferred_image_alt(),
             public_price=instance.get_public_price(),
             created_at=instance.created_at,
             updated_at=instance.updated_at,
