@@ -1,0 +1,71 @@
+﻿{% load component_tags %}
+
+<div class="gc-cart-quote-form">
+  <div class="gc-cart-quote-form__head">
+    <h3 class="gc-cart-quote-form__title">Solicitar cotización</h3>
+    <p class="gc-cart-quote-form__copy">
+      Dejanos tus datos y te contactamos para continuar la cotización.
+    </p>
+  </div>
+
+  <form method="post" class="gc-cart-quote-form__form" data-cart-quote-form novalidate>
+    {% if form.non_field_errors %}
+    <div class="gc-cart-quote-form__errors">
+      {% for error in form.non_field_errors %}
+      <p class="gc-cart-quote-form__error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="gc-cart-quote-form__fields">
+      <div class="gc-cart-quote-form__field">
+        <label for="{{ form.customer_name.id_for_label }}" class="gc-cart-quote-form__label">{{ form.customer_name.label }}</label>
+        {{ form.customer_name }}
+        {% for error in form.customer_name.errors %}
+        <p class="gc-cart-quote-form__error">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="gc-cart-quote-form__field">
+        <label for="{{ form.customer_email.id_for_label }}" class="gc-cart-quote-form__label">{{ form.customer_email.label }}</label>
+        {{ form.customer_email }}
+        {% for error in form.customer_email.errors %}
+        <p class="gc-cart-quote-form__error">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="gc-cart-quote-form__field">
+        <label for="{{ form.customer_phone.id_for_label }}" class="gc-cart-quote-form__label">{{ form.customer_phone.label }}</label>
+        {{ form.customer_phone }}
+        {% for error in form.customer_phone.errors %}
+        <p class="gc-cart-quote-form__error">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="gc-cart-quote-form__field">
+        <label for="{{ form.company_name.id_for_label }}" class="gc-cart-quote-form__label">{{ form.company_name.label }}</label>
+        {{ form.company_name }}
+        {% for error in form.company_name.errors %}
+        <p class="gc-cart-quote-form__error">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="gc-cart-quote-form__field gc-cart-quote-form__field--full">
+        <label for="{{ form.message.id_for_label }}" class="gc-cart-quote-form__label">{{ form.message.label }}</label>
+        {{ form.message }}
+        {% for error in form.message.errors %}
+        <p class="gc-cart-quote-form__error">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="gc-cart-quote-form__actions">
+      {% component "button" type="button" variant="ghost" size="md" data_attrs={"modal-close-target": quote_modal_id} %}
+        {% fill "content" %}Cancelar{% endfill %}
+      {% endcomponent %}
+      {% component "button" type="submit" variant="primary" size="md" %}
+        {% fill "content" %}Enviar solicitud{% endfill %}
+      {% endcomponent %}
+    </div>
+  </form>
+</div>

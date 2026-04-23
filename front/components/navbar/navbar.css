@@ -3,9 +3,6 @@
 }
 
 .gc-navbar.is-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 40;
   width: 100%;
 }
 

@@ -49,7 +49,7 @@ class TestTemplateMailService(LoggedSimpleTestCase):
         self.assertEqual(1, len(mail.outbox))
         self.assertEqual("Template mail service", mail.outbox[0].subject)
         self.assertIn("This message comes from one Django template.", mail.outbox[0].body)
-        self.assertNotIn("Sent via", mail.outbox[0].body)
+        self.assertNotIn("Enviado desde", mail.outbox[0].body)
         self.assertEqual(1, len(mail.outbox[0].alternatives))
         self.assertIn("Open dashboard", mail.outbox[0].alternatives[0][0])
         logger_info_mock.assert_called_once()
@@ -88,10 +88,10 @@ class TestTemplateMailService(LoggedSimpleTestCase):
 
         self.assertEqual(1, delivered_count)
         self.assertEqual(1, len(mail.outbox))
-        self.assertIn("Sent via GEA Trader", mail.outbox[0].body)
-        self.assertIn("Support: support@gea-trader.test", mail.outbox[0].body)
-        self.assertIn("Phone: +54 11 5555 1234", mail.outbox[0].body)
-        self.assertIn("Website: https://gea-trader.test", mail.outbox[0].body)
+        self.assertIn("Enviado desde GEA Trader", mail.outbox[0].body)
+        self.assertIn("Soporte: support@gea-trader.test", mail.outbox[0].body)
+        self.assertIn("Teléfono: +54 11 5555 1234", mail.outbox[0].body)
+        self.assertIn("Sitio web: https://gea-trader.test", mail.outbox[0].body)
 
     def test_send_accepts_an_explicit_tenant_without_relying_on_runtime_context(self) -> None:
         """ Deliver one templated message using an explicit tenant snapshot instead of ambient runtime state. """
@@ -124,7 +124,7 @@ class TestTemplateMailService(LoggedSimpleTestCase):
 
         self.assertEqual(1, delivered_count)
         self.assertEqual(1, len(mail.outbox))
-        self.assertIn("Sent via GEA Trader", mail.outbox[0].body)
-        self.assertIn("Support: hello@gea-trader.test", mail.outbox[0].body)
-        self.assertIn("Phone: +54 11 5555 1234", mail.outbox[0].body)
-        self.assertIn("Website: https://gea-trader.test", mail.outbox[0].body)
+        self.assertIn("Enviado desde GEA Trader", mail.outbox[0].body)
+        self.assertIn("Soporte: hello@gea-trader.test", mail.outbox[0].body)
+        self.assertIn("Teléfono: +54 11 5555 1234", mail.outbox[0].body)
+        self.assertIn("Sitio web: https://gea-trader.test", mail.outbox[0].body)

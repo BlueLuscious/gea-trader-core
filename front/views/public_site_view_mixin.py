@@ -3,10 +3,14 @@
 import re
 from typing import Any
 from django.http import Http404
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic.base import ContextMixin
 from catalog.dtos.factories import ProductModelDTOFactory
 from catalog.models import ProductModel
+from front.forms import QuoteRequestForm
 from masterdata.dtos.factories import CategoryModelDTOFactory
 from masterdata.models import CategoryModel
 from tenancy.models import TenantBrandingModel, TenantModel
@@ -16,6 +20,21 @@ class PublicSiteViewMixin(ContextMixin):
     """ Resolve the single public tenant and provide shared storefront context. """
 
     tenant_context_name = "current_tenant"
+    quote_modal_id = "site-quote-request-modal"
+
+    @method_decorator(ensure_csrf_cookie)
+    def dispatch(self, request, *args: object, **kwargs: object):
+        """ Ensure public storefront responses emit a CSRF cookie.
+
+        Args:
+            request: Current HTTP request.
+            *args: Positional dispatch arguments.
+            **kwargs: Keyword dispatch arguments.
+
+        Returns:
+            HttpResponse: View dispatch result.
+        """
+        return super().dispatch(request, *args, **kwargs)
 
     def get_tenant(self) -> TenantModel:
         """ Return the single active tenant that owns the public site.
@@ -31,6 +50,18 @@ class PublicSiteViewMixin(ContextMixin):
             raise Http404("No public tenant is available.")
 
         return tenant
+
+    def ensure_runtime_session_key(self) -> str:
+        """ Ensure the public storefront request already owns one session key.
+
+        Returns:
+            str: Current request session key.
+        """
+        if self.request.session.session_key:
+            return self.request.session.session_key
+
+        self.request.session.create()
+        return self.request.session.session_key or ""
 
     def get_brand_name(self, tenant: TenantModel) -> str:
         """ Return the public display name for the site tenant.
@@ -140,9 +171,32 @@ class PublicSiteViewMixin(ContextMixin):
             "site_home_url": "/",
             "site_products_url": reverse("product_list"),
             "site_categories_url": reverse("category_list"),
+            "site_cart_state_url": reverse("cart_state"),
+            "site_cart_add_url": reverse("cart_add_item"),
+            "site_cart_update_quantity_url": reverse("cart_update_quantity"),
+            "site_cart_remove_url": reverse("cart_remove_item"),
+            "site_cart_clear_url": reverse("cart_clear"),
+            "site_cart_quote_url": reverse("cart_quote_request"),
+            "site_quote_request_form_html": self.build_quote_request_form_html(),
+            "site_quote_request_modal_id": self.quote_modal_id,
             "carrousel_prev_attrs": {"carousel-prev": "true"},
             "carrousel_next_attrs": {"carousel-next": "true"},
         }
+
+    def build_quote_request_form_html(self) -> str:
+        """ Render the initial quote-request form HTML for the shared modal.
+
+        Returns:
+            str: Server-rendered quote-request form markup.
+        """
+        return render_to_string(
+            "cart/runtime/quote_request_form.html",
+            {
+                "form": QuoteRequestForm(),
+                "quote_modal_id": self.quote_modal_id,
+            },
+            request=self.request,
+        )
 
     def get_context_data(self, **kwargs: object) -> dict[str, object]:
         """ Extend context with the resolved public tenant and shared navigation.
@@ -154,6 +208,7 @@ class PublicSiteViewMixin(ContextMixin):
             dict[str, object]: Context extended with public-site layout data.
         """
         context = super().get_context_data(**kwargs)
+        self.ensure_runtime_session_key()
         tenant = self.get_tenant()
         context.update(self.build_layout_context(tenant))
         return context

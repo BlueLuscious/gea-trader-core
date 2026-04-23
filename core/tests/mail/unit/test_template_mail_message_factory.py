@@ -32,8 +32,8 @@ class TestTemplateMailMessageFactory(LoggedSimpleTestCase):
         self.assertEqual("Template factory", message.subject)
         self.assertIn("Factory body", message.text_body)
         self.assertIn("Factory body", str(message.html_body))
-        self.assertNotIn("Sent via", message.text_body)
-        self.assertNotIn("Sent via", str(message.html_body))
+        self.assertNotIn("Enviado desde", message.text_body)
+        self.assertNotIn("Enviado desde", str(message.html_body))
         self.assertEqual(("reply@example.com",), message.reply_to)
         self.assertEqual({"X-Test": "factory"}, message.headers)
 
@@ -69,7 +69,7 @@ class TestTemplateMailMessageFactory(LoggedSimpleTestCase):
         finally:
             ActiveTenantContext.reset(tenant_token)
 
-        self.assertIn("Sent via GEA Trader Pro", message.text_body)
-        self.assertIn("Support: hello@gea-trader.test", message.text_body)
-        self.assertIn("Phone: +54 11 5555 9999", message.text_body)
-        self.assertIn("Website: https://gea-trader.test", message.text_body)
+        self.assertIn("Enviado desde GEA Trader Pro", message.text_body)
+        self.assertIn("Soporte: hello@gea-trader.test", message.text_body)
+        self.assertIn("Teléfono: +54 11 5555 9999", message.text_body)
+        self.assertIn("Sitio web: https://gea-trader.test", message.text_body)

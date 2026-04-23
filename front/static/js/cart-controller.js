@@ -1,71 +1,72 @@
-(function () {
+﻿(function () {
     "use strict";
+
+    function getSiteShell() {
+        return document.querySelector(".site-shell");
+    }
+
+    function getCookie(name) {
+        const cookie = document.cookie
+            .split(";")
+            .map((item) => item.trim())
+            .find((item) => item.startsWith(`${name}=`));
+        if (!cookie) {
+            return "";
+        }
+
+        return decodeURIComponent(cookie.slice(name.length + 1));
+    }
 
     class CartController {
         constructor() {
-            this.storageKey = "quote-cart-items";
             this.listeners = new Set();
+            this.state = {
+                cart_id: null,
+                status: "",
+                items: [],
+                count: 0,
+                items_html: "",
+                summary_html: "",
+            };
         }
 
         init() {
-            this.notify();
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", () => {
+                    this.refresh();
+                }, { once: true });
+                return;
+            }
+
+            this.refresh();
         }
 
-        getStoredItems() {
-            try {
-                const raw = localStorage.getItem(this.storageKey);
-                const parsed = raw ? JSON.parse(raw) : [];
-                return Array.isArray(parsed) ? parsed : [];
-            } catch (error) {
-                return [];
-            }
-        }
-
-        saveItems(items) {
-            try {
-                localStorage.setItem(this.storageKey, JSON.stringify(items));
-            } catch (error) {
-                // localStorage may be blocked by browser privacy settings.
-            }
+        getUrls() {
+            const shell = getSiteShell();
+            return {
+                state: shell ? shell.dataset.cartStateUrl || "" : "",
+                add: shell ? shell.dataset.cartAddUrl || "" : "",
+                updateQuantity: shell ? shell.dataset.cartUpdateQuantityUrl || "" : "",
+                remove: shell ? shell.dataset.cartRemoveUrl || "" : "",
+                clear: shell ? shell.dataset.cartClearUrl || "" : "",
+            };
         }
 
         getItems() {
-            return this.getStoredItems();
-        }
-
-        getItemId(item, index) {
-            if (item && item.id !== undefined && item.id !== null && item.id !== "") {
-                return String(item.id);
-            }
-
-            if (item && item.product_id !== undefined && item.product_id !== null && item.product_id !== "") {
-                return String(item.product_id);
-            }
-
-            if (item && item.sku) {
-                return String(item.sku);
-            }
-
-            return String(index);
-        }
-
-        findItemIndex(items, itemId) {
-            const targetId = String(itemId);
-            return items.findIndex((item, index) => this.getItemId(item, index) === targetId);
+            return Array.isArray(this.state.items) ? this.state.items : [];
         }
 
         getCount() {
-            return this.getItems().reduce((total, item) => {
-                const quantity = Number(item && item.quantity ? item.quantity : 1);
-                return total + (Number.isFinite(quantity) ? quantity : 1);
-            }, 0);
+            return Number(this.state.count || 0);
         }
 
         getState() {
-            const items = this.getItems();
             return {
-                items,
+                ...this.state,
+                items: this.getItems(),
                 count: this.getCount(),
+                items_html: this.state.items_html || "",
+                summary_html: this.state.summary_html || "",
             };
         }
 
@@ -84,92 +85,182 @@
             document.dispatchEvent(new CustomEvent("cartchange", { detail }));
         }
 
-        setItems(items) {
-            const nextItems = Array.isArray(items) ? items : [];
-            this.saveItems(nextItems);
+        setState(nextState) {
+            this.state = {
+                cart_id: nextState && nextState.cart_id ? nextState.cart_id : null,
+                status: nextState && nextState.status ? nextState.status : "",
+                items: Array.isArray(nextState && nextState.items) ? nextState.items : [],
+                count: Number(nextState && nextState.count ? nextState.count : 0),
+                items_html: nextState && nextState.items_html ? nextState.items_html : "",
+                summary_html: nextState && nextState.summary_html ? nextState.summary_html : "",
+            };
             this.notify();
         }
 
-        addItem(item) {
-            const nextItem = item && typeof item === "object" ? item : {};
-            const items = this.getItems();
-            const incomingId = this.getItemId(nextItem, items.length);
-            const existingIndex = this.findItemIndex(items, incomingId);
+        async request(url, payload) {
+            if (!url) {
+                console.error("CartController: missing runtime URL.");
+                return this.getState();
+            }
 
-            if (existingIndex >= 0) {
-                const currentItem = items[existingIndex];
-                const currentQuantity = Number(currentItem && currentItem.quantity ? currentItem.quantity : 1) || 1;
-                const nextQuantity = Number(nextItem && nextItem.quantity ? nextItem.quantity : 1) || 1;
-                items[existingIndex] = {
-                    ...currentItem,
-                    ...nextItem,
-                    quantity: currentQuantity + nextQuantity,
-                };
-            } else {
-                items.push({
-                    quantity: Number(nextItem.quantity || 1) || 1,
-                    ...nextItem,
+            const response = await fetch(url, {
+                method: payload ? "POST" : "GET",
+                headers: payload ? {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                } : {},
+                credentials: "same-origin",
+                body: payload ? JSON.stringify(payload) : undefined,
+            });
+
+            if (!response.ok) {
+                let errorMessage = `Cart request failed with status ${response.status}`;
+                try {
+                    const errorPayload = await response.json();
+                    if (errorPayload && errorPayload.error) {
+                        errorMessage = String(errorPayload.error);
+                    }
+                } catch (error) {
+                    // Keep the generic message when the response is not JSON.
+                }
+                console.error("CartController: request failed.", {
+                    url,
+                    status: response.status,
+                    statusText: response.statusText,
                 });
+                throw new Error(errorMessage);
             }
 
-            this.setItems(items);
+            const nextState = await response.json();
+            this.setState(nextState);
+            return this.getState();
         }
 
-        updateQuantity(itemId, quantity) {
-            const nextQuantity = Math.max(0, Number(quantity) || 0);
-            const items = this.getItems();
-            const itemIndex = this.findItemIndex(items, itemId);
-            if (itemIndex < 0) {
-                return;
+        async refresh() {
+            try {
+                return await this.request(this.getUrls().state);
+            } catch (error) {
+                console.error("CartController: unable to refresh cart state.", error);
+                return this.getState();
             }
-
-            if (nextQuantity <= 0) {
-                items.splice(itemIndex, 1);
-            } else {
-                items[itemIndex] = {
-                    ...items[itemIndex],
-                    quantity: nextQuantity,
-                };
-            }
-
-            this.setItems(items);
         }
 
-        incrementItem(itemId) {
-            const items = this.getItems();
-            const itemIndex = this.findItemIndex(items, itemId);
-            if (itemIndex < 0) {
-                return;
+        async addItem(item) {
+            const nextItem = item && typeof item === "object" ? item : {};
+            if (!nextItem.product_id) {
+                return this.getState();
             }
 
-            const currentQuantity = Number(items[itemIndex] && items[itemIndex].quantity ? items[itemIndex].quantity : 1) || 1;
-            this.updateQuantity(itemId, currentQuantity + 1);
+            try {
+                const nextState = await this.request(this.getUrls().add, {
+                    product_id: nextItem.product_id,
+                    variant_id: nextItem.variant_id || "",
+                    quantity: nextItem.quantity || 1,
+                });
+                document.dispatchEvent(new CustomEvent("cartitemadded", {
+                    detail: {
+                        productTitle: nextItem.product_title || "",
+                        count: this.getCount(),
+                    },
+                }));
+                if (window.ToastController && typeof window.ToastController.success === "function") {
+                    window.ToastController.success({
+                        title: "Producto agregado",
+                        message: nextItem.product_title
+                            ? `${nextItem.product_title} ya está en tu carrito de cotización.`
+                            : "El producto ya está en tu carrito de cotización.",
+                    });
+                }
+                return nextState;
+            } catch (error) {
+                console.error("CartController: unable to add item.", error);
+                if (window.ToastController && typeof window.ToastController.danger === "function") {
+                    window.ToastController.danger({
+                        title: "No pudimos agregar el producto",
+                        message: error && error.message ? error.message : "Volvé a intentarlo en unos segundos.",
+                    });
+                }
+                return this.getState();
+            }
         }
 
-        decrementItem(itemId) {
-            const items = this.getItems();
-            const itemIndex = this.findItemIndex(items, itemId);
-            if (itemIndex < 0) {
-                return;
+        async updateQuantity(itemId, quantity) {
+            if (!itemId) {
+                return this.getState();
             }
 
-            const currentQuantity = Number(items[itemIndex] && items[itemIndex].quantity ? items[itemIndex].quantity : 1) || 1;
-            this.updateQuantity(itemId, currentQuantity - 1);
+            try {
+                return await this.request(this.getUrls().updateQuantity, {
+                    item_id: itemId,
+                    quantity,
+                });
+            } catch (error) {
+                console.error("CartController: unable to update quantity.", error);
+                return this.getState();
+            }
         }
 
-        removeItem(itemId) {
-            const items = this.getItems();
-            const itemIndex = this.findItemIndex(items, itemId);
-            if (itemIndex < 0) {
-                return;
+        async incrementItem(itemId) {
+            const currentItem = this.getItems().find((item) => String(item.id) === String(itemId));
+            const currentQuantity = Number(currentItem && currentItem.quantity ? currentItem.quantity : 1) || 1;
+            return this.updateQuantity(itemId, currentQuantity + 1);
+        }
+
+        async decrementItem(itemId) {
+            const currentItem = this.getItems().find((item) => String(item.id) === String(itemId));
+            const currentQuantity = Number(currentItem && currentItem.quantity ? currentItem.quantity : 1) || 1;
+            return this.updateQuantity(itemId, currentQuantity - 1);
+        }
+
+        async removeItem(itemId) {
+            if (!itemId) {
+                return this.getState();
             }
 
-            items.splice(itemIndex, 1);
-            this.setItems(items);
+            try {
+                const nextState = await this.request(this.getUrls().remove, {
+                    item_id: itemId,
+                });
+                if (window.ToastController && typeof window.ToastController.info === "function") {
+                    window.ToastController.info({
+                        title: "Producto quitado",
+                        message: "El producto se eliminó del carrito de cotización.",
+                    });
+                }
+                return nextState;
+            } catch (error) {
+                console.error("CartController: unable to remove item.", error);
+                if (window.ToastController && typeof window.ToastController.danger === "function") {
+                    window.ToastController.danger({
+                        title: "No pudimos quitar el producto",
+                        message: error && error.message ? error.message : "Volvé a intentarlo en unos segundos.",
+                    });
+                }
+                return this.getState();
+            }
         }
 
-        clear() {
-            this.setItems([]);
+        async clear() {
+            try {
+                const hadItems = this.getCount() > 0;
+                const nextState = await this.request(this.getUrls().clear, {});
+                if (hadItems && window.ToastController && typeof window.ToastController.info === "function") {
+                    window.ToastController.info({
+                        title: "Carrito vaciado",
+                        message: "Quitamos todos los productos del carrito de cotización.",
+                    });
+                }
+                return nextState;
+            } catch (error) {
+                console.error("CartController: unable to clear cart.", error);
+                if (window.ToastController && typeof window.ToastController.danger === "function") {
+                    window.ToastController.danger({
+                        title: "No pudimos vaciar el carrito",
+                        message: error && error.message ? error.message : "Volvé a intentarlo en unos segundos.",
+                    });
+                }
+                return this.getState();
+            }
         }
 
         openCart() {

@@ -19,6 +19,7 @@
             }
 
             this.button.addEventListener("click", (event) => this.handleClick(event));
+            document.addEventListener("cartitemadded", () => this.flash());
             this.unsubscribe = window.CartController.subscribe((state) => this.sync(state));
             this.root.dataset.cartButtonInitialized = "true";
         }
@@ -41,6 +42,15 @@
             this.countNode.textContent = String(count);
             this.countNode.classList.toggle("is-hidden", count <= 0);
             this.countNode.setAttribute("aria-hidden", count > 0 ? "false" : "true");
+        }
+
+        flash() {
+            this.root.classList.remove("is-pulsing");
+            void this.root.offsetWidth;
+            this.root.classList.add("is-pulsing");
+            window.setTimeout(() => {
+                this.root.classList.remove("is-pulsing");
+            }, 700);
         }
     }
 

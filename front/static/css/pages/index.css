@@ -1,7 +1,7 @@
 .home-hero {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw + var(--viewport-bleed-adjust));
+  margin-right: calc(50% - 50vw + var(--viewport-bleed-adjust));
   padding-block: clamp(2.4rem, 5.5vw, 4.25rem);
   background:
     radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-secondary) 24%, transparent), transparent 18%),
@@ -210,8 +210,8 @@
 
 .home-recent-products {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw + var(--viewport-bleed-adjust));
+  margin-right: calc(50% - 50vw + var(--viewport-bleed-adjust));
   padding-block: clamp(1.25rem, 3vw, 2.4rem) clamp(2.5rem, 5vw, 4rem);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.42)),
@@ -267,7 +267,7 @@
 }
 
 .home-recent-products__shell {
-  max-width: 70vw;
+  max-width: none;
   padding: 1.25rem;
   border: 1px solid rgba(146, 174, 230, 0.34);
   border-radius: 1.6rem;
@@ -323,8 +323,8 @@
 
 .home-categories {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw + var(--viewport-bleed-adjust));
+  margin-right: calc(50% - 50vw + var(--viewport-bleed-adjust));
   padding-block: clamp(1.25rem, 3vw, 2.4rem) clamp(2.5rem, 5vw, 4rem);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.34)),
@@ -494,8 +494,8 @@
 
 .site-index-footer {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw + var(--viewport-bleed-adjust));
+  margin-right: calc(50% - 50vw + var(--viewport-bleed-adjust));
   padding-block: clamp(1.25rem, 3vw, 2.4rem) clamp(2.5rem, 5vw, 4rem);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.28)),
@@ -642,6 +642,16 @@
   justify-self: center;
 }
 
+@media (width >= 48rem) {
+  .home-categories__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-recent-products__shell {
+    max-width: 70vw;
+  }
+}
+
 @media (width >= 64rem) {
   .home-hero__inner {
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
@@ -650,15 +660,7 @@
   .home-categories__header {
     grid-template-columns: minmax(0, 1fr);
   }
-}
 
-@media (width >= 48rem) {
-  .home-categories__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (width >= 64rem) {
   .home-categories__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

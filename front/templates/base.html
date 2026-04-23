@@ -1,4 +1,4 @@
-{% extends "simple.html" %}
+﻿{% extends "simple.html" %}
 {% load static component_tags %}
 
 {% block simple_heads %}
@@ -33,7 +33,15 @@
 {% block page_heads %}{% block extra_heads %}{% endblock %}{% endblock %}
 
 {% block body %}
-    <div class="site-shell">
+    <div
+        class="site-shell"
+        data-cart-state-url="{{ site_cart_state_url }}"
+        data-cart-add-url="{{ site_cart_add_url }}"
+        data-cart-update-quantity-url="{{ site_cart_update_quantity_url }}"
+        data-cart-remove-url="{{ site_cart_remove_url }}"
+        data-cart-clear-url="{{ site_cart_clear_url }}"
+        data-cart-quote-url="{{ site_cart_quote_url }}"
+    >
         <header class="site-header">
             {% component "navbar" id="site-navbar" sticky=False links_position="center"
                 aria_label="Navegación principal" menu_aria_label="Abrir menú principal"
@@ -81,8 +89,8 @@
             {% block content %}{% endblock %}
         </main>
 
-        {% component "cart_sidebar" id="site-cart-sidebar" title="Carrito de cotización" %}{% endcomponent %}
-        
+        {% component "cart_sidebar" id="site-cart-sidebar" title="Carrito de cotización" quote_modal_id="site-quote-request-modal" %}{% endcomponent %}
+
         {% if site_whatsapp_url %}
         <a href="{{ site_whatsapp_url }}" class="site-whatsapp-fab"
             target="_blank" rel="noreferrer" aria-label="Abrir WhatsApp"
@@ -91,6 +99,14 @@
         </a>
         {% endif %}
     </div>
+
+    {% component "modal" id="site-quote-request-modal" aria_label="Formulario de solicitud de cotización" width="lg" %}
+        {% fill "content" %}
+            <div data-quote-request-modal-content>{{ site_quote_request_form_html|safe }}</div>
+        {% endfill %}
+    {% endcomponent %}
+    
+    {% component "toast" id="site-toast" position="top-left" %}{% endcomponent %}
 {% endblock %}
 
 {% block page_scripts %}

@@ -60,6 +60,7 @@ Current examples:
 - `EMAIL_USE_TLS`
 - `EMAIL_USE_SSL`
 - `DEFAULT_FROM_EMAIL`
+- `BASE_URL` for absolute links when one mail flow needs them
 
 Current meaning of `DEFAULT_FROM_EMAIL`:
 
@@ -137,6 +138,15 @@ Recommended local MailHog values:
 - `EMAIL_USE_TLS=False`
 - `EMAIL_USE_SSL=False`
 - `DEFAULT_FROM_EMAIL=noreply@localhost`
+- `BASE_URL=http://127.0.0.1:8000`
+
+`BASE_URL` is documented as a shared project configuration in:
+
+- `docs/core/config/config.md`
+
+Within the mail runtime specifically, the current use of `BASE_URL` is:
+
+- building absolute links included in outbound messages when the flow cannot rely on request-local host information
 
 ## Local Manual Smoke Test
 

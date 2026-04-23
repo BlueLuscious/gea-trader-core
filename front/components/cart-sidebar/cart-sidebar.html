@@ -8,6 +8,7 @@
   data-cart-sidebar-title="{{ title }}"
   data-cart-sidebar-empty-title="{{ empty_title }}"
   data-cart-sidebar-empty-copy="{{ empty_copy }}"
+  {% if quote_modal_id %}data-quote-modal-id="{{ quote_modal_id }}"{% endif %}
 >
   {% component "sidebar"
     id=sidebar_id
@@ -22,10 +23,10 @@
         <div class="gc-cart-sidebar__heading-copy">
           <h2 class="gc-cart-sidebar__title">{{ title }}</h2>
           <p class="gc-cart-sidebar__subtitle">
-            <span data-cart-sidebar-count>0</span> items cargados
+            <span data-cart-sidebar-count>0</span> productos cargados
           </p>
         </div>
-        {% component "badge" label="Cotizacion" variant="info" %}{% endcomponent %}
+        {% component "badge" label="Cotización" variant="info" %}{% endcomponent %}
       </div>
     {% endfill %}
 

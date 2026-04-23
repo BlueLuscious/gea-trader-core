@@ -1,4 +1,4 @@
-from enum import StrEnum
+﻿from enum import StrEnum
 
 
 class BadgeVariant(StrEnum):
@@ -50,6 +50,7 @@ class Size(StrEnum):
     LG = "lg"
     FULL = "full"
 
+
 ButtonSize = Size
 SwitchSize = Size
 
@@ -87,3 +88,10 @@ class PanelWidth(StrEnum):
     LG = "lg"
     XL = "xl"
     FULL = "full"
+
+
+class ToastPosition(StrEnum):
+    TOP_LEFT = "top-left"
+    TOP_RIGHT = "top-right"
+    BOTTOM_LEFT = "bottom-left"
+    BOTTOM_RIGHT = "bottom-right"

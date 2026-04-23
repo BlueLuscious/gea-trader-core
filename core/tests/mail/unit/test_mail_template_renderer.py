@@ -21,8 +21,8 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
 
         self.assertIn("Renderer test", rendered_text)
         self.assertIn("Plain text body", rendered_text)
-        self.assertNotIn("Sent via", rendered_text)
-        self.assertNotIn("Support:", rendered_text)
+        self.assertNotIn("Enviado desde", rendered_text)
+        self.assertNotIn("Soporte:", rendered_text)
         self.assertNotIn("---", rendered_text)
 
     def test_render_html_keeps_the_output_neutral_when_no_branding_context_exists(self) -> None:
@@ -37,10 +37,10 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
 
         self.assertIn("Renderer test", rendered_html)
         self.assertIn("HTML body", rendered_html)
-        self.assertNotIn("Sent via", rendered_html)
-        self.assertNotIn("Support:", rendered_html)
-        self.assertNotIn("Phone:", rendered_html)
-        self.assertNotIn("Website:", rendered_html)
+        self.assertNotIn("Enviado desde", rendered_html)
+        self.assertNotIn("Soporte:", rendered_html)
+        self.assertNotIn("Teléfono:", rendered_html)
+        self.assertNotIn("Sitio web:", rendered_html)
         self.assertNotIn("border-top:1px solid #d9e0eb", rendered_html)
 
     def test_render_html_includes_branding_when_context_provides_it(self) -> None:
@@ -86,10 +86,10 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
         finally:
             ActiveTenantContext.reset(tenant_token)
 
-        self.assertIn("Sent via GEA Trader", rendered_text)
-        self.assertIn("Support: support@gea-trader.test", rendered_text)
-        self.assertIn("Phone: +54 11 5555 1234", rendered_text)
-        self.assertIn("Website: https://gea-trader.test", rendered_text)
+        self.assertIn("Enviado desde GEA Trader", rendered_text)
+        self.assertIn("Soporte: support@gea-trader.test", rendered_text)
+        self.assertIn("Teléfono: +54 11 5555 1234", rendered_text)
+        self.assertIn("Sitio web: https://gea-trader.test", rendered_text)
 
     def test_render_html_allows_explicit_context_to_override_active_tenant_values(self) -> None:
         """ Render the HTML template with explicit values taking precedence over the active tenant context. """

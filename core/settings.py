@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
+BASE_URL = os.environ.get('BASE_URL', '').strip()
 
 # Application definition
 

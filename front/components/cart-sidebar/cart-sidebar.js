@@ -1,42 +1,29 @@
-(function () {
+﻿(function () {
     "use strict";
 
-    function getItemKey(item, index) {
-        if (item && item.id !== undefined && item.id !== null && item.id !== "") {
-            return String(item.id);
-        }
-
-        if (item && item.product_id !== undefined && item.product_id !== null && item.product_id !== "") {
-            return String(item.product_id);
-        }
-
-        if (item && item.sku) {
-            return String(item.sku);
-        }
-
-        return String(index);
+    function getSiteShell() {
+        return document.querySelector(".site-shell");
     }
 
-    function escapeHtml(value) {
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
+    function getCartQuoteUrl() {
+        const shell = getSiteShell();
+        return shell ? shell.dataset.cartQuoteUrl || "" : "";
     }
 
-    function formatCurrency(value) {
-        const amount = Number(value);
-        if (!Number.isFinite(amount)) {
+    function getQuoteModalContentNode() {
+        return document.querySelector("[data-quote-request-modal-content]");
+    }
+
+    function getCsrfToken() {
+        const cookie = document.cookie
+            .split(";")
+            .map((item) => item.trim())
+            .find((item) => item.startsWith("csrftoken="));
+        if (!cookie) {
             return "";
         }
 
-        return new Intl.NumberFormat("es-AR", {
-            style: "currency",
-            currency: "ARS",
-            maximumFractionDigits: 0,
-        }).format(amount);
+        return decodeURIComponent(cookie.slice("csrftoken=".length));
     }
 
     class CartSidebarController {
@@ -44,14 +31,18 @@
             this.root = root;
             this.id = root.dataset.cartSidebarId || "";
             this.title = root.dataset.cartSidebarTitle || "Carrito";
-            this.emptyTitle = root.dataset.cartSidebarEmptyTitle || "Tu carrito esta vacio";
-            this.emptyCopy = root.dataset.cartSidebarEmptyCopy || "Agrega productos para continuar.";
+            this.emptyTitle = root.dataset.cartSidebarEmptyTitle || "Tu carrito está vacío";
+            this.emptyCopy = root.dataset.cartSidebarEmptyCopy || "Agregá productos para continuar.";
             this.sidebar = root.querySelector("[data-sidebar]");
             this.sidebarId = this.sidebar ? this.sidebar.dataset.sidebarId : "";
             this.itemsNode = root.querySelector("[data-cart-sidebar-items]");
             this.emptyNode = root.querySelector("[data-cart-sidebar-empty]");
+            this.quoteModalId = root.dataset.quoteModalId || "";
             this.countNodes = root.querySelectorAll("[data-cart-sidebar-count]");
             this.unsubscribe = null;
+            this.pendingQuantityAnimation = null;
+            this.quoteModalContentNode = getQuoteModalContentNode();
+            this.initialQuoteRequestMarkup = this.quoteModalContentNode ? this.quoteModalContentNode.innerHTML : "";
         }
 
         mount() {
@@ -64,6 +55,7 @@
             }
 
             this.root.addEventListener("click", (event) => this.handleAction(event));
+            document.addEventListener("submit", (event) => this.handleSubmit(event));
             document.addEventListener("cartopen", () => this.open());
             document.addEventListener("cartchange", (event) => this.render(event.detail || { items: [], count: 0 }));
             this.unsubscribe = window.CartController.subscribe((state) => this.render(state));
@@ -76,20 +68,18 @@
             }
         }
 
-        handleAction(event) {
+        async handleAction(event) {
             const clearButton = event.target.closest("[data-cart-clear]");
             if (clearButton) {
                 event.preventDefault();
-                window.CartController.clear();
+                await window.CartController.clear();
                 return;
             }
 
             const quoteButton = event.target.closest("[data-cart-quote]");
             if (quoteButton) {
                 event.preventDefault();
-                document.dispatchEvent(new CustomEvent("cartquote", {
-                    detail: window.CartController.getState(),
-                }));
+                this.openQuoteRequest();
                 return;
             }
 
@@ -106,23 +96,111 @@
             }
 
             if (action === "remove") {
-                window.CartController.removeItem(itemId);
+                await window.CartController.removeItem(itemId);
                 return;
             }
 
             if (action === "increment") {
-                window.CartController.incrementItem(itemId);
+                this.pendingQuantityAnimation = { itemId, direction: "up" };
+                await window.CartController.incrementItem(itemId);
                 return;
             }
 
             if (action === "decrement") {
-                window.CartController.decrementItem(itemId);
+                this.pendingQuantityAnimation = { itemId, direction: "down" };
+                await window.CartController.decrementItem(itemId);
             }
+        }
+
+        async openQuoteRequest() {
+            if (!window.CartController || !window.CartController.getCount()) {
+                return;
+            }
+
+            if (!this.quoteModalContentNode) {
+                this.quoteModalContentNode = getQuoteModalContentNode();
+            }
+
+            if (this.quoteModalContentNode && !this.quoteModalContentNode.innerHTML.trim()) {
+                this.restoreInitialQuoteRequestMarkup();
+            }
+
+            if (window.ModalController && this.quoteModalId) {
+                window.ModalController.openById(this.quoteModalId);
+            }
+        }
+
+        async submitQuoteRequest(form) {
+            if (!form) {
+                return;
+            }
+
+            const quoteUrl = getCartQuoteUrl();
+            if (!this.quoteModalContentNode) {
+                this.quoteModalContentNode = getQuoteModalContentNode();
+            }
+
+            if (!quoteUrl || !this.quoteModalContentNode) {
+                return;
+            }
+
+            try {
+                const response = await fetch(quoteUrl, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken": getCsrfToken(),
+                    },
+                    body: new FormData(form),
+                });
+                const payload = await response.json();
+
+                if (payload.success) {
+                    this.restoreInitialQuoteRequestMarkup();
+                    if (window.ModalController && this.quoteModalId) {
+                        window.ModalController.closeById(this.quoteModalId);
+                    }
+                    if (payload.cart_state && window.CartController) {
+                        window.CartController.setState(payload.cart_state);
+                    } else if (window.CartController) {
+                        await window.CartController.refresh();
+                    }
+                    if (window.ToastController && typeof window.ToastController.success === "function") {
+                        window.ToastController.success({
+                            title: "Solicitud enviada",
+                            message: payload.message || "Recibimos tu pedido y lo vamos a revisar a la brevedad.",
+                        });
+                    }
+                    return;
+                }
+
+                this.quoteModalContentNode.innerHTML = payload.form_html || "";
+                if (window.ModalController && this.quoteModalId) {
+                    window.ModalController.openById(this.quoteModalId);
+                }
+            } catch (error) {
+                console.error("CartSidebarController: unable to submit quote request.", error);
+                if (window.ToastController && typeof window.ToastController.danger === "function") {
+                    window.ToastController.danger({
+                        title: "No pudimos enviar la solicitud",
+                        message: "Revisá tus datos y volvé a intentarlo en unos segundos.",
+                    });
+                }
+            }
+        }
+
+        handleSubmit(event) {
+            const quoteForm = event.target.closest("[data-cart-quote-form]");
+            if (!quoteForm) {
+                return;
+            }
+
+            event.preventDefault();
+            this.submitQuoteRequest(quoteForm);
         }
 
         render(state) {
             const count = Number(state.count || 0);
-            const items = Array.isArray(state.items) ? state.items : [];
             this.countNodes.forEach((node) => {
                 node.textContent = String(count);
             });
@@ -131,77 +209,91 @@
                 return;
             }
 
-            if (!items.length) {
+            if (!count) {
                 this.emptyNode.classList.remove("is-hidden");
                 this.itemsNode.classList.add("is-hidden");
                 this.itemsNode.innerHTML = "";
+                this.restoreInitialQuoteRequestMarkup();
+                if (window.ModalController && this.quoteModalId) {
+                    window.ModalController.closeById(this.quoteModalId);
+                }
                 return;
             }
 
             this.emptyNode.classList.add("is-hidden");
             this.itemsNode.classList.remove("is-hidden");
+            this.itemsNode.innerHTML = `${state && state.items_html ? state.items_html : ""}${state && state.summary_html ? state.summary_html : ""}`;
+            this.applyPendingQuantityAnimation();
+        }
 
-            const subtotal = items.reduce((total, item) => {
-                const quantity = Number(item && item.quantity ? item.quantity : 1);
-                const price = Number(item && item.price ? item.price : 0);
-                return total + (Number.isFinite(quantity) ? quantity : 1) * (Number.isFinite(price) ? price : 0);
-            }, 0);
+        applyPendingQuantityAnimation() {
+            if (!this.pendingQuantityAnimation || !this.itemsNode) {
+                return;
+            }
 
-            const itemsMarkup = items.map((item, index) => {
-                const itemId = getItemKey(item, index);
-                const quantity = Math.max(1, Number(item && item.quantity ? item.quantity : 1) || 1);
-                const title = item && (item.title || item.name || item.label) ? (item.title || item.name || item.label) : `Producto ${index + 1}`;
-                const meta = item && (item.sku || item.subtitle || item.description) ? (item.sku || item.subtitle || item.description) : "";
-                const price = formatCurrency(item && item.price ? item.price : 0);
+            const { itemId, direction } = this.pendingQuantityAnimation;
+            this.pendingQuantityAnimation = null;
+            window.requestAnimationFrame(() => {
+                const itemNode = this.itemsNode.querySelector(`[data-cart-item-id="${CSS.escape(String(itemId))}"]`);
+                if (!itemNode) {
+                    return;
+                }
 
-                return `
-                    <article class="gc-cart-sidebar__item">
-                        <div class="gc-cart-sidebar__item-head">
-                            <p class="gc-cart-sidebar__item-title">${escapeHtml(title)}</p>
-                            ${meta ? `<p class="gc-cart-sidebar__item-meta">${escapeHtml(meta)}</p>` : ""}
-                            ${price ? `<p class="gc-cart-sidebar__item-price">${escapeHtml(price)}</p>` : ""}
-                        </div>
-                        <div class="gc-cart-sidebar__item-actions">
-                            <div class="gc-cart-sidebar__qty-controls" aria-label="Cantidad">
-                                <button
-                                    type="button"
-                                    class="gc-cart-sidebar__qty-button"
-                                    data-cart-action="decrement"
-                                    data-item-id="${escapeHtml(itemId)}"
-                                >-</button>
-                                <span class="gc-cart-sidebar__qty">${escapeHtml(quantity)}</span>
-                                <button
-                                    type="button"
-                                    class="gc-cart-sidebar__qty-button"
-                                    data-cart-action="increment"
-                                    data-item-id="${escapeHtml(itemId)}"
-                                >+</button>
-                            </div>
-                            <button
-                                type="button"
-                                class="gc-cart-sidebar__remove"
-                                data-cart-action="remove"
-                                data-item-id="${escapeHtml(itemId)}"
-                            >Quitar</button>
-                        </div>
-                    </article>
-                `;
-            }).join("");
+                const buttonAction = direction === "up" ? "increment" : "decrement";
+                const buttonNode = itemNode.querySelector(`[data-cart-action="${buttonAction}"]`);
+                const qtyNode = itemNode.querySelector("[data-cart-qty-value]");
 
-            const summaryMarkup = `
-                <section class="gc-cart-sidebar__summary">
-                    <div class="gc-cart-sidebar__summary-row">
-                        <p class="gc-cart-sidebar__summary-label">Items</p>
-                        <p class="gc-cart-sidebar__summary-value">${escapeHtml(count)}</p>
-                    </div>
-                    <div class="gc-cart-sidebar__summary-row">
-                        <p class="gc-cart-sidebar__summary-label">Subtotal estimado</p>
-                        <p class="gc-cart-sidebar__summary-value">${escapeHtml(formatCurrency(subtotal) || "-")}</p>
-                    </div>
-                </section>
-            `;
+                if (buttonNode) {
+                    buttonNode.classList.remove("is-bumping");
+                    void buttonNode.offsetWidth;
+                    buttonNode.classList.add("is-bumping");
+                    window.setTimeout(() => {
+                        buttonNode.classList.remove("is-bumping");
+                    }, 360);
+                }
 
-            this.itemsNode.innerHTML = itemsMarkup + summaryMarkup;
+                if (qtyNode) {
+                    const className = direction === "up" ? "is-ticking-up" : "is-ticking-down";
+                    qtyNode.classList.remove("is-ticking-up", "is-ticking-down");
+                    void qtyNode.offsetWidth;
+                    qtyNode.classList.add(className);
+                    window.setTimeout(() => {
+                        qtyNode.classList.remove(className);
+                    }, 440);
+                }
+
+                itemNode.classList.remove("is-updating");
+                void itemNode.offsetWidth;
+                itemNode.classList.add("is-updating");
+                window.setTimeout(() => {
+                    itemNode.classList.remove("is-updating");
+                }, 460);
+
+                const mediaNode = itemNode.querySelector(".gc-cart-sidebar__item-media");
+                if (mediaNode) {
+                    mediaNode.animate(
+                        [
+                            { transform: "scale(1)", offset: 0 },
+                            { transform: direction === "up" ? "scale(1.04)" : "scale(0.98)", offset: 0.45 },
+                            { transform: "scale(1)", offset: 1 },
+                        ],
+                        {
+                            duration: 420,
+                            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+                        }
+                    );
+                }
+            });
+        }
+
+        restoreInitialQuoteRequestMarkup() {
+            if (!this.quoteModalContentNode) {
+                this.quoteModalContentNode = getQuoteModalContentNode();
+            }
+
+            if (this.quoteModalContentNode) {
+                this.quoteModalContentNode.innerHTML = this.initialQuoteRequestMarkup;
+            }
         }
     }
 
@@ -227,7 +319,6 @@
 
         const instance = new CartSidebarController(root);
         instance.mount();
-
         if (existingId) {
             registry.set(existingId, instance);
         }

@@ -1,9 +1,28 @@
-from django.template import Context, Template
-from django.test import Client, SimpleTestCase
+﻿from django.template import Context, Template
+from django.test import Client
+
+from core.testing.base import LoggedTestCase
+from tenancy.models import TenantBrandingModel, TenantModel
 
 
-class ThemeLayoutTests(SimpleTestCase):
+class ThemeLayoutTests(LoggedTestCase):
+    """ Verify theme-enabled layout primitives and storefront assets. """
+
+    def setUp(self) -> None:
+        """ Create one active tenant so the public storefront can render fully. """
+        self.tenant = TenantModel.objects.create(
+            name="GEA Trader",
+            slug="gea-trader",
+            business_email="info@gea.test",
+            is_active=True,
+        )
+        TenantBrandingModel.objects.create(
+            tenant=self.tenant,
+            display_name="GEA Trader",
+        )
+
     def render_template(self, template_string: str, context: dict | None = None) -> str:
+        """ Render one small component snippet with an optional context. """
         return Template(template_string).render(Context(context or {}))
 
     def test_index_renders_theme_controller_assets(self):
@@ -20,6 +39,7 @@ class ThemeLayoutTests(SimpleTestCase):
         self.assertIn("data-theme-button", html)
         self.assertIn("data-cart-button", html)
         self.assertIn("data-cart-sidebar", html)
+        self.assertIn("data-toast", html)
 
     def test_button_renders_as_generic_control(self):
         html = self.render_template(
@@ -88,3 +108,14 @@ class ThemeLayoutTests(SimpleTestCase):
         self.assertIn("data-switch-input", html)
         self.assertIn("fa-sun", html)
         self.assertIn("fa-moon", html)
+
+    def test_toast_renders_global_runtime_root(self):
+        html = self.render_template(
+            """
+            {% component "toast" id="site-toast" %}{% endcomponent %}
+            """
+        )
+
+        self.assertIn('data-toast-id="site-toast"', html)
+        self.assertIn("data-toast-template", html)
+        self.assertIn("data-toast-dismiss", html)

@@ -1,16 +1,16 @@
 {% if product_name or support_email or phone_number or website_url %}
 <div style="margin-top:8px; border-top:1px solid #d9e0eb; padding-top:16px; font-size:12px; line-height:20px; color:#5b6b86;">
     {% if product_name %}
-    <div>Sent via {{ product_name }}</div>
+    <div>Enviado desde {{ product_name }}</div>
     {% endif %}
     {% if support_email %}
-    <div>Support: <a href="mailto:{{ support_email }}" style="color:#5b6b86;">{{ support_email }}</a></div>
+    <div>Soporte: <a href="mailto:{{ support_email }}" style="color:#5b6b86;">{{ support_email }}</a></div>
     {% endif %}
     {% if phone_number %}
-    <div>Phone: <a href="tel:{{ phone_number }}" style="color:#5b6b86;">{{ phone_number }}</a></div>
+    <div>Teléfono: <a href="tel:{{ phone_number }}" style="color:#5b6b86;">{{ phone_number }}</a></div>
     {% endif %}
     {% if website_url %}
-    <div>Website: <a href="{{ website_url }}" style="color:#5b6b86;">{{ website_url }}</a></div>
+    <div>Sitio web: <a href="{{ website_url }}" style="color:#5b6b86;">{{ website_url }}</a></div>
     {% endif %}
 </div>
 {% endif %}

@@ -60,3 +60,21 @@
 .gc-cart-button__count.is-hidden {
   display: none;
 }
+
+.gc-cart-button.is-pulsing .gc-cart-button__button {
+  animation: gc-cart-button-pulse 0.7s ease;
+}
+
+@keyframes gc-cart-button-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-button-primary) 26%, transparent);
+  }
+
+  45% {
+    box-shadow: 0 0 0 0.55rem color-mix(in srgb, var(--color-button-primary) 18%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-button-primary) 0%, transparent);
+  }
+}

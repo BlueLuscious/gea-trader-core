@@ -48,6 +48,7 @@
   --radius-full: 999px;
   --site-max-width: 100%;
   --site-gutter: 1rem;
+  --viewport-bleed-adjust: calc((100vw - 100%) / 2);
 }
 
 :root[data-theme="dark"] {
@@ -96,6 +97,7 @@
 
 html {
   color-scheme: light;
+  overflow-x: clip;
 }
 
 :root[data-theme="dark"] {
@@ -109,6 +111,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.5;
+  overflow-x: clip;
 }
 
 h1,
@@ -135,20 +138,20 @@ textarea {
 
 .site-shell {
   min-height: 100vh;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
+  isolation: isolate;
 }
 
-.site-main,
-.site-footer {
-  width: min(var(--site-max-width), calc(100% - (var(--site-gutter) * 2)));
-  margin-inline: auto;
+.site-main {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .brand {
@@ -182,10 +185,6 @@ textarea {
 .brand__name {
   display: none;
   color: var(--color-text);
-}
-
-.site-footer {
-  padding-bottom: 1rem;
 }
 
 .site-whatsapp-fab {
@@ -264,10 +263,6 @@ textarea {
 @media (width >= 48rem) {
   .site-cart-button--desktop {
     display: inline-flex;
-  }
-
-  .site-footer--mobile {
-    display: none;
   }
 }
 

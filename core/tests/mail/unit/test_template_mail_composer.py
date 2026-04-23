@@ -57,6 +57,6 @@ class TestTemplateMailComposer(LoggedSimpleTestCase):
             ),
         )
 
-        self.assertIn("Sent via GEA Trader", message.text_body)
-        self.assertIn("Support: hello@gea-trader.test", message.text_body)
+        self.assertIn("Enviado desde GEA Trader", message.text_body)
+        self.assertIn("Soporte: hello@gea-trader.test", message.text_body)
         self.assertIsNone(ActiveTenantContext.get())

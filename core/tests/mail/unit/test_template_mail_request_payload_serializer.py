@@ -37,6 +37,7 @@ class TestTemplateMailRequestPayloadSerializer(LoggedTestCase):
         self.assertEqual(request.html_template_name, rebuilt_request.html_template_name)
         self.assertIsNone(rebuilt_request.tenant)
         self.assertEqual("GEA Trader", rebuilt_request.context["product_name"])
+        self.assertIsNone(rebuilt_request.context["product_logo_url"])
         self.assertEqual("hello@gea-trader.test", rebuilt_request.context["support_email"])
         self.assertEqual("Serializer test", rebuilt_request.context["mail_title"])
         self.assertEqual(request.reply_to, rebuilt_request.reply_to)
@@ -55,4 +56,5 @@ class TestTemplateMailRequestPayloadSerializer(LoggedTestCase):
         payload = TemplateMailRequestPayloadSerializer.serialize(request)
 
         self.assertEqual("GEA Trader", payload["context"]["product_name"])
+        self.assertIsNone(payload["context"]["product_logo_url"])
         self.assertNotIn("tenant_id", payload)

@@ -1,8 +1,11 @@
-""" Single-tenant public home view tests for the front app. """
+﻿from django.core import mail
+from django.test import override_settings
 
 from core.testing.base import LoggedTestCase
+from cart.models import CartItemModel, CartModel
 from catalog.models import ProductModel, ProductVariantModel
 from masterdata.models import CategoryModel
+from quotation.models import QuoteItemModel, QuoteModel
 from tenancy.models import TenantBrandingModel, TenantModel
 
 
@@ -113,8 +116,8 @@ class TestFrontViews(LoggedTestCase):
         self.assertContains(response, "https://instagram.com/gea.trader")
         self.assertContains(response, "https://facebook.com/geatrader")
         self.assertContains(response, "https://linkedin.com/company/gea-trader")
-        self.assertContains(response, '/media/branding/favicons/gea-light.ico')
-        self.assertContains(response, '/media/branding/favicons/gea-dark.ico')
+        self.assertContains(response, "/media/branding/favicons/gea-light.ico")
+        self.assertContains(response, "/media/branding/favicons/gea-dark.ico")
 
     def test_public_home_returns_not_found_when_no_active_tenant_exists(self) -> None:
         """ Verify the public root returns not found when no active tenant is available. """
@@ -148,7 +151,7 @@ class TestFrontViews(LoggedTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Productos")
-        self.assertContains(response, "2 productos activos")
+        self.assertContains(response, "2 productos")
         self.assertContains(response, self.featured_product.name)
         self.assertContains(response, self.subcategory_product.name)
 
@@ -234,9 +237,9 @@ class TestFrontViews(LoggedTestCase):
         self.assertNotContains(first_page_response, "Catalog Product 12")
         self.assertContains(second_page_response, "Catalog Product 12")
 
-    def test_product_list_paginates_products_twelve_per_page(self) -> None:
-        """ Verify the public product catalog paginates product cards with twelve products per page. """
-        for index in range(13):
+    def test_product_list_paginates_products_twenty_four_per_page(self) -> None:
+        """ Verify the public product catalog paginates product cards with twenty-four products per page. """
+        for index in range(25):
             product = ProductModel.objects.create(
                 tenant=self.tenant,
                 category=self.lubricants_category,
@@ -260,6 +263,172 @@ class TestFrontViews(LoggedTestCase):
         self.assertEqual(first_page_response.status_code, 200)
         self.assertEqual(second_page_response.status_code, 200)
         self.assertContains(first_page_response, "Store Product 00")
-        self.assertContains(first_page_response, "Store Product 09")
-        self.assertNotContains(first_page_response, "Store Product 12")
-        self.assertContains(second_page_response, "Store Product 12")
+        self.assertContains(first_page_response, "Store Product 21")
+        self.assertNotContains(first_page_response, "Store Product 22")
+        self.assertContains(second_page_response, "Store Product 22")
+
+    def test_cart_state_returns_empty_payload_when_no_cart_exists(self) -> None:
+        """ Verify the public cart state endpoint returns one empty runtime payload by default. """
+        response = self.client.get("/carrito/estado/")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["cart_id"], None)
+        self.assertEqual(payload["status"], "")
+        self.assertEqual(payload["items"], [])
+        self.assertEqual(payload["count"], 0)
+        self.assertEqual(payload["items_html"], "")
+        self.assertEqual(payload["summary_html"], "")
+
+    def test_cart_add_item_creates_one_persisted_active_cart(self) -> None:
+        """ Verify adding one product creates one persisted active cart scoped to the current tenant. """
+        response = self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(CartModel.objects.count(), 1)
+        self.assertEqual(CartItemModel.objects.count(), 1)
+        cart = CartModel.objects.get()
+        cart_item = CartItemModel.objects.get()
+        self.assertEqual(cart.tenant, self.tenant)
+        self.assertEqual(cart_item.product, self.subcategory_product)
+        self.assertEqual(cart_item.variant.sku, "HYD-46-205L")
+        payload = response.json()
+        self.assertEqual(payload["cart_id"], cart.id)
+        self.assertEqual(payload["status"], "active")
+        self.assertEqual(payload["count"], 1)
+        self.assertEqual(len(payload["items"]), 1)
+        self.assertEqual(payload["items"][0]["id"], cart_item.id)
+        self.assertEqual(payload["items"][0]["product_id"], self.subcategory_product.id)
+        self.assertEqual(payload["items"][0]["variant_id"], cart_item.variant_id)
+        self.assertEqual(payload["items"][0]["title"], "Hydraulic Oil 46")
+        self.assertEqual(payload["items"][0]["subtitle"], "205L Drum")
+        self.assertEqual(payload["items"][0]["sku"], "HYD-46-205L")
+        self.assertEqual(payload["items"][0]["price"], "98000.00")
+        self.assertEqual(payload["items"][0]["price_text"], "ARS 98000.00")
+        self.assertIn("Hydraulic Oil 46", payload["items_html"])
+        self.assertIn("HYD-46-205L", payload["items_html"])
+        self.assertNotIn("Subtotal estimado", payload["summary_html"])
+
+    def test_cart_update_quantity_keeps_one_line_item_in_the_public_count(self) -> None:
+        """ Verify quantity changes do not inflate the public cart count beyond one line item. """
+        self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+        cart_item = CartItemModel.objects.get()
+
+        response = self.client.post(
+            "/carrito/cantidad/",
+            data='{"item_id": %s, "quantity": 3}' % cart_item.id,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        cart_item.refresh_from_db()
+        self.assertEqual(cart_item.quantity, 3)
+        payload = response.json()
+        self.assertEqual(payload["count"], 1)
+
+    def test_cart_remove_item_deletes_one_persisted_line(self) -> None:
+        """ Verify the public cart can remove one persisted item and return an empty cart state. """
+        self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+        cart_item = CartItemModel.objects.get()
+
+        response = self.client.post(
+            "/carrito/quitar/",
+            data='{"item_id": %s}' % cart_item.id,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(CartItemModel.objects.count(), 0)
+        self.assertContains(response, '"items": []')
+        self.assertContains(response, '"count": 0')
+
+    def test_base_layout_pre_renders_quote_request_form_inside_the_modal(self) -> None:
+        """ Verify the shared public layout includes the initial quote-request form markup. """
+        response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'data-quote-request-modal-content')
+        self.assertContains(response, "Solicitar cotización")
+        self.assertContains(response, "Nombre y apellido")
+        self.assertContains(response, 'data-cart-quote-form')
+
+    def test_cart_quote_request_get_returns_the_rendered_form(self) -> None:
+        """ Verify the public cart quote endpoint returns the rendered request form. """
+        self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+
+        response = self.client.get("/carrito/cotizar/")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertFalse(payload["success"])
+        self.assertIn("Solicitar cotización", payload["form_html"])
+        self.assertIn("Nombre y apellido", payload["form_html"])
+        self.assertIn('data-modal-close-target="site-quote-request-modal"', payload["form_html"])
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        CELERY_TASK_ALWAYS_EAGER=True,
+    )
+    def test_cart_quote_request_post_creates_quote_items_and_notifies_tenant(self) -> None:
+        """ Verify the public cart quote endpoint creates one quote, snapshots items, and sends notification mail. """
+        self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 2}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+
+        response = self.client.post(
+            "/carrito/cotizar/",
+            data={
+                "customer_name": "Ada Lovelace",
+                "customer_email": "ada@example.com",
+                "customer_phone": "+54 11 5555 0000",
+                "company_name": "Analytical Engines",
+                "message": "Necesito disponibilidad y plazo de entrega.",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(QuoteModel.objects.count(), 1)
+        self.assertEqual(QuoteItemModel.objects.count(), 1)
+        quote = QuoteModel.objects.get()
+        quote_item = QuoteItemModel.objects.get()
+        cart = CartModel.objects.get()
+        self.assertEqual(quote.tenant, self.tenant)
+        self.assertEqual(quote.cart, cart)
+        self.assertEqual(quote.workflow_status, "requested")
+        self.assertEqual(quote.customer_name, "Ada Lovelace")
+        self.assertEqual(quote.customer_email, "ada@example.com")
+        self.assertEqual(quote.customer_phone, "+54 11 5555 0000")
+        self.assertEqual(quote.company_name, "Analytical Engines")
+        self.assertEqual(quote.notes, "Necesito disponibilidad y plazo de entrega.")
+        self.assertEqual(quote_item.product_name_snapshot, "Hydraulic Oil 46")
+        self.assertEqual(quote_item.sku_snapshot, "HYD-46-205L")
+        self.assertEqual(quote_item.quantity, 2)
+        self.assertEqual(str(quote_item.unit_price_snapshot), "98000.00")
+        self.assertEqual(cart.status, "converted")
+        payload = response.json()
+        self.assertTrue(payload["success"])
+        self.assertEqual(payload["quote_id"], quote.id)
+        self.assertIn("Gracias, Ada Lovelace", payload["message"])
+        self.assertEqual(payload["cart_state"]["count"], 0)
+        self.assertTrue(quote.id)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Ada Lovelace", mail.outbox[0].subject)
+        self.assertIn("Hydraulic Oil 46", mail.outbox[0].body)

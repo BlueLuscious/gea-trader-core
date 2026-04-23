@@ -14,6 +14,7 @@ class TestTenantMailContextResolver(LoggedSimpleTestCase):
         self.assertEqual(
             {
                 "product_name": None,
+                "product_logo_url": None,
                 "support_email": None,
                 "phone_number": None,
                 "website_url": None,
@@ -42,6 +43,7 @@ class TestTenantMailContextResolver(LoggedSimpleTestCase):
             self.assertEqual(
                 {
                     "product_name": "GEA Trader",
+                    "product_logo_url": None,
                     "support_email": "support@gea-trader.test",
                     "phone_number": "+54 11 5555 1234",
                     "website_url": "https://gea-trader.test",
@@ -64,6 +66,7 @@ class TestTenantMailContextResolver(LoggedSimpleTestCase):
             self.assertEqual(
                 {
                     "product_name": "GEA Trader",
+                    "product_logo_url": None,
                     "support_email": "hello@gea-trader.test",
                     "phone_number": None,
                     "website_url": None,

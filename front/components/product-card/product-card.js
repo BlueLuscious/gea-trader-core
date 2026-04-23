@@ -22,26 +22,12 @@
             }
 
             const productId = this.root.dataset.productId || "";
-            const title = this.root.dataset.productTitle || "";
-            const brandName = this.root.dataset.productBrand || "";
-            const imageUrl = this.root.dataset.productImageUrl || "";
-            const priceValue = this.root.dataset.productPrice || "";
-            const href = this.root.dataset.productHref || "";
-
+            const productTitle = this.root.dataset.productTitle || "";
             window.CartController.addItem({
-                id: productId || title,
                 product_id: productId,
-                name: title,
-                brand_name: brandName,
-                image_url: imageUrl,
-                price: priceValue,
-                href,
                 quantity: 1,
+                product_title: productTitle,
             });
-
-            if (typeof window.CartController.openCart === "function") {
-                window.CartController.openCart();
-            }
         }
     }
 

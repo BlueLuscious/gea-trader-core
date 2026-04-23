@@ -1,0 +1,38 @@
+﻿<div
+  {% if id %}id="{{ id }}"{% endif %}
+  class="gc-toast gc-toast--{{ position }} {{ class_name }}"
+  data-toast
+  data-toast-id="{{ id }}"
+  data-toast-max-visible="{{ max_visible }}"
+  data-toast-auto-close-ms="{{ auto_close_ms }}"
+  data-toast-position="{{ position }}"
+  aria-label="{{ aria_label }}"
+  aria-live="polite"
+  aria-atomic="false"
+></div>
+
+<template data-toast-template>
+  <article class="gc-toast__item gc-toast__item--info" data-toast-item role="status">
+    <div class="gc-toast__icon" data-toast-icon aria-hidden="true"></div>
+    <div class="gc-toast__copy">
+      <p class="gc-toast__title" data-toast-title></p>
+      <p class="gc-toast__message" data-toast-message></p>
+    </div>
+    <button
+      type="button"
+      class="gc-toast__dismiss"
+      data-toast-dismiss
+      aria-label="Cerrar notificación"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </article>
+</template>
+
+<script>
+  window.GeaToastQueue = window.GeaToastQueue || [];
+  window.GeaToastQueue.push("{{ id|escapejs }}");
+  if (window.ToastController && typeof window.ToastController.initById === "function") {
+    window.ToastController.initById("{{ id|escapejs }}");
+  }
+</script>

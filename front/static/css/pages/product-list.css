@@ -1,7 +1,7 @@
 .products-page {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw + var(--viewport-bleed-adjust));
+  margin-right: calc(50% - 50vw + var(--viewport-bleed-adjust));
   min-height: calc(100vh - 6rem);
   padding-block: 1.4rem 2.2rem;
   background:

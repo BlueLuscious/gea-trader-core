@@ -69,7 +69,7 @@ class ProductListView(PublicSiteViewMixin, TemplateView):
 
         context.update(
             product_cards=product_cards,
-            product_count_text=str(product_queryset.count()),
+            product_count_text=f"{product_queryset.count()} productos",
             page_obj=page_obj,
             is_paginated=page_obj.paginator.num_pages > 1,
             pagination_links=[

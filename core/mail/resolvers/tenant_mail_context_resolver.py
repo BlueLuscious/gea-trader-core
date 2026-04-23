@@ -1,6 +1,9 @@
 """ Tenant-aware base context helpers for outbound mail templates. """
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Any
+from urllib.parse import urljoin
 from django.core.exceptions import ObjectDoesNotExist
 from tenancy.runtime import ActiveTenantContext
 
@@ -25,6 +28,7 @@ class TenantMailContextResolver:
 
         return {
             "product_name": cls.get_product_name(tenant, branding),
+            "product_logo_url": cls.get_product_logo_url(tenant, branding),
             "support_email": cls.get_support_email(tenant),
             "phone_number": cls.get_phone_number(tenant),
             "website_url": cls.get_website_url(tenant),
@@ -78,6 +82,56 @@ class TenantMailContextResolver:
             return tenant_name
 
         return None
+
+    @classmethod
+    def get_product_logo_url(
+        cls,
+        tenant: "TenantModel | None",
+        branding: "TenantBrandingModel | None",
+    ) -> str | None:
+        """ Return the preferred logo URL for one mail context.
+
+        Args:
+            cls: Resolver class.
+            tenant: Active tenant bound to the current runtime context.
+            branding: Optional branding row for the active tenant.
+
+        Returns:
+            str | None: Preferred logo URL or ``None``.
+        """
+        if branding is None:
+            return None
+
+        for field_name in ("logo_light", "logo_dark", "icon_light", "icon_dark"):
+            asset = getattr(branding, field_name, None)
+            if asset:
+                return cls.build_public_asset_url(tenant, asset.url)
+
+        return None
+
+    @classmethod
+    def build_public_asset_url(cls, tenant: "TenantModel | None", asset_url: str) -> str:
+        """ Return one public absolute asset URL when a tenant website exists.
+
+        Args:
+            tenant: Active tenant bound to the current runtime context.
+            asset_url: Raw asset URL exposed by the storage backend.
+
+        Returns:
+            str: Absolute asset URL when possible, otherwise the original value.
+        """
+        normalized_asset_url = str(asset_url or "").strip()
+        if not normalized_asset_url:
+            return ""
+
+        if normalized_asset_url.startswith(("http://", "https://")):
+            return normalized_asset_url
+
+        website_url = cls.get_website_url(tenant)
+        if not website_url:
+            return normalized_asset_url
+
+        return urljoin(f"{website_url.rstrip('/')}/", normalized_asset_url.lstrip("/"))
 
     @staticmethod
     def get_support_email(tenant: "TenantModel | None") -> str | None:

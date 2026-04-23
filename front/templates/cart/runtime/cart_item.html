@@ -1,0 +1,63 @@
+{% load component_tags %}
+
+<article class="gc-cart-sidebar__item" data-cart-item-id="{{ item.id }}">
+    <div class="gc-cart-sidebar__item-body">
+        {% if item.image_url %}
+        <div class="gc-cart-sidebar__item-media">
+            <img src="{{ item.image_url }}" alt="{{ item.title }}" class="gc-cart-sidebar__item-image" />
+        </div>
+        {% endif %}
+
+        <div class="gc-cart-sidebar__item-head">
+            {% if item.href %}
+            <a href="{{ item.href }}" class="gc-cart-sidebar__item-link">
+                <p class="gc-cart-sidebar__item-title">{{ item.title }}</p>
+            </a>
+            {% else %}
+            <p class="gc-cart-sidebar__item-title">{{ item.title }}</p>
+            {% endif %}
+
+            {% if item.subtitle %}
+            <p class="gc-cart-sidebar__item-meta">{{ item.subtitle }}</p>
+            {% endif %}
+
+            {% if item.sku %}
+            <p class="gc-cart-sidebar__item-meta">SKU: {{ item.sku }}</p>
+            {% endif %}
+
+            {% if item.price_text %}
+            <p class="gc-cart-sidebar__item-price">{{ item.price_text }}</p>
+            {% endif %}
+        </div>
+
+        <button
+            type="button"
+            class="gc-cart-sidebar__remove gc-cart-sidebar__remove--icon"
+            data-cart-action="remove"
+            data-item-id="{{ item.id }}"
+            aria-label="Quitar producto"
+        >
+            {% component "icon" name="trash" size="sm" %}{% endcomponent %}
+        </button>
+    </div>
+
+    <div class="gc-cart-sidebar__item-actions">
+        <div class="gc-cart-sidebar__qty-controls" aria-label="Cantidad">
+            <button
+                type="button"
+                class="gc-cart-sidebar__qty-button"
+                data-cart-action="decrement"
+                data-item-id="{{ item.id }}"
+                aria-label="Restar unidad"
+            >-</button>
+            <span class="gc-cart-sidebar__qty" data-cart-qty-value>{{ item.quantity }}</span>
+            <button
+                type="button"
+                class="gc-cart-sidebar__qty-button"
+                data-cart-action="increment"
+                data-item-id="{{ item.id }}"
+                aria-label="Sumar unidad"
+            >+</button>
+        </div>
+    </div>
+</article>

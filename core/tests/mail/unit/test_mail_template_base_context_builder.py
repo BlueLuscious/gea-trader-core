@@ -31,6 +31,7 @@ class TestMailTemplateBaseContextBuilder(LoggedSimpleTestCase):
             ActiveTenantContext.reset(tenant_token)
 
         self.assertEqual("GEA Trader", built_context["product_name"])
+        self.assertIsNone(built_context["product_logo_url"])
         self.assertEqual("support@gea-trader.test", built_context["support_email"])
         self.assertEqual("Builder test", built_context["mail_title"])
 
@@ -48,6 +49,7 @@ class TestMailTemplateBaseContextBuilder(LoggedSimpleTestCase):
         )
 
         self.assertEqual("GEA Trader Legal", built_context["product_name"])
+        self.assertIsNone(built_context["product_logo_url"])
         self.assertEqual("hello@gea-trader.test", built_context["support_email"])
         self.assertEqual("Builder test", built_context["mail_title"])
 
@@ -69,4 +71,5 @@ class TestMailTemplateBaseContextBuilder(LoggedSimpleTestCase):
         )
 
         self.assertEqual("Override Brand", built_context["product_name"])
+        self.assertIsNone(built_context["product_logo_url"])
         self.assertEqual("override@example.com", built_context["support_email"])
