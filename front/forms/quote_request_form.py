@@ -1,7 +1,5 @@
 """ Public quote-request form used by the storefront quote-request modal. """
 
-from __future__ import annotations
-
 from django import forms
 
 

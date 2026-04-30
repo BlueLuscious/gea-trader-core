@@ -1,7 +1,5 @@
 """ Tenant-aware base context helpers for outbound mail templates. """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin
 from django.core.exceptions import ObjectDoesNotExist

@@ -7,7 +7,6 @@ from core.mail.backends import DjangoMailDeliveryBackend
 from core.mail.dtos import MailMessageDTO
 from core.mail.serializers import MailMessagePayloadSerializer
 
-
 logger = logging.getLogger(__name__)
 
 

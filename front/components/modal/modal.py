@@ -1,12 +1,8 @@
 ﻿""" Reusable modal component for runtime storefront dialogs. """
 
-from __future__ import annotations
-
 from typing import NamedTuple
 from uuid import uuid4
-
 from django_components import Component, register
-
 from front.components.props import PanelWidth, normalize_bool, normalize_enum
 
 

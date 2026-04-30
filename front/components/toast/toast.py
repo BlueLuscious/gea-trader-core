@@ -1,12 +1,8 @@
 ﻿""" Global toast runtime component. """
 
-from __future__ import annotations
-
 from typing import NamedTuple
 from uuid import uuid4
-
 from django_components import Component, register
-
 from front.components.props import ToastPosition, normalize_enum
 
 

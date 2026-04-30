@@ -1,40 +1,21 @@
 ﻿""" Shared cart runtime helpers for public JSON views. """
 
-from __future__ import annotations
-
 import json
 from decimal import Decimal
 from typing import Any
-
 from django.http import HttpRequest, JsonResponse
 from django.template.loader import render_to_string
 from django.urls import reverse
-
 from cart.models import CartItemModel, CartModel
 from catalog.models import ProductModel, ProductVariantModel
-from front.views.public_site_view_mixin import PublicSiteViewMixin
+from front.views.mixins.base import BaseTenantAwareMixin
 from tenancy.models import TenantModel
 
 
-class CartRuntimeViewMixin(PublicSiteViewMixin):
+class CartRuntimeViewMixin(BaseTenantAwareMixin):
     """ Provide shared cart runtime helpers for public storefront JSON views. """
 
     http_method_names = ["get", "post"]
-
-    def ensure_session_key(self, request: HttpRequest) -> str:
-        """ Ensure the incoming request owns one Django session key.
-
-        Args:
-            request: Current HTTP request.
-
-        Returns:
-            str: Persisted Django session key.
-        """
-        if request.session.session_key:
-            return request.session.session_key
-
-        request.session.create()
-        return request.session.session_key or ""
 
     def get_request_payload(self, request: HttpRequest) -> dict[str, Any]:
         """ Parse one JSON request body into a dictionary.

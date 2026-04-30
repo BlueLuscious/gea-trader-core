@@ -1,49 +1,21 @@
-﻿""" Public JSON view that creates one quote request from the current cart. """
-
-from __future__ import annotations
+""" Public JSON view that creates one quote request from the current cart. """
 
 import logging
-
 from django.http import HttpRequest, JsonResponse
 from django.template.loader import render_to_string
 from django.views import View
-
 from front.forms import QuoteRequestForm
 from quotation.services import CartQuoteRequestService
-
 from .mixins import CartRuntimeViewMixin
-
 
 logger = logging.getLogger(__name__)
 
 
 class CartQuoteRequestView(CartRuntimeViewMixin, View):
-    """ Expose the public quote-request form and submission endpoint. """
+    """ Validate and persist one public quote request from the current cart. """
 
     service_class = CartQuoteRequestService
     quote_modal_id = "site-quote-request-modal"
-
-    def get(self, request: HttpRequest) -> JsonResponse:
-        """ Return the initial quote-request form HTML.
-
-        Args:
-            request: Current HTTP request.
-
-        Returns:
-            JsonResponse: Initial form HTML payload.
-        """
-        tenant = self.get_tenant()
-        cart = self.get_active_cart(request, tenant)
-        form = QuoteRequestForm()
-        if cart is None or not cart.items.exists():
-            form.add_error(None, "Agregá al menos un producto antes de pedir la cotización.")
-
-        return JsonResponse(
-            {
-                "success": False,
-                "form_html": self.render_quote_form_html(form=form),
-            }
-        )
 
     def post(self, request: HttpRequest) -> JsonResponse:
         """ Validate and persist one quote request from the active cart.

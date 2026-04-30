@@ -7,7 +7,6 @@ from core.mail.dtos import TemplateMailRequestDTO
 from core.mail.serializers import TemplateMailRequestPayloadSerializer
 from core.mail.services.mail_service import MailService
 
-
 logger = logging.getLogger(__name__)
 
 
