@@ -13,6 +13,8 @@ It currently defines:
 - tenant-aware quote ownership at the quote root
 - quotation-specific access rules for owner-managed flows
 - DTOs and DTO factories for higher layers
+- factories for domain snapshot assembly
+- services for cart-origin quote conversion and tenant notifications
 - master admin registrations for technical visibility
 - an owner-facing quotes flow for manual creation and follow-up
 
@@ -25,7 +27,9 @@ Current contents:
 - `apps.py`
 - `choices/`
 - `models/`
+- `factories/`
 - `dtos/`
+- `services/`
 - `admin/`
 - `migrations/`
 - `tests/`
@@ -39,7 +43,35 @@ The `quotation/` app is responsible for:
 - scoping quotes to the owning business
 - exposing reusable quote query helpers
 - exposing quotation-specific access rules
+- converting eligible runtime carts into quote requests
+- notifying the tenant when one public quote request is accepted
 - registering quote admin flows for both master and owner admin sites
+
+## Public Cart-To-Quote Runtime
+
+The public cart-to-quote flow is orchestrated by `quotation/services/`.
+The storefront HTTP endpoint lives in `front/`, but quotation owns the quote-domain side effects.
+
+Current service boundaries:
+
+- `CartQuoteRequestService`: orchestrates conversion, notification dispatch, and result DTO assembly.
+- `CartQuoteRequestConverter`: converts one active cart into a requested quote and persisted quote-item snapshots.
+- `CartQuoteRequestNotificationDispatcher`: resolves tenant recipients and dispatches the notification through the shared mail service.
+- `CartQuoteRequestNotificationBuilder`: builds the mail request and context for one quote notification.
+- `QuoteAdminUrlBuilder`: builds the owner-admin quote URL used in notifications.
+
+Current factory boundary:
+
+- `QuoteItemSnapshotFactory`: builds `QuoteItemModel` snapshot instances from cart items before bulk persistence.
+
+The converter is intentionally separate from notification delivery.
+This keeps cart snapshot persistence reusable if a future quote flow needs to create a quote without sending the same tenant notification.
+
+The notification dispatcher resolves the tenant contact recipient before sending.
+When no tenant contact email exists, it skips delivery and returns `None` instead of failing the quote conversion.
+
+The owner-admin quote URL prefers an absolute `BASE_URL` when configured.
+If no project base URL is available, the builder falls back to the tenant public website URL when present, and finally to a relative owner-admin path.
 
 ## Models
 
@@ -115,6 +147,14 @@ Current factories:
 
 - `QuoteModelDTOFactory`
 - `QuoteItemModelDTOFactory`
+
+Current result DTOs:
+
+- `CartQuoteRequestResultDTO`
+
+Current result factories:
+
+- `CartQuoteRequestResultDTOFactory`
 
 Current DTO direction:
 
@@ -249,6 +289,7 @@ Current test areas:
 - `quotation/tests/admin/`
 - `quotation/tests/dtos/`
 - `quotation/tests/factories/`
+- `quotation/tests/services/`
 
 Project-level admin behavior tied to `quotation` currently lives in:
 
@@ -262,6 +303,9 @@ Good candidates:
 - quote snapshot rules
 - quote query helpers
 - quote DTOs and DTO factories
+- quote snapshot factories
+- cart-to-quote conversion services
+- quote notification request assembly and dispatching
 - quotation-specific admin implementations
 
 ## What Should Not Live Here

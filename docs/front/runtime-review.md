@@ -17,7 +17,8 @@ The review focuses on:
 
 ### Encoding And Copy Consistency
 
-Several files currently show mojibake-like Spanish strings in the working tree or terminal output.
+Earlier terminal output showed mojibake-like Spanish strings in a few public-runtime files.
+Treat that as a signal to verify encoding before changing copy, not as proof that the file is corrupted.
 
 Examples worth checking:
 
@@ -28,7 +29,7 @@ Examples worth checking:
 - `quotation/templates/quotation/mail/messages/cart_quote_request_notification.txt`
 - `core/templates/mail/partials/footer.html`
 
-Follow-up:
+Rule:
 
 - verify the real on-disk encoding for these files
 - normalize affected files to UTF-8 without corrupted characters
@@ -51,9 +52,9 @@ The current public storefront runtime adds stable user-facing strings but does n
 - owner-admin strings that must follow the translation workflow immediately
 - public storefront strings that may stay as direct source copy for now
 
-Follow-up:
+Current alignment:
 
-- document the current rule for public storefront copy in `docs/front/front.md`
+- `docs/front/front.md` documents the current rule for public storefront copy
 - keep owner-admin and reusable admin-facing strings wrapped for translation
 - avoid later moving admin copy through the codebase without matching `locale/es/LC_MESSAGES/django.po` updates
 
@@ -94,9 +95,9 @@ This is valid, but it creates a few trade-offs:
 - client-side state restoration must be explicit
 - the item and summary templates become part of the JSON API contract
 
-Follow-up:
+Current alignment:
 
-- document this pattern in `docs/front/front.md`
+- `docs/front/front.md` documents this server-rendered fragment pattern
 - decide whether future runtime fragments should remain server-rendered or move toward smaller JSON payloads plus client rendering
 - keep one approach consistent per surface
 
@@ -115,12 +116,13 @@ That cleanup is good, but the next pricing step should be explicit:
 ### Quote Request Modal Lifecycle
 
 The quote request form is now server-rendered in the base layout and submitted asynchronously.
+The `GET /carrito/cotizar/` endpoint is part of the current contract for server-rendered form refreshes.
 
-Next refinements:
+Potential future refinements:
 
-- decide whether the `GET /carrito/cotizar/` endpoint is still part of the intended contract
-- remove it if the project no longer needs lazy server loading
-- keep only one documented source of truth for initial modal rendering
+- reevaluate the `GET /carrito/cotizar/` endpoint only if the modal no longer needs server-rendered refreshes
+- keep the base-layout initial render and endpoint refresh behavior aligned
+- keep only one documented source of truth for modal form ownership
 
 ### Better Empty And Converted Cart UX
 
@@ -155,23 +157,23 @@ When quotation runtime behavior changes materially, also consider:
 - focused `quotation/tests/`
 - focused `core/tests/mail/` coverage for tenant-aware notifications
 
-## Documentation Follow-Ups
+## Documentation Alignment
 
-### Keep Front Docs In Sync With The Real Runtime
+### Front Runtime Docs
 
 The branch has moved the public site beyond a simple shell.
 
-Follow-up:
+Current alignment:
 
-- update `docs/front/front.md` with the current cart runtime endpoints and modal strategy
-- document the server-rendered fragment pattern used by the cart sidebar
-- document the quote-request flow entrypoint from public storefront to `quotation/`
+- `docs/front/front.md` documents the current cart runtime endpoints and modal strategy
+- `docs/front/front.md` documents the server-rendered fragment pattern used by the cart sidebar
+- `docs/front/front.md` documents the public storefront quote-request entrypoint
 
-### Add Quotation Runtime Notes
+### Quotation Runtime Docs
 
-`docs/quotation/quotation.md` currently describes the quote domain well, but it should also mention the new public cart-to-quote conversion service.
+`docs/quotation/quotation.md` describes the quote domain and the public cart-to-quote conversion service.
 
-Recommended additions:
+Current alignment:
 
 - service responsibility of `CartQuoteRequestService`
 - relationship to `cart/`

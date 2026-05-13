@@ -50,6 +50,9 @@ Current direction:
 - `cart/` is not treated as an owner-managed CRUD surface
 - future owner-facing visibility should likely appear as dashboard metrics, summaries, or support views rather than editable rows
 
+The current public cart HTTP endpoints live in `front/`.
+They use the `cart/` models, managers, and querysets as persistence infrastructure, but the request parsing, JSON response contract, and server-rendered sidebar fragments remain storefront concerns.
+
 This keeps carts aligned with live transactional state rather than curated business configuration.
 
 ## Models
@@ -200,7 +203,8 @@ See also:
 
 Current rationale:
 
-- no dedicated runtime service or orchestration boundary exists yet inside the app
+- no dedicated runtime service or orchestration boundary exists yet inside the `cart/` app
+- current public cart HTTP orchestration lives in `front/`
 - adding logs only to master-admin technical surfaces would create more noise than signal
 
 Future likely logging boundaries:
