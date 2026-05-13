@@ -1,13 +1,29 @@
 """ Quote-request modal context helpers for public storefront pages. """
 
-from django.template.loader import render_to_string
-from front.forms import QuoteRequestForm
+from front.views.cart.runtime import QuoteRequestFormRenderer
 
 
 class QuoteRequestModalContextMixin:
     """ Provide the shared quote-request modal context for storefront pages. """
 
     quote_modal_id = "site-quote-request-modal"
+    quote_request_form_renderer_class = QuoteRequestFormRenderer
+
+    def get_quote_request_form_renderer(self) -> QuoteRequestFormRenderer:
+        """ Return the renderer used for the quote-request modal form.
+
+        Returns:
+            QuoteRequestFormRenderer: Renderer for the quote-request form.
+        """
+        return self.quote_request_form_renderer_class()
+
+    def render_quote_request_form_html(self) -> str:
+        """ Render the initial quote-request form HTML for the shared modal.
+
+        Returns:
+            str: Server-rendered quote-request form markup.
+        """
+        return self.get_quote_request_form_renderer().render(request=self.request)
 
     def build_quote_request_modal_context(self) -> dict[str, str]:
         """ Build the shared quote-request modal context for the base layout.
@@ -20,21 +36,6 @@ class QuoteRequestModalContextMixin:
             "site_quote_request_form_html": self.render_quote_request_form_html(),
         }
 
-    def render_quote_request_form_html(self) -> str:
-        """ Render the initial quote-request form HTML for the shared modal.
-
-        Returns:
-            str: Server-rendered quote-request form markup.
-        """
-        return render_to_string(
-            "cart/runtime/quote_request_form.html",
-            {
-                "form": QuoteRequestForm(),
-                "quote_modal_id": self.quote_modal_id,
-            },
-            request=self.request,
-        )
-
     def get_context_data(self, **kwargs: object) -> dict[str, object]:
         """ Extend context with the shared quote-request modal data.
 
@@ -44,6 +45,6 @@ class QuoteRequestModalContextMixin:
         Returns:
             dict[str, object]: Context extended with quote-request modal data.
         """
-        context = super().get_context_data(**kwargs)
+        context: dict[str, object] = super().get_context_data(**kwargs)
         context.update(self.build_quote_request_modal_context())
         return context

@@ -2,9 +2,9 @@
 
 import logging
 from django.http import HttpRequest, JsonResponse
-from django.template.loader import render_to_string
 from django.views import View
 from front.forms import QuoteRequestForm
+from front.views.cart.runtime import QuoteRequestFormRenderer
 from quotation.services import CartQuoteRequestService
 from .mixins import CartRuntimeViewMixin
 
@@ -15,7 +15,31 @@ class CartQuoteRequestView(CartRuntimeViewMixin, View):
     """ Validate and persist one public quote request from the current cart. """
 
     service_class = CartQuoteRequestService
-    quote_modal_id = "site-quote-request-modal"
+    quote_request_form_renderer_class = QuoteRequestFormRenderer
+
+    def get_quote_request_form_renderer(self) -> QuoteRequestFormRenderer:
+        """ Return the renderer used for quote-request form fragments.
+
+        Returns:
+            QuoteRequestFormRenderer: Renderer for quote-request form markup.
+        """
+        return self.quote_request_form_renderer_class()
+
+    def get(self, request: HttpRequest) -> JsonResponse:
+        """ Return the rendered quote-request form for modal refreshes.
+
+        Args:
+            request: Current HTTP request.
+
+        Returns:
+            JsonResponse: Form refresh payload for the quote-request modal.
+        """
+        return JsonResponse(
+            {
+                "success": False,
+                "form_html": self.get_quote_request_form_renderer().render(request=request),
+            }
+        )
 
     def post(self, request: HttpRequest) -> JsonResponse:
         """ Validate and persist one quote request from the active cart.
@@ -32,10 +56,26 @@ class CartQuoteRequestView(CartRuntimeViewMixin, View):
 
         if cart is None or not cart.items.exists():
             form.add_error(None, "Tu carrito está vacío. Agregá productos antes de cotizar.")
-            return JsonResponse({"success": False, "form_html": self.render_quote_form_html(form=form)})
+            return JsonResponse(
+                {
+                    "success": False,
+                    "form_html": self.get_quote_request_form_renderer().render(
+                        form=form,
+                        request=request,
+                    ),
+                }
+            )
 
         if not form.is_valid():
-            return JsonResponse({"success": False, "form_html": self.render_quote_form_html(form=form)})
+            return JsonResponse(
+                {
+                    "success": False,
+                    "form_html": self.get_quote_request_form_renderer().render(
+                        form=form,
+                        request=request,
+                    ),
+                }
+            )
 
         try:
             result = self.service_class.create_from_cart(
@@ -48,7 +88,15 @@ class CartQuoteRequestView(CartRuntimeViewMixin, View):
             )
         except ValueError as error:
             form.add_error(None, str(error))
-            return JsonResponse({"success": False, "form_html": self.render_quote_form_html(form=form)})
+            return JsonResponse(
+                {
+                    "success": False,
+                    "form_html": self.get_quote_request_form_renderer().render(
+                        form=form,
+                        request=request,
+                    ),
+                }
+            )
 
         logger.info(
             "Accepted public quote request quote_id=%s notification_task_id=%s",
@@ -63,23 +111,6 @@ class CartQuoteRequestView(CartRuntimeViewMixin, View):
                 "message": self.build_success_message(customer_name=result.quote.customer_name),
                 "cart_state": self.build_cart_state(active_cart),
             }
-        )
-
-    def render_quote_form_html(self, *, form: QuoteRequestForm) -> str:
-        """ Render the public quote-request form partial.
-
-        Args:
-            form: Quote-request form instance.
-
-        Returns:
-            str: Rendered form HTML.
-        """
-        return render_to_string(
-            "cart/runtime/quote_request_form.html",
-            {
-                "form": form,
-                "quote_modal_id": self.quote_modal_id,
-            },
         )
 
     def build_success_message(self, *, customer_name: str) -> str:
