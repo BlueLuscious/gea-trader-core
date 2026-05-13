@@ -1,17 +1,16 @@
 """ Notification request builder for public cart-to-quote conversions. """
 
 from decimal import Decimal
-from urllib.parse import urljoin
-from django.conf import settings
-from django.urls import reverse
 from core.mail import TemplateMailRequestDTO, TenantMailReplyPolicy
 from quotation.models import QuoteItemModel, QuoteModel
+from quotation.services.quote_admin_url_builder import QuoteAdminUrlBuilder
 
 
 class CartQuoteRequestNotificationBuilder:
     """ Build tenant notification requests for public quote submissions. """
 
     reply_policy_class = TenantMailReplyPolicy
+    quote_admin_url_builder_class = QuoteAdminUrlBuilder
 
     @classmethod
     def build(cls, *, quote: QuoteModel, quote_items: list[QuoteItemModel], recipient: str) -> TemplateMailRequestDTO:
@@ -57,7 +56,7 @@ class CartQuoteRequestNotificationBuilder:
             "mail_intro": "Se recibió una nueva solicitud desde el sitio público y ya quedó registrada para seguimiento comercial.",
             "mail_outro": "Podés revisar la cotización en el panel de administración para continuar la conversación con el cliente.",
             "cta_label": "Abrir cotización en admin",
-            "cta_url": cls.build_quote_admin_url(quote),
+            "cta_url": cls.quote_admin_url_builder_class.build(quote=quote),
             "quote_id": quote.id,
             "quote_customer_name": quote.customer_name,
             "quote_customer_email": quote.customer_email,
@@ -76,22 +75,3 @@ class CartQuoteRequestNotificationBuilder:
             "quote_item_count": len(quote_items),
             "quote_subtotal_text": f"ARS {subtotal:.2f}" if subtotal else "",
         }
-
-    @staticmethod
-    def build_quote_admin_url(quote: QuoteModel) -> str:
-        """ Build one owner-admin URL for the created quote.
-
-        Args:
-            quote: Newly created quote root.
-
-        Returns:
-            str: Absolute owner-admin URL when one base URL exists, otherwise one relative path.
-        """
-        admin_path = reverse("owner_admin:quotation_quotemodel_change", args=[quote.id])
-        base_url_setting = str(getattr(settings, "BASE_URL", "") or "").strip()
-        website_url = str(getattr(quote.tenant, "website_url", "") or "").strip()
-        base_url = base_url_setting or website_url
-        if not base_url:
-            return admin_path
-
-        return urljoin(f"{base_url.rstrip('/')}/", admin_path.lstrip("/"))

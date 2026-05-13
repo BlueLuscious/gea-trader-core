@@ -11,9 +11,11 @@ from quotation.choices import QuoteWorkflowStatus
 from quotation.models.managers.quote_model_manager import QuoteModelManager
 
 if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
     from accounts.models.user_model import UserModel
     from cart.models import CartModel
     from tenancy.models import TenantModel
+    from quotation.models import QuoteItemModel
 
 
 class QuoteModel(models.Model):
@@ -120,6 +122,7 @@ class QuoteModel(models.Model):
     tenant_id: UUID
     cart_id: int | None
     user_id: int | None
+    items: "RelatedManager[QuoteItemModel]"
 
     class Meta:
         """ Declarative admin-facing metadata for quote persistence. """
