@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     "use strict";
 
     function getSiteShell() {
@@ -85,6 +85,10 @@
             document.dispatchEvent(new CustomEvent("cartchange", { detail }));
         }
 
+        dispatchRuntimeEvent(name, detail) {
+            document.dispatchEvent(new CustomEvent(name, { detail }));
+        }
+
         setState(nextState) {
             this.state = {
                 cart_id: nextState && nextState.cart_id ? nextState.cart_id : null,
@@ -163,23 +167,13 @@
                         count: this.getCount(),
                     },
                 }));
-                if (window.ToastController && typeof window.ToastController.success === "function") {
-                    window.ToastController.success({
-                        title: "Producto agregado",
-                        message: nextItem.product_title
-                            ? `${nextItem.product_title} ya está en tu carrito de cotización.`
-                            : "El producto ya está en tu carrito de cotización.",
-                    });
-                }
                 return nextState;
             } catch (error) {
                 console.error("CartController: unable to add item.", error);
-                if (window.ToastController && typeof window.ToastController.danger === "function") {
-                    window.ToastController.danger({
-                        title: "No pudimos agregar el producto",
-                        message: error && error.message ? error.message : "Volvé a intentarlo en unos segundos.",
-                    });
-                }
+                this.dispatchRuntimeEvent("cartoperationfailed", {
+                    operation: "add",
+                    message: error && error.message ? error.message : "",
+                });
                 return this.getState();
             }
         }
@@ -196,6 +190,10 @@
                 });
             } catch (error) {
                 console.error("CartController: unable to update quantity.", error);
+                this.dispatchRuntimeEvent("cartoperationfailed", {
+                    operation: "updateQuantity",
+                    message: error && error.message ? error.message : "",
+                });
                 return this.getState();
             }
         }
@@ -221,21 +219,17 @@
                 const nextState = await this.request(this.getUrls().remove, {
                     item_id: itemId,
                 });
-                if (window.ToastController && typeof window.ToastController.info === "function") {
-                    window.ToastController.info({
-                        title: "Producto quitado",
-                        message: "El producto se eliminó del carrito de cotización.",
-                    });
-                }
+                this.dispatchRuntimeEvent("cartitemremoved", {
+                    itemId,
+                    count: this.getCount(),
+                });
                 return nextState;
             } catch (error) {
                 console.error("CartController: unable to remove item.", error);
-                if (window.ToastController && typeof window.ToastController.danger === "function") {
-                    window.ToastController.danger({
-                        title: "No pudimos quitar el producto",
-                        message: error && error.message ? error.message : "Volvé a intentarlo en unos segundos.",
-                    });
-                }
+                this.dispatchRuntimeEvent("cartoperationfailed", {
+                    operation: "remove",
+                    message: error && error.message ? error.message : "",
+                });
                 return this.getState();
             }
         }
@@ -244,21 +238,18 @@
             try {
                 const hadItems = this.getCount() > 0;
                 const nextState = await this.request(this.getUrls().clear, {});
-                if (hadItems && window.ToastController && typeof window.ToastController.info === "function") {
-                    window.ToastController.info({
-                        title: "Carrito vaciado",
-                        message: "Quitamos todos los productos del carrito de cotización.",
+                if (hadItems) {
+                    this.dispatchRuntimeEvent("cartcleared", {
+                        count: this.getCount(),
                     });
                 }
                 return nextState;
             } catch (error) {
                 console.error("CartController: unable to clear cart.", error);
-                if (window.ToastController && typeof window.ToastController.danger === "function") {
-                    window.ToastController.danger({
-                        title: "No pudimos vaciar el carrito",
-                        message: error && error.message ? error.message : "Volvé a intentarlo en unos segundos.",
-                    });
-                }
+                this.dispatchRuntimeEvent("cartoperationfailed", {
+                    operation: "clear",
+                    message: error && error.message ? error.message : "",
+                });
                 return this.getState();
             }
         }

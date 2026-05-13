@@ -33,7 +33,7 @@ class ThemeLayoutTests(LoggedTestCase):
         html = response.content.decode()
         self.assertIn("data-theme-selected", html)
         self.assertIn("js/theme-controller.js", html)
-        self.assertIn("js/cart-controller.js", html)
+        self.assertIn("js/cart/cart-controller.js", html)
         self.assertIn("js/base.js", html)
         self.assertIn("site-navbar", html)
         self.assertIn("data-theme-button", html)
