@@ -1,16 +1,11 @@
 """ Public single-tenant category page for storefront product browsing. """
 
-from django.views.generic import DetailView
-from front.views.mixins.pages import CatalogPresentationMixin, CategoryProductListPageContextMixin, TenantAwareMixin
+from front.views.base import PublicPageDetailView
+from front.views.mixins.pages import CatalogDataMixin, CategoryProductListPageContextMixin
 from masterdata.models import CategoryModel
 
 
-class CategoryProductListView(
-    CategoryProductListPageContextMixin,
-    CatalogPresentationMixin,
-    TenantAwareMixin,
-    DetailView,
-):
+class CategoryProductListView(CategoryProductListPageContextMixin, CatalogDataMixin, PublicPageDetailView):
     """ Render one public category page with optional subcategory filtering. """
 
     model = CategoryModel

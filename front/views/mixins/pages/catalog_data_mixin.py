@@ -8,7 +8,7 @@ from masterdata.dtos.factories import CategoryModelDTOFactory
 from masterdata.models import CategoryModel
 
 
-class CatalogPresentationMixin:
+class CatalogDataMixin:
     """ Build reusable storefront DTO and card payloads. """
 
     def build_product_dtos(self, queryset: Any) -> list[object]:

@@ -1,10 +1,10 @@
 """ Public single-tenant home view for the front app. """
 
-from django.views.generic import TemplateView
-from front.views.mixins.pages import CatalogPresentationMixin, IndexPageContextMixin, TenantAwareMixin
+from front.views.base import PublicPageTemplateView
+from front.views.mixins.pages import CatalogDataMixin, IndexPageContextMixin
 
 
-class IndexView(IndexPageContextMixin, CatalogPresentationMixin, TenantAwareMixin, TemplateView):
+class IndexView(IndexPageContextMixin, CatalogDataMixin, PublicPageTemplateView):
     """ Render the public single-tenant storefront home page. """
 
     template_name = "pages/index.html"

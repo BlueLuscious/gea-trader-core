@@ -1,11 +1,11 @@
 """ Public single-tenant product detail view for the front app. """
 
-from django.views.generic import DetailView
 from catalog.models import ProductModel
-from front.views.mixins.pages import CatalogPresentationMixin, ProductDetailPageContextMixin, TenantAwareMixin
+from front.views.base import PublicPageDetailView
+from front.views.mixins.pages import CatalogDataMixin, ProductDetailPageContextMixin
 
 
-class ProductDetailView(ProductDetailPageContextMixin, CatalogPresentationMixin, TenantAwareMixin, DetailView):
+class ProductDetailView(ProductDetailPageContextMixin, CatalogDataMixin, PublicPageDetailView):
     """ Render one public product detail page with active variants. """
 
     model = ProductModel
