@@ -279,7 +279,7 @@ msgid "Product currently selected in this cart line."
 msgstr "Producto seleccionado actualmente en esta línea del carrito."
 
 #: .\cart\models\cart_item_model.py:38
-#: .\catalog\admin\owner\product_variant_model_inline.py:22
+#: .\catalog\admin\owner\product_variant_model_inline.py:26
 #: .\catalog\models\product_image_model.py:30
 #: .\quotation\admin\owner\quote_item_model_inline_form.py:20
 #: .\quotation\models\quote_item_model.py:39
@@ -570,64 +570,80 @@ msgstr "Producto destacado"
 msgid "Request through quote"
 msgstr "Solicitar mediante cotización"
 
-#: .\catalog\admin\owner\product_variant_model_inline.py:23
+#: .\catalog\admin\owner\product_variant_model_inline.py:27
 msgid "Variants"
 msgstr "Variantes"
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:13
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:45
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:49
 #: .\catalog\models\product_variant_model.py:42
 msgid "Variant attributes"
 msgstr "Atributos de la variante"
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:14
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:54
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:58
 msgid ""
 "Add public variant details as key-value pairs, such as size or packaging."
 msgstr ""
 "Agrega detalles públicos de la variante como pares clave-valor, por ejemplo "
 "tamaño o presentación."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:30
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:15
+msgid "Attribute key"
+msgstr "Clave del atributo"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:16
+msgid "Attribute value"
+msgstr "Valor del atributo"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:17
+msgid "Add attribute"
+msgstr "Agregar atributo"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:18
+msgid "Remove attribute"
+msgstr "Eliminar atributo"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:34
 msgid ""
 "Optional internal price. Customers still request a quote for this product."
 msgstr ""
 "Precio interno opcional. Los clientes igual solicitarán una cotización para "
 "este producto."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:34
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:38
 msgid ""
 "Required on the default variant when the product is directly purchasable."
 msgstr ""
 "Obligatorio en la variante predeterminada cuando el producto se puede "
 "comprar directamente."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:43
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:47
 #: .\catalog\models\product_variant_model.py:30
 msgid "Variant name"
 msgstr "Nombre de la variante"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:44
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:48
 #: .\catalog\models\product_variant_model.py:36
 msgid "Variant SKU"
 msgstr "SKU de la variante"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:46
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:50
 #: .\catalog\models\product_variant_model.py:50
 msgid "Price"
 msgstr "Precio"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:47
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:51
 #: .\catalog\models\product_variant_model.py:55
 msgid "Default variant"
 msgstr "Variante predeterminada"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:48
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:52
 #: .\catalog\models\product_variant_model.py:60
 msgid "Available for selection"
 msgstr "Disponible para seleccionar"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:49
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:53
 #: .\catalog\models\product_image_model.py:47
 #: .\catalog\models\product_variant_model.py:65
 #: .\masterdata\admin\owner\category_child_model_inline_form.py:24
@@ -636,17 +652,17 @@ msgstr "Disponible para seleccionar"
 msgid "Display order"
 msgstr "Orden de visualización"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:52
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:56
 #: .\catalog\models\product_variant_model.py:31
 msgid "Optional customer-facing name for this specific variant."
 msgstr "Nombre opcional visible para clientes para esta variante específica."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:53
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:57
 #: .\catalog\models\product_variant_model.py:37
 msgid "Unique internal reference for this variant."
 msgstr "Referencia interna única para esta variante."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:55
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:59
 #: .\catalog\models\product_variant_model.py:51
 msgid ""
 "Optional direct price for this variant when it does not rely only on quotes."
@@ -654,16 +670,16 @@ msgstr ""
 "Precio directo opcional para esta variante cuando no depende solo de "
 "cotizaciones."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:56
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:60
 msgid "Choose exactly one default variant for each product."
 msgstr "Elige exactamente una variante predeterminada para cada producto."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:57
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:61
 #: .\catalog\models\product_variant_model.py:61
 msgid "Turn this off to keep the variant without offering it."
 msgstr "Desactiva esto para conservar la variante sin ofrecerla."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:58
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:62
 #: .\catalog\models\product_variant_model.py:66
 msgid "Lower values appear first in admin and customer-facing variant lists."
 msgstr ""

@@ -12,6 +12,10 @@ class ProductVariantModelInlineForm(forms.ModelForm):
     attributes_json = JsonKeyValueField(
         label=_("Variant attributes"),
         help_text=_("Add public variant details as key-value pairs, such as size or packaging."),
+        key_label=_("Attribute key"),
+        value_label=_("Attribute value"),
+        add_label=_("Add attribute"),
+        remove_label=_("Remove attribute"),
         required=False,
     )
 
