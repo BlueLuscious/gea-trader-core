@@ -3,10 +3,17 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from catalog.models import ProductVariantModel
+from core.forms import JsonKeyValueField
 
 
 class ProductVariantModelInlineForm(forms.ModelForm):
     """ Keep one focused and reusable owner form contract for product variants. """
+
+    attributes_json = JsonKeyValueField(
+        label=_("Variant attributes"),
+        help_text=_("Add public variant details as key-value pairs, such as size or packaging."),
+        required=False,
+    )
 
     def __init__(self, *args: object, requires_quote: bool | None = None, **kwargs: object) -> None:
         """ Build one owner inline variant form with pricing guidance for the current product flow.
@@ -31,10 +38,11 @@ class ProductVariantModelInlineForm(forms.ModelForm):
         """ Configure the owner inline variant form. """
 
         model = ProductVariantModel
-        fields = ("name", "sku", "price", "is_default", "is_active", "sort_order")
+        fields = ("name", "sku", "attributes_json", "price", "is_default", "is_active", "sort_order")
         labels = {
             "name": _("Variant name"),
             "sku": _("Variant SKU"),
+            "attributes_json": _("Variant attributes"),
             "price": _("Price"),
             "is_default": _("Default variant"),
             "is_active": _("Available for selection"),
@@ -43,6 +51,7 @@ class ProductVariantModelInlineForm(forms.ModelForm):
         help_texts = {
             "name": _("Optional customer-facing name for this specific variant."),
             "sku": _("Unique internal reference for this variant."),
+            "attributes_json": _("Add public variant details as key-value pairs, such as size or packaging."),
             "price": _("Optional direct price for this variant when it does not rely only on quotes."),
             "is_default": _("Choose exactly one default variant for each product."),
             "is_active": _("Turn this off to keep the variant without offering it."),

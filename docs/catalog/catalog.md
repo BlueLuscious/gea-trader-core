@@ -87,7 +87,7 @@ Current fields cover:
 
 - relation to `ProductModel`
 - variant naming and SKU
-- free-form `attributes_json`
+- flat `attributes_json` edited through an owner-admin key-value editor
 - optional price
 - default flag
 - active flag
@@ -99,6 +99,8 @@ Current behavior:
 - only one default variant is allowed per product
 - variants are the current place where price lives
 - variants are used as the more concrete commercial layer for quoting or selling
+- variant attributes are stored as a flat JSON object and edited as key-value rows in owner admin through `core.forms.JsonKeyValueField`
+- public attribute display formatting remains owned by `ProductVariantModelDTOFactory`
 - the default variant must stay available for selection
 - variant fields expose user-friendly labels and help texts for admin translation flows
 - owner-admin product saves require at least one variant and exactly one default variant

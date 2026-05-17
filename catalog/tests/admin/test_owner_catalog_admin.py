@@ -9,8 +9,9 @@ from accounts.models import UserModel
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin import ProductModelAdmin
 from catalog.admin.owner.product_variant_model_inline import ProductVariantModelInline
-from catalog.models import ProductModel
+from catalog.models import ProductModel, ProductVariantModel
 from core.adminsites.site_instances import owner_admin_site
+from core.forms import JsonKeyValueWidget
 from core.testing.base import LoggedTestCase
 from masterdata.models import BrandModel, CategoryModel
 from tenancy.choices import TenantRole
@@ -297,6 +298,88 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
                 "Optional internal price. Customers still request a quote for this product.",
                 empty_form.fields["price"].help_text,
             )
+
+    def test_variant_inline_exposes_the_attributes_editor(self) -> None:
+        """ Verify owner variant forms expose the key-value attributes editor. """
+        empty_form = self.build_empty_variant_form(self.in_scope_product)
+
+        self.assertIn("attributes_json", empty_form.fields)
+        self.assertIsInstance(empty_form.fields["attributes_json"].widget, JsonKeyValueWidget)
+
+    def test_variant_inline_persists_submitted_attributes(self) -> None:
+        """ Verify owner variant rows persist key-value attributes as a JSON dictionary. """
+        self.operator.user_permissions.add(Permission.objects.get(codename="add_productvariantmodel"))
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "1",
+                "variants-INITIAL_FORMS": "0",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-name": "Primary",
+                "variants-0-sku": "PUMP-ATTR-001",
+                "variants-0-attributes_json__key": "capacidad",
+                "variants-0-attributes_json__value": "20L",
+                "variants-0-price": str(Decimal("15.00")),
+                "variants-0-is_default": "on",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+            },
+            instance=self.in_scope_product,
+        )
+
+        self.assertTrue(
+            formset.is_valid(),
+            f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
+        )
+        formset.save()
+
+        variant = ProductVariantModel.objects.get(product=self.in_scope_product, sku="PUMP-ATTR-001")
+        self.assertEqual(variant.attributes_json, {"capacidad": "20L"})
+
+    def test_variant_inline_clears_submitted_empty_attributes(self) -> None:
+        """ Verify owner variant rows clear attributes when the editor is submitted empty. """
+        self.operator.user_permissions.add(Permission.objects.get(codename="change_productvariantmodel"))
+        variant = ProductVariantModel.objects.create(
+            product=self.in_scope_product,
+            name="Primary",
+            sku="PUMP-CLEAR-001",
+            attributes_json={"capacidad": "20L"},
+            price=Decimal("15.00"),
+            is_default=True,
+            is_active=True,
+            sort_order=0,
+        )
+        formset = self.build_variant_formset(
+            data={
+                "variants-TOTAL_FORMS": "1",
+                "variants-INITIAL_FORMS": "1",
+                "variants-MIN_NUM_FORMS": "0",
+                "variants-MAX_NUM_FORMS": "1000",
+                "variants-0-id": str(variant.pk),
+                "variants-0-name": "Primary",
+                "variants-0-sku": "PUMP-CLEAR-001",
+                "variants-0-attributes_json__present": "1",
+                "variants-0-price": str(Decimal("15.00")),
+                "variants-0-is_default": "on",
+                "variants-0-is_active": "on",
+                "variants-0-sort_order": "0",
+            },
+            instance=self.in_scope_product,
+        )
+
+        self.assertTrue(
+            formset.is_valid(),
+            f"errors={formset.errors} non_form_errors={formset.non_form_errors()}",
+        )
+        self.assertEqual(formset.forms[0].cleaned_data["attributes_json"], {})
+        self.assertIn("attributes_json", formset.forms[0].changed_data)
+        self.assertEqual(formset.forms[0].instance.attributes_json, {})
+        saved_instances = formset.save()
+        variant.refresh_from_db()
+
+        self.assertEqual([instance.pk for instance in saved_instances], [variant.pk])
+        self.assertEqual(saved_instances[0].attributes_json, {})
+        self.assertEqual(variant.attributes_json, {})
 
     def test_variant_inline_explains_purchasable_default_price_requirement(self) -> None:
         """ Verify purchasable products explain the priced default-variant rule before save. """
