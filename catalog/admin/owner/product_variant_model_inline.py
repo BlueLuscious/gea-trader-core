@@ -17,7 +17,11 @@ class ProductVariantModelInline(StackedInline):
     show_count = True
     extra = 0
     can_delete = False
-    fields = ("name", "sku", "attributes_json", "price", "is_default", "is_active", "sort_order")
+    fields = (
+        ("name", "sku", "price", "sort_order"),
+        ("is_default", "is_active"),
+        "attributes_json",
+    )
     ordering = ("sort_order", "name", "id")
     verbose_name = _("Variant")
     verbose_name_plural = _("Variants")
