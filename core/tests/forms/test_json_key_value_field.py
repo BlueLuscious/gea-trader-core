@@ -81,3 +81,21 @@ class TestJsonKeyValueField(LoggedSimpleTestCase):
         self.assertIn("border-base-200", context["widget"]["input_classes"])
         self.assertIn("rounded-default", context["widget"]["add_button_classes"])
         self.assertIn("text-red-600", context["widget"]["remove_button_classes"])
+
+    def test_widget_builds_rows_from_bound_submitted_values(self) -> None:
+        """ Verify invalid bound forms can re-render submitted flat rows. """
+        field = JsonKeyValueField(required=False)
+
+        context = field.widget.get_context(
+            "variant-attributes_json",
+            [("capacidad", "20L"), ("", "Tambor")],
+            {},
+        )
+
+        self.assertEqual(
+            context["widget"]["rows"],
+            [
+                {"key": "capacidad", "value": "20L"},
+                {"key": "", "value": "Tambor"},
+            ],
+        )

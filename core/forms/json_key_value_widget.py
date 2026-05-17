@@ -134,11 +134,18 @@ class JsonKeyValueWidget(forms.Widget):
         """ Convert one JSON value into template row dictionaries.
 
         Args:
-            value: Current JSON value from the model or form.
+            value: Current JSON value from the model or submitted bound rows.
 
         Returns:
             list[dict[str, str]]: Key-value rows for the widget template.
         """
+        if isinstance(value, list | tuple):
+            rows = [
+                self.build_row_from_submitted_value(row)
+                for row in value
+            ]
+            return rows or [{"key": "", "value": ""}]
+
         if isinstance(value, dict):
             rows = [
                 {"key": str(key), "value": str(item_value)}
@@ -147,6 +154,20 @@ class JsonKeyValueWidget(forms.Widget):
             return rows or [{"key": "", "value": ""}]
 
         return [{"key": "", "value": ""}]
+
+    def build_row_from_submitted_value(self, row: Any) -> dict[str, str]:
+        """ Convert one submitted row into a template row dictionary.
+
+        Args:
+            row: Submitted row tuple, list, or fallback scalar value.
+
+        Returns:
+            dict[str, str]: Row dictionary preserving submitted key and value.
+        """
+        if isinstance(row, tuple | list) and len(row) >= 2:
+            return {"key": str(row[0]), "value": str(row[1])}
+
+        return {"key": "", "value": str(row)}
 
     def value_from_datadict(
         self,
