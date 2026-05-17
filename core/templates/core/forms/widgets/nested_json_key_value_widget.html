@@ -1,0 +1,146 @@
+<div
+  class="core-nested-json-key-value"
+  data-nested-json-key-value-widget
+  data-nested-json-key-value-max-depth="{{ widget.max_depth }}"
+  {% if widget.attrs.id %}id="{{ widget.attrs.id }}"{% endif %}
+>
+  <input type="hidden" name="{{ widget.name }}__present" value="1">
+
+  <div class="core-nested-json-key-value__header">
+    <span>{{ widget.key_label }}</span>
+    <span>{{ widget.value_label }}</span>
+    <span aria-hidden="true"></span>
+  </div>
+
+  <div class="core-nested-json-key-value__rows" data-nested-json-key-value-rows>
+    {% for row in widget.rows %}
+      <div
+        class="core-nested-json-key-value__row"
+        data-nested-json-key-value-row
+        data-nested-json-key-value-row-id="{{ row.row_id }}"
+        data-nested-json-key-value-parent-id="{{ row.parent_id }}"
+        data-nested-json-key-value-depth="{{ row.depth }}"
+        data-nested-json-key-value-has-children="{{ row.has_children|yesno:'true,false' }}"
+        style="--nested-json-key-value-depth: {{ row.depth }};"
+      >
+        <input
+          type="hidden"
+          name="{{ widget.name }}__row_id"
+          value="{{ row.row_id }}"
+          data-nested-json-key-value-row-id-input
+        >
+        <input
+          type="hidden"
+          name="{{ widget.name }}__parent_id"
+          value="{{ row.parent_id }}"
+          data-nested-json-key-value-parent-id-input
+        >
+        <input
+          type="text"
+          name="{{ widget.name }}__key"
+          value="{{ row.key }}"
+          class="{{ widget.input_classes }} core-nested-json-key-value__input"
+          placeholder="{{ widget.key_label }}"
+          data-nested-json-key-value-key
+        >
+        <input
+          type="text"
+          name="{{ widget.name }}__value"
+          value="{{ row.value }}"
+          class="{{ widget.input_classes }} core-nested-json-key-value__input"
+          placeholder="{{ widget.value_label }}"
+          data-nested-json-key-value-value
+          {% if row.has_children %}hidden{% endif %}
+        >
+        <div class="core-nested-json-key-value__actions">
+          <button
+            type="button"
+            class="{{ widget.child_button_classes }} core-nested-json-key-value__child"
+            title="{{ widget.add_child_label }}"
+            aria-label="{{ widget.add_child_label }}"
+            data-nested-json-key-value-add-child
+            {% if not row.can_add_child %}hidden{% endif %}
+          >
+            {{ widget.add_child_label }}
+          </button>
+          <button
+            type="button"
+            class="{{ widget.remove_button_classes }} core-nested-json-key-value__remove"
+            title="{{ widget.remove_label }}"
+            aria-label="{{ widget.remove_label }}"
+            data-nested-json-key-value-remove
+          >
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">close</span>
+          </button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <button
+    type="button"
+    class="{{ widget.add_button_classes }} core-nested-json-key-value__add"
+    data-nested-json-key-value-add-root
+  >
+    {{ widget.add_label }}
+  </button>
+
+  <template data-nested-json-key-value-template>
+    <div
+      class="core-nested-json-key-value__row"
+      data-nested-json-key-value-row
+      data-nested-json-key-value-row-id=""
+      data-nested-json-key-value-parent-id=""
+      data-nested-json-key-value-depth="1"
+      data-nested-json-key-value-has-children="false"
+      style="--nested-json-key-value-depth: 1;"
+    >
+      <input
+        type="hidden"
+        name="{{ widget.name }}__row_id"
+        value=""
+        data-nested-json-key-value-row-id-input
+      >
+      <input
+        type="hidden"
+        name="{{ widget.name }}__parent_id"
+        value=""
+        data-nested-json-key-value-parent-id-input
+      >
+      <input
+        type="text"
+        name="{{ widget.name }}__key"
+        class="{{ widget.input_classes }} core-nested-json-key-value__input"
+        placeholder="{{ widget.key_label }}"
+        data-nested-json-key-value-key
+      >
+      <input
+        type="text"
+        name="{{ widget.name }}__value"
+        class="{{ widget.input_classes }} core-nested-json-key-value__input"
+        placeholder="{{ widget.value_label }}"
+        data-nested-json-key-value-value
+      >
+      <div class="core-nested-json-key-value__actions">
+        <button
+          type="button"
+          class="{{ widget.child_button_classes }} core-nested-json-key-value__child"
+          title="{{ widget.add_child_label }}"
+          aria-label="{{ widget.add_child_label }}"
+          data-nested-json-key-value-add-child
+        >
+          {{ widget.add_child_label }}
+        </button>
+        <button
+          type="button"
+          class="{{ widget.remove_button_classes }} core-nested-json-key-value__remove"
+          title="{{ widget.remove_label }}"
+          aria-label="{{ widget.remove_label }}"
+          data-nested-json-key-value-remove
+        >
+          <span class="material-symbols-outlined text-sm" aria-hidden="true">close</span>
+        </button>
+      </div>
+    </div>
+  </template>
+</div>

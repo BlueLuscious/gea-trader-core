@@ -38,10 +38,10 @@ class JsonKeyValueWidget(forms.Widget):
             remove_label: Optional label for the remove-row action.
         """
         super().__init__(attrs)
-        self.key_label = key_label or _("Attribute key")
-        self.value_label = value_label or _("Attribute value")
-        self.add_label = add_label or _("Add attribute")
-        self.remove_label = remove_label or _("Remove attribute")
+        self.key_label = key_label or _("Key")
+        self.value_label = value_label or _("Value")
+        self.add_label = add_label or _("Add row")
+        self.remove_label = remove_label or _("Remove row")
 
     def get_context(self, name: str, value: Any, attrs: dict[str, Any] | None) -> dict[str, Any]:
         """ Build template context for the key-value editor.

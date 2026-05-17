@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-17 02:17-0300\n"
+"POT-Creation-Date: 2026-05-17 05:35-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -875,33 +875,64 @@ msgid "Business operations"
 msgstr "Operaciones del negocio"
 
 #: .\core\forms\json_key_value_field.py:15
-msgid "Enter a valid list of variant attributes."
-msgstr "Ingresa una lista válida de atributos de variante."
+msgid "Enter a valid key-value list."
+msgstr "Ingresa una lista clave-valor válida."
 
 #: .\core\forms\json_key_value_field.py:16
-msgid "Attribute keys are required when a value is provided."
-msgstr ""
-"Las claves de los atributos son obligatorias cuando se proporciona un valor."
+msgid "Keys are required when a value is provided."
+msgstr "Las claves son obligatorias cuando se proporciona un valor."
 
 #: .\core\forms\json_key_value_field.py:17
-msgid "Attribute keys must be unique."
-msgstr "Las claves de los atributos deben ser únicas."
+msgid "Keys must be unique."
+msgstr "Las claves deben ser únicas."
 
 #: .\core\forms\json_key_value_widget.py:41
-msgid "Attribute key"
-msgstr "Clave del atributo"
+#: .\core\forms\nested_json_key_value_widget.py:48
+msgid "Key"
+msgstr "Clave"
 
 #: .\core\forms\json_key_value_widget.py:42
-msgid "Attribute value"
-msgstr "Valor del atributo"
+#: .\core\forms\nested_json_key_value_widget.py:49
+msgid "Value"
+msgstr "Valor"
 
 #: .\core\forms\json_key_value_widget.py:43
-msgid "Add attribute"
-msgstr "Agregar atributo"
+#: .\core\forms\nested_json_key_value_widget.py:50
+msgid "Add row"
+msgstr "Agregar fila"
 
 #: .\core\forms\json_key_value_widget.py:44
-msgid "Remove attribute"
-msgstr "Eliminar atributo"
+#: .\core\forms\nested_json_key_value_widget.py:52
+msgid "Remove row"
+msgstr "Eliminar fila"
+
+#: .\core\forms\nested_json_key_value_field.py:18
+msgid "Enter a valid nested key-value list."
+msgstr "Ingresa una lista clave-valor anidada válida."
+
+#: .\core\forms\nested_json_key_value_field.py:19
+msgid "Nested key-value depth is not valid."
+msgstr "La profundidad de clave-valor anidada no es válida."
+
+#: .\core\forms\nested_json_key_value_field.py:20
+msgid "Keys are required when a value or child rows are provided."
+msgstr "Las claves son obligatorias cuando se proporciona un valor o filas hijas."
+
+#: .\core\forms\nested_json_key_value_field.py:21
+msgid "Keys must be unique within the same level."
+msgstr "Las claves deben ser únicas dentro del mismo nivel."
+
+#: .\core\forms\nested_json_key_value_field.py:22
+msgid "Nested key-value rows exceed the allowed depth."
+msgstr "Las filas clave-valor anidadas superan la profundidad permitida."
+
+#: .\core\forms\nested_json_key_value_field.py:23
+msgid "A key cannot have both a value and child rows."
+msgstr "Una clave no puede tener un valor y filas hijas al mismo tiempo."
+
+#: .\core\forms\nested_json_key_value_widget.py:51
+msgid "Add child row"
+msgstr "Agregar fila hija"
 
 #: .\core\i18n\translation_anchors.py:6
 msgid "Welcome back to"

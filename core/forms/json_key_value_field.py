@@ -12,9 +12,9 @@ class JsonKeyValueField(forms.Field):
 
     widget = JsonKeyValueWidget
     default_error_messages = {
-        "invalid": _("Enter a valid list of variant attributes."),
-        "missing_key": _("Attribute keys are required when a value is provided."),
-        "duplicate_key": _("Attribute keys must be unique."),
+        "invalid": _("Enter a valid key-value list."),
+        "missing_key": _("Keys are required when a value is provided."),
+        "duplicate_key": _("Keys must be unique."),
     }
 
     def __init__(

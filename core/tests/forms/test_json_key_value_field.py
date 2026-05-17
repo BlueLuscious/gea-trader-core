@@ -29,7 +29,7 @@ class TestJsonKeyValueField(LoggedSimpleTestCase):
         with override("en"):
             with self.assertRaisesMessage(
                 ValidationError,
-                "Attribute keys are required when a value is provided.",
+                "Keys are required when a value is provided.",
             ):
                 field.clean([("", "20L")])
 
@@ -38,7 +38,7 @@ class TestJsonKeyValueField(LoggedSimpleTestCase):
         field = JsonKeyValueField(required=False)
 
         with override("en"):
-            with self.assertRaisesMessage(ValidationError, "Attribute keys must be unique."):
+            with self.assertRaisesMessage(ValidationError, "Keys must be unique."):
                 field.clean([("capacidad", "20L"), (" capacidad ", "205L")])
 
     def test_widget_reads_repeated_key_value_inputs(self) -> None:
