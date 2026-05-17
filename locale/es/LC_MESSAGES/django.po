@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-21 10:58-0300\n"
+"POT-Creation-Date: 2026-05-17 02:17-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -317,7 +317,7 @@ msgstr "Notas opcionales de runtime capturadas para esta línea del carrito."
 #: .\masterdata\models\brand_model.py:47
 #: .\masterdata\models\category_model.py:75
 #: .\quotation\models\quote_item_model.py:82
-#: .\quotation\models\quote_model.py:108
+#: .\quotation\models\quote_model.py:110
 msgid "Created at"
 msgstr "Creado el"
 
@@ -330,7 +330,7 @@ msgstr "Cuándo se creó este ítem del carrito."
 #: .\catalog\models\product_variant_model.py:75
 #: .\masterdata\models\brand_model.py:48
 #: .\masterdata\models\category_model.py:76
-#: .\quotation\models\quote_model.py:113
+#: .\quotation\models\quote_model.py:115
 msgid "Updated at"
 msgstr "Actualizado el"
 
@@ -358,7 +358,7 @@ msgstr "La variante debe pertenecer al producto seleccionado."
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:54
 #: .\masterdata\models\brand_model.py:24
 #: .\masterdata\models\category_model.py:27
-#: .\quotation\models\quote_model.py:26
+#: .\quotation\models\quote_model.py:28
 #: .\tenancy\admin\owner\owner_tenant_settings_admin.py:37
 #: .\tenancy\models\tenant_branding_model.py:19
 #: .\tenancy\models\tenant_group_model.py:20
@@ -374,7 +374,7 @@ msgstr ""
 
 #: .\cart\models\cart_model.py:33
 #: .\quotation\admin\owner\quote_model_admin_form.py:36
-#: .\quotation\models\quote_model.py:44
+#: .\quotation\models\quote_model.py:46
 msgid "Customer account"
 msgstr "Cuenta del cliente"
 
@@ -574,46 +574,60 @@ msgstr "Solicitar mediante cotización"
 msgid "Variants"
 msgstr "Variantes"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:23
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:13
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:45
+#: .\catalog\models\product_variant_model.py:42
+msgid "Variant attributes"
+msgstr "Atributos de la variante"
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:14
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:54
+msgid ""
+"Add public variant details as key-value pairs, such as size or packaging."
+msgstr ""
+"Agrega detalles públicos de la variante como pares clave-valor, por ejemplo "
+"tamaño o presentación."
+
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:30
 msgid ""
 "Optional internal price. Customers still request a quote for this product."
 msgstr ""
 "Precio interno opcional. Los clientes igual solicitarán una cotización para "
 "este producto."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:27
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:34
 msgid ""
 "Required on the default variant when the product is directly purchasable."
 msgstr ""
 "Obligatorio en la variante predeterminada cuando el producto se puede "
 "comprar directamente."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:36
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:43
 #: .\catalog\models\product_variant_model.py:30
 msgid "Variant name"
 msgstr "Nombre de la variante"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:37
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:44
 #: .\catalog\models\product_variant_model.py:36
 msgid "Variant SKU"
 msgstr "SKU de la variante"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:38
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:46
 #: .\catalog\models\product_variant_model.py:50
 msgid "Price"
 msgstr "Precio"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:39
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:47
 #: .\catalog\models\product_variant_model.py:55
 msgid "Default variant"
 msgstr "Variante predeterminada"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:40
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:48
 #: .\catalog\models\product_variant_model.py:60
 msgid "Available for selection"
 msgstr "Disponible para seleccionar"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:41
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:49
 #: .\catalog\models\product_image_model.py:47
 #: .\catalog\models\product_variant_model.py:65
 #: .\masterdata\admin\owner\category_child_model_inline_form.py:24
@@ -622,17 +636,17 @@ msgstr "Disponible para seleccionar"
 msgid "Display order"
 msgstr "Orden de visualización"
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:44
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:52
 #: .\catalog\models\product_variant_model.py:31
 msgid "Optional customer-facing name for this specific variant."
 msgstr "Nombre opcional visible para clientes para esta variante específica."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:45
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:53
 #: .\catalog\models\product_variant_model.py:37
 msgid "Unique internal reference for this variant."
 msgstr "Referencia interna única para esta variante."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:46
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:55
 #: .\catalog\models\product_variant_model.py:51
 msgid ""
 "Optional direct price for this variant when it does not rely only on quotes."
@@ -640,16 +654,16 @@ msgstr ""
 "Precio directo opcional para esta variante cuando no depende solo de "
 "cotizaciones."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:47
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:56
 msgid "Choose exactly one default variant for each product."
 msgstr "Elige exactamente una variante predeterminada para cada producto."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:48
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:57
 #: .\catalog\models\product_variant_model.py:61
 msgid "Turn this off to keep the variant without offering it."
 msgstr "Desactiva esto para conservar la variante sin ofrecerla."
 
-#: .\catalog\admin\owner\product_variant_model_inline_form.py:49
+#: .\catalog\admin\owner\product_variant_model_inline_form.py:58
 #: .\catalog\models\product_variant_model.py:66
 msgid "Lower values appear first in admin and customer-facing variant lists."
 msgstr ""
@@ -792,10 +806,6 @@ msgstr "Productos"
 msgid "Product this variant belongs to."
 msgstr "Producto al que pertenece esta variante."
 
-#: .\catalog\models\product_variant_model.py:42
-msgid "Variant attributes"
-msgstr "Atributos de la variante"
-
 #: .\catalog\models\product_variant_model.py:43
 msgid "Structured attributes such as size, color, or packaging."
 msgstr "Atributos estructurados como tamaño, color o presentación."
@@ -848,7 +858,7 @@ msgstr "Ventas"
 
 #: .\core\adminsites\services\owner_tenant_sidebar_navigation_builder.py:110
 #: .\core\tests\adminsites\test_adminsites.py:87
-#: .\quotation\models\quote_model.py:129
+#: .\quotation\models\quote_model.py:132
 msgid "Quotes"
 msgstr "Cotizaciones"
 
@@ -863,6 +873,35 @@ msgstr "Admin del negocio"
 #: .\core\adminsites\sites\owner_admin_site.py:23
 msgid "Business operations"
 msgstr "Operaciones del negocio"
+
+#: .\core\forms\json_key_value_field.py:15
+msgid "Enter a valid list of variant attributes."
+msgstr "Ingresa una lista válida de atributos de variante."
+
+#: .\core\forms\json_key_value_field.py:16
+msgid "Attribute keys are required when a value is provided."
+msgstr ""
+"Las claves de los atributos son obligatorias cuando se proporciona un valor."
+
+#: .\core\forms\json_key_value_field.py:17
+msgid "Attribute keys must be unique."
+msgstr "Las claves de los atributos deben ser únicas."
+
+#: .\core\forms\json_key_value_widget.py:41
+msgid "Attribute key"
+msgstr "Clave del atributo"
+
+#: .\core\forms\json_key_value_widget.py:42
+msgid "Attribute value"
+msgstr "Valor del atributo"
+
+#: .\core\forms\json_key_value_widget.py:43
+msgid "Add attribute"
+msgstr "Agregar atributo"
+
+#: .\core\forms\json_key_value_widget.py:44
+msgid "Remove attribute"
+msgstr "Eliminar atributo"
 
 #: .\core\i18n\translation_anchors.py:6
 msgid "Welcome back to"
@@ -1159,11 +1198,11 @@ msgstr ""
 msgid "Reset filters"
 msgstr "Restablecer filtros"
 
-#: .\core\settings.py:165
+#: .\core\settings.py:166
 msgid "Spanish"
 msgstr "Español"
 
-#: .\core\settings.py:166
+#: .\core\settings.py:167
 msgid "English"
 msgstr "Inglés"
 
@@ -1492,52 +1531,52 @@ msgstr ""
 "cotización."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:28
-#: .\quotation\models\quote_model.py:51
+#: .\quotation\models\quote_model.py:53
 msgid "Workflow status"
 msgstr "Estado del flujo de trabajo"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:29
-#: .\quotation\models\quote_model.py:58
+#: .\quotation\models\quote_model.py:60
 msgid "Customer name"
 msgstr "Nombre del cliente"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:30
-#: .\quotation\models\quote_model.py:64
+#: .\quotation\models\quote_model.py:66
 msgid "Customer email"
 msgstr "Correo del cliente"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:31
-#: .\quotation\models\quote_model.py:71
+#: .\quotation\models\quote_model.py:73
 msgid "Customer phone"
 msgstr "Teléfono del cliente"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:32
-#: .\quotation\models\quote_model.py:78
+#: .\quotation\models\quote_model.py:80
 msgid "Company"
 msgstr "Empresa"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:33
-#: .\quotation\models\quote_model.py:85
+#: .\quotation\models\quote_model.py:87
 msgid "Tax ID"
 msgstr "Identificación fiscal"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:34
-#: .\quotation\models\quote_model.py:91
+#: .\quotation\models\quote_model.py:93
 msgid "Internal notes"
 msgstr "Notas internas"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:35
-#: .\quotation\models\quote_model.py:35
+#: .\quotation\models\quote_model.py:37
 msgid "Source cart"
 msgstr "Carrito de origen"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:37
-#: .\quotation\models\quote_model.py:97
+#: .\quotation\models\quote_model.py:99
 msgid "Requested at"
 msgstr "Solicitada el"
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:38
-#: .\quotation\models\quote_model.py:103
+#: .\quotation\models\quote_model.py:105
 msgid "Resolved at"
 msgstr "Resuelta el"
 
@@ -1551,12 +1590,12 @@ msgid "Optional. Use this when the quote belongs to a business customer."
 msgstr "Opcional. Úsalo cuando la cotización corresponda a un cliente empresa."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:43
-#: .\quotation\models\quote_model.py:86
+#: .\quotation\models\quote_model.py:88
 msgid "Optional tax or company identification reference."
 msgstr "Referencia opcional de identificación fiscal o empresarial."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:44
-#: .\quotation\models\quote_model.py:92
+#: .\quotation\models\quote_model.py:94
 msgid "Private notes not intended for customers."
 msgstr "Notas privadas no destinadas a los clientes."
 
@@ -1594,7 +1633,7 @@ msgid "Cancelled"
 msgstr "Cancelada"
 
 #: .\quotation\models\quote_item_model.py:21
-#: .\quotation\models\quote_model.py:128
+#: .\quotation\models\quote_model.py:131
 msgid "Quote"
 msgstr "Cotización"
 
@@ -1659,72 +1698,72 @@ msgstr "Nota interna opcional para este ítem de cotización."
 msgid "When this quote item was created."
 msgstr "Cuándo se creó este ítem de cotización."
 
-#: .\quotation\models\quote_model.py:27
+#: .\quotation\models\quote_model.py:29
 msgid "Business that owns this quote and the follow-up around it."
 msgstr "Negocio al que pertenece esta cotización y el seguimiento asociado."
 
-#: .\quotation\models\quote_model.py:36
+#: .\quotation\models\quote_model.py:38
 msgid "Optional cart that originated this quote."
 msgstr "Carrito opcional que originó esta cotización."
 
-#: .\quotation\models\quote_model.py:45
+#: .\quotation\models\quote_model.py:47
 msgid "Optional customer account related to this quote."
 msgstr "Cuenta de cliente opcional relacionada con esta cotización."
 
-#: .\quotation\models\quote_model.py:52
+#: .\quotation\models\quote_model.py:54
 msgid "Current internal workflow stage of this quote."
 msgstr "Etapa actual del flujo de trabajo interno de esta cotización."
 
-#: .\quotation\models\quote_model.py:59
+#: .\quotation\models\quote_model.py:61
 msgid "Name of the person requesting the quote."
 msgstr "Nombre de la persona que solicita la cotización."
 
-#: .\quotation\models\quote_model.py:65
+#: .\quotation\models\quote_model.py:67
 msgid "Email address used to follow up on this quote."
 msgstr "Correo electrónico usado para dar seguimiento a esta cotización."
 
-#: .\quotation\models\quote_model.py:72
+#: .\quotation\models\quote_model.py:74
 msgid "Phone number used to follow up on this quote."
 msgstr "Teléfono usado para dar seguimiento a esta cotización."
 
-#: .\quotation\models\quote_model.py:79
+#: .\quotation\models\quote_model.py:81
 msgid "Optional company name when the quote belongs to a business customer."
 msgstr ""
 "Nombre de empresa opcional cuando la cotización corresponde a un cliente "
 "empresa."
 
-#: .\quotation\models\quote_model.py:98
+#: .\quotation\models\quote_model.py:100
 msgid "When the quote was formally requested."
 msgstr "Cuándo se solicitó formalmente la cotización."
 
-#: .\quotation\models\quote_model.py:104
+#: .\quotation\models\quote_model.py:106
 msgid ""
 "When the internal workflow for this quote reached a terminal resolution."
 msgstr ""
 "Cuándo el flujo de trabajo interno de esta cotización llegó a una resolución "
 "terminal."
 
-#: .\quotation\models\quote_model.py:109
+#: .\quotation\models\quote_model.py:111
 msgid "When this quote was created."
 msgstr "Cuándo se creó esta cotización."
 
-#: .\quotation\models\quote_model.py:114
+#: .\quotation\models\quote_model.py:116
 msgid "When this quote was last updated."
 msgstr "Cuándo se actualizó por última vez esta cotización."
 
-#: .\quotation\models\quote_model.py:176
+#: .\quotation\models\quote_model.py:179
 msgid "Source cart must belong to the same business as the quote."
 msgstr ""
 "El carrito de origen debe pertenecer al mismo negocio que la cotización."
 
-#: .\quotation\models\quote_model.py:207
+#: .\quotation\models\quote_model.py:210
 msgid ""
 "Workflow status cannot change after the quote reaches a terminal resolution."
 msgstr ""
 "El estado del flujo de trabajo no puede cambiar después de que la cotización "
 "llegue a una resolución terminal."
 
-#: .\quotation\models\quote_model.py:212
+#: .\quotation\models\quote_model.py:215
 msgid "Workflow status cannot move backward once the quote progresses."
 msgstr ""
 "El estado del flujo de trabajo no puede retroceder una vez que la cotización "

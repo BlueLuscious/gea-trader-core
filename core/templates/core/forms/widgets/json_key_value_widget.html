@@ -1,0 +1,81 @@
+<div
+  class="core-json-key-value"
+  data-json-key-value-widget
+  {% if widget.attrs.id %}id="{{ widget.attrs.id }}"{% endif %}
+>
+  <input type="hidden" name="{{ widget.name }}__present" value="1">
+
+  <div class="core-json-key-value__header">
+    <span>{{ widget.key_label }}</span>
+    <span>{{ widget.value_label }}</span>
+    <span aria-hidden="true"></span>
+  </div>
+
+  <div class="core-json-key-value__rows" data-json-key-value-rows>
+    {% for row in widget.rows %}
+      <div class="core-json-key-value__row" data-json-key-value-row>
+        <input
+          type="text"
+          name="{{ widget.name }}__key"
+          value="{{ row.key }}"
+          class="{{ widget.input_classes }} core-json-key-value__input"
+          placeholder="{{ widget.key_label }}"
+          data-json-key-value-key
+        >
+        <input
+          type="text"
+          name="{{ widget.name }}__value"
+          value="{{ row.value }}"
+          class="{{ widget.input_classes }} core-json-key-value__input"
+          placeholder="{{ widget.value_label }}"
+          data-json-key-value-value
+        >
+        <button
+          type="button"
+          class="{{ widget.remove_button_classes }} core-json-key-value__remove"
+          title="{{ widget.remove_label }}"
+          aria-label="{{ widget.remove_label }}"
+          data-json-key-value-remove
+        >
+          <span class="material-symbols-outlined text-sm" aria-hidden="true">close</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+
+  <button
+    type="button"
+    class="{{ widget.add_button_classes }} core-json-key-value__add"
+    data-json-key-value-add
+  >
+    {{ widget.add_label }}
+  </button>
+
+  <template data-json-key-value-template>
+    <div class="core-json-key-value__row" data-json-key-value-row>
+      <input
+        type="text"
+        name="{{ widget.name }}__key"
+        class="{{ widget.input_classes }} core-json-key-value__input"
+        placeholder="{{ widget.key_label }}"
+        data-json-key-value-key
+      >
+      <input
+        type="text"
+        name="{{ widget.name }}__value"
+        class="{{ widget.input_classes }} core-json-key-value__input"
+        placeholder="{{ widget.value_label }}"
+        data-json-key-value-value
+      >
+      <button
+        type="button"
+        class="{{ widget.remove_button_classes }} core-json-key-value__remove"
+        title="{{ widget.remove_label }}"
+        aria-label="{{ widget.remove_label }}"
+        data-json-key-value-remove
+      >
+        <span class="material-symbols-outlined text-sm" aria-hidden="true">close</span>
+      </button>
+    </div>
+  </template>
+</div>
