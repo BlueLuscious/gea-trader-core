@@ -25,8 +25,8 @@ class TestMailhogTemplateMailServiceIntegration(BaseMailIntegrationSimpleTestCas
                     "cta_label": "Open dashboard",
                     "cta_url": "https://example.com/dashboard",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
             ),
         )
 
@@ -46,8 +46,8 @@ class TestMailhogTemplateMailServiceIntegration(BaseMailIntegrationSimpleTestCas
                     "mail_title": "First templated integration",
                     "mail_body": "First templated body.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
             ),
         )
         second_delivered_count = TemplateMailService.send(
@@ -58,8 +58,8 @@ class TestMailhogTemplateMailServiceIntegration(BaseMailIntegrationSimpleTestCas
                     "mail_title": "Second templated integration",
                     "mail_body": "Second templated body.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
             ),
         )
 
@@ -92,8 +92,8 @@ class TestMailhogTemplateMailServiceIntegration(BaseMailIntegrationSimpleTestCas
                     "mail_title": "Integration template",
                     "mail_body": "This tenant-aware message should appear in MailHog.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 tenant=tenant,
             ),
         )
@@ -136,8 +136,8 @@ class TestMailhogTemplateMailServiceIntegration(BaseMailIntegrationSimpleTestCas
                     "mail_title": "First tenant-aware integration",
                     "mail_body": "First tenant-aware body.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 tenant=first_tenant,
             ),
         )
@@ -149,8 +149,8 @@ class TestMailhogTemplateMailServiceIntegration(BaseMailIntegrationSimpleTestCas
                     "mail_title": "Second tenant-aware integration",
                     "mail_body": "Second tenant-aware body.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 tenant=second_tenant,
             ),
         )

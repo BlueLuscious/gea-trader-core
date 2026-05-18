@@ -19,8 +19,8 @@ class TestTemplateMailComposer(LoggedSimpleTestCase):
                     "mail_title": "Template composer",
                     "mail_body": "This message comes from one composer.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
             ),
         )
 
@@ -51,8 +51,8 @@ class TestTemplateMailComposer(LoggedSimpleTestCase):
                     "mail_title": "Template composer",
                     "mail_body": "This message comes from one composer.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 tenant=tenant,
             ),
         )

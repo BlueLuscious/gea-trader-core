@@ -23,8 +23,8 @@ class TestMailhogAsyncTemplateMailServiceIntegration(BaseAsyncMailIntegrationTra
                     "mail_body": "This message should appear in MailHog after Celery processing.",
                     "mail_outro": "Regards from the async template service.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
             ),
         )
         delivered_count = async_result.get(timeout=self.mailhog_wait_timeout_seconds)
@@ -55,8 +55,8 @@ class TestMailhogAsyncTemplateMailServiceIntegration(BaseAsyncMailIntegrationTra
                     "mail_title": "Async tenant integration",
                     "mail_body": "This tenant-aware async message should appear in MailHog.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 tenant=tenant,
             ),
         )

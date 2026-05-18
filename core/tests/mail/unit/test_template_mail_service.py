@@ -40,8 +40,8 @@ class TestTemplateMailService(LoggedSimpleTestCase):
                         "cta_label": "Open dashboard",
                         "cta_url": "https://example.com/dashboard",
                     },
-                    html_template_name="mail/messages/test_message.html",
-                    text_template_name="mail/messages/test_message.txt",
+                    html_template_name="core/mail/messages/test_message.html",
+                    text_template_name="core/mail/messages/test_message.txt",
                 ),
             )
 
@@ -79,8 +79,8 @@ class TestTemplateMailService(LoggedSimpleTestCase):
                         "mail_title": "Template mail service",
                         "mail_body": "This message comes from one Django template.",
                     },
-                    html_template_name="mail/messages/test_message.html",
-                    text_template_name="mail/messages/test_message.txt",
+                    html_template_name="core/mail/messages/test_message.html",
+                    text_template_name="core/mail/messages/test_message.txt",
                 ),
             )
         finally:
@@ -116,8 +116,8 @@ class TestTemplateMailService(LoggedSimpleTestCase):
                     "mail_title": "Template mail service",
                     "mail_body": "This message comes from one Django template.",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 tenant=tenant,
             ),
         )

@@ -12,7 +12,7 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
     def test_render_text_keeps_the_output_neutral_when_no_branding_context_exists(self) -> None:
         """ Render the text template without inventing product or support branding. """
         rendered_text = MailTemplateRenderer.render_text(
-            "mail/messages/test_message.txt",
+            "core/mail/messages/test_message.txt",
             {
                 "mail_title": "Renderer test",
                 "mail_body": "Plain text body",
@@ -28,7 +28,7 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
     def test_render_html_keeps_the_output_neutral_when_no_branding_context_exists(self) -> None:
         """ Render the HTML template without inventing product or support branding. """
         rendered_html = MailTemplateRenderer.render_html(
-            "mail/messages/test_message.html",
+            "core/mail/messages/test_message.html",
             {
                 "mail_title": "Renderer test",
                 "mail_body": "HTML body",
@@ -46,7 +46,7 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
     def test_render_html_includes_branding_when_context_provides_it(self) -> None:
         """ Render the HTML template with explicit product and support branding context. """
         rendered_html = MailTemplateRenderer.render_html(
-            "mail/messages/test_message.html",
+            "core/mail/messages/test_message.html",
             {
                 "mail_title": "Renderer test",
                 "mail_body": "HTML body",
@@ -77,7 +77,7 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
 
         try:
             rendered_text = MailTemplateRenderer.render_text(
-                "mail/messages/test_message.txt",
+                "core/mail/messages/test_message.txt",
                 {
                     "mail_title": "Renderer test",
                     "mail_body": "Plain text body",
@@ -107,7 +107,7 @@ class TestMailTemplateRenderer(LoggedSimpleTestCase):
 
         try:
             rendered_html = MailTemplateRenderer.render_html(
-                "mail/messages/test_message.html",
+                "core/mail/messages/test_message.html",
                 {
                     "mail_title": "Renderer test",
                     "mail_body": "HTML body",

@@ -22,8 +22,8 @@ class TestTemplateMailMessageFactory(LoggedSimpleTestCase):
                     "cta_label": "Open dashboard",
                     "cta_url": "https://example.com/dashboard",
                 },
-                html_template_name="mail/messages/test_message.html",
-                text_template_name="mail/messages/test_message.txt",
+                html_template_name="core/mail/messages/test_message.html",
+                text_template_name="core/mail/messages/test_message.txt",
                 reply_to=["reply@example.com"],
                 headers={"X-Test": "factory"},
             ),
@@ -62,8 +62,8 @@ class TestTemplateMailMessageFactory(LoggedSimpleTestCase):
                         "mail_title": "Template factory",
                         "mail_body": "Factory body",
                     },
-                    html_template_name="mail/messages/test_message.html",
-                    text_template_name="mail/messages/test_message.txt",
+                    html_template_name="core/mail/messages/test_message.html",
+                    text_template_name="core/mail/messages/test_message.txt",
                 ),
             )
         finally:

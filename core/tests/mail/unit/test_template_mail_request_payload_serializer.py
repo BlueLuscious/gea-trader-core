@@ -24,8 +24,8 @@ class TestTemplateMailRequestPayloadSerializer(LoggedTestCase):
             subject="Serializer test",
             to=[MailRecipientDTO(email="owner@example.com", name="Owner User")],
             context={"mail_title": "Serializer test", "mail_body": "Template body"},
-            html_template_name="mail/messages/test_message.html",
-            text_template_name="mail/messages/test_message.txt",
+            html_template_name="core/mail/messages/test_message.html",
+            text_template_name="core/mail/messages/test_message.txt",
             tenant=tenant,
             reply_to=["reply@example.com"],
         )
@@ -48,8 +48,8 @@ class TestTemplateMailRequestPayloadSerializer(LoggedTestCase):
             subject="Serializer test",
             to=[MailRecipientDTO(email="owner@example.com", name="Owner User")],
             context={"mail_title": "Serializer test", "mail_body": "Template body"},
-            html_template_name="mail/messages/test_message.html",
-            text_template_name="mail/messages/test_message.txt",
+            html_template_name="core/mail/messages/test_message.html",
+            text_template_name="core/mail/messages/test_message.txt",
             tenant=TenantModel(name="GEA Trader", slug="gea-trader"),
         )
 

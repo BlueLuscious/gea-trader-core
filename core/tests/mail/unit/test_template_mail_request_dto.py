@@ -13,14 +13,14 @@ class TestTemplateMailRequestDTO(LoggedSimpleTestCase):
             subject="  Template request  ",
             to=[MailRecipientDTO(email="owner@example.com")],
             context={"mail_title": "Template request"},
-            html_template_name="  mail/messages/test_message.html  ",
-            text_template_name="  mail/messages/test_message.txt  ",
+            html_template_name="  core/mail/messages/test_message.html  ",
+            text_template_name="  core/mail/messages/test_message.txt  ",
             reply_to=[" reply@example.com ", ""],
         )
 
         self.assertEqual("Template request", request.subject)
-        self.assertEqual("mail/messages/test_message.html", request.html_template_name)
-        self.assertEqual("mail/messages/test_message.txt", request.text_template_name)
+        self.assertEqual("core/mail/messages/test_message.html", request.html_template_name)
+        self.assertEqual("core/mail/messages/test_message.txt", request.text_template_name)
         self.assertEqual(("reply@example.com",), request.reply_to)
         self.assertEqual({"mail_title": "Template request"}, request.context)
 
@@ -32,5 +32,5 @@ class TestTemplateMailRequestDTO(LoggedSimpleTestCase):
                 to=[MailRecipientDTO(email="owner@example.com")],
                 context={},
                 html_template_name=" ",
-                text_template_name="mail/messages/test_message.txt",
+                text_template_name="core/mail/messages/test_message.txt",
             )

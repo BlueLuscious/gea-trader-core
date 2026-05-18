@@ -1,6 +1,6 @@
 # Core Mail Templates
 
-This document explains the shared mail template structure under `core/templates/mail/`.
+This document explains the shared mail template structure under `core/templates/core/mail/`.
 
 See also:
 
@@ -23,9 +23,9 @@ They should:
 
 Mail templates live under:
 
-- `core/templates/mail/layouts/`
-- `core/templates/mail/partials/`
-- `core/templates/mail/messages/`
+- `core/templates/core/mail/layouts/`
+- `core/templates/core/mail/partials/`
+- `core/templates/core/mail/messages/`
 
 Current structure:
 

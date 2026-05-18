@@ -74,8 +74,8 @@ request = TemplateMailRequestDTO(
         "mail_title": "Example notification",
         "mail_body": "This message was composed directly.",
     },
-    html_template_name="mail/messages/test_message.html",
-    text_template_name="mail/messages/test_message.txt",
+    html_template_name="core/mail/messages/test_message.html",
+    text_template_name="core/mail/messages/test_message.txt",
 )
 
 message = TemplateMailComposer.compose(request)
@@ -150,8 +150,8 @@ class QuotationInquiryMailComposer:
                 "customer_name": inquiry.customer_name,
                 "customer_email": inquiry.customer_email,
             },
-            html_template_name="mail/messages/quotation_inquiry.html",
-            text_template_name="mail/messages/quotation_inquiry.txt",
+            html_template_name="core/mail/messages/quotation_inquiry.html",
+            text_template_name="core/mail/messages/quotation_inquiry.txt",
             tenant=inquiry.tenant,
             reply_to=TenantMailReplyPolicy.resolve_customer_reply_to(inquiry.customer_email),
         )

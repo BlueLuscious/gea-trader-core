@@ -9,4 +9,4 @@
 {% if mail_outro %}
 {{ mail_outro }}
 {% endif %}
-{% include "mail/partials/footer.txt" %}
+{% include "core/mail/partials/footer.txt" %}

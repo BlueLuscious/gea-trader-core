@@ -1,4 +1,4 @@
-{% extends "mail/layouts/base.txt" %}
+{% extends "core/mail/layouts/base.txt" %}
 
 {% block content %}
 {{ mail_body }}
