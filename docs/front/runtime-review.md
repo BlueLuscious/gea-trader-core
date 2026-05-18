@@ -27,7 +27,7 @@ Examples worth checking:
 - `front/static/js/pages/product-detail.js`
 - `quotation/templates/quotation/mail/messages/cart_quote_request_notification.html`
 - `quotation/templates/quotation/mail/messages/cart_quote_request_notification.txt`
-- `core/templates/mail/partials/footer.html`
+- `core/templates/core/mail/partials/footer.html`
 
 Rule:
 
