@@ -1,0 +1,5 @@
+.core-json-key-value__header,
+.core-json-key-value__row {
+  display: grid;
+  grid-template-columns: minmax(8rem, min(100%, 42rem)) minmax(8rem, min(100%, 42rem)) auto;
+}

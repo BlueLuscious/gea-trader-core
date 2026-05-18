@@ -1,52 +1,46 @@
+.core-json-key-value,
 .core-nested-json-key-value {
   min-width: 20rem;
 }
 
-.core-nested-json-key-value__header,
-.core-nested-json-key-value__row {
-  display: grid;
-  grid-template-columns: minmax(8rem, min(100%, 36rem)) minmax(8rem, min(100%, 36rem)) auto;
-  gap: 0.75rem;
-  align-items: center;
-}
-
+.core-json-key-value__header,
 .core-nested-json-key-value__header {
   margin-bottom: 0.375rem;
-  padding-inline-start: 0;
   color: var(--color-font-subtle-light, #6b7280);
   font-size: var(--text-xs, 0.75rem);
   font-weight: var(--font-weight-medium, 500);
 }
 
+.core-json-key-value__row,
+.core-nested-json-key-value__row {
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.core-json-key-value__rows,
 .core-nested-json-key-value__rows {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.core-nested-json-key-value__row {
-  padding-inline-start: calc((var(--nested-json-key-value-depth, 1) - 1) * 1.5rem);
-}
-
+.core-json-key-value__input,
 .core-nested-json-key-value__input {
   width: 100%;
   min-width: 0;
 }
 
-.core-nested-json-key-value__actions {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
+.core-json-key-value__add,
 .core-nested-json-key-value__add {
   margin-top: 0.75rem;
 }
 
+.core-json-key-value__remove,
 .core-nested-json-key-value__remove {
   flex-shrink: 0;
 }
 
+.dark .core-json-key-value__header,
 .dark .core-nested-json-key-value__header {
   color: var(--color-font-subtle-dark, #9ca3af);
 }

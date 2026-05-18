@@ -4,7 +4,7 @@ from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from core.forms.nested_json_key_value_widget import NestedJsonKeyValueWidget
+from core.forms.widgets import NestedJsonKeyValueWidget
 
 NestedJsonValue = str | dict[str, Any]
 NestedJsonDict = dict[str, NestedJsonValue]

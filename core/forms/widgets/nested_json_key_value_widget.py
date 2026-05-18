@@ -1,12 +1,11 @@
 """ Shared widget for editing bounded nested JSON key-value data. """
 
 from typing import Any
-from django import forms
 from django.utils.translation import gettext_lazy as _
-from unfold.widgets import INPUT_CLASSES
+from core.forms.widgets.base_json_key_value_widget import BaseJsonKeyValueWidget
 
 
-class NestedJsonKeyValueWidget(forms.Widget):
+class NestedJsonKeyValueWidget(BaseJsonKeyValueWidget):
     """ Render a bounded nested JSON object as key-value rows. """
 
     template_name = "core/forms/widgets/nested_json_key_value_widget.html"
@@ -16,9 +15,9 @@ class NestedJsonKeyValueWidget(forms.Widget):
         """ Load shared assets for the nested key-value JSON editor. """
 
         css = {
-            "all": ("core/forms/nested_json_key_value_widget.css",),
+            "all": ("core/forms/widgets/nested_json_key_value_widget.css",),
         }
-        js = ("core/forms/nested_json_key_value_widget.js",)
+        js = ("core/forms/widgets/nested_json_key_value_widget.js",)
 
     def __init__(
         self,
@@ -42,14 +41,16 @@ class NestedJsonKeyValueWidget(forms.Widget):
             add_child_label: Optional label for the add-child-row action.
             remove_label: Optional label for the remove-row action.
         """
-        super().__init__(attrs)
+        super().__init__(
+            attrs,
+            key_label=key_label,
+            value_label=value_label,
+            add_label=add_label,
+            remove_label=remove_label,
+        )
         self.validate_max_depth(max_depth)
         self.max_depth = max_depth
-        self.key_label = key_label or _("Key")
-        self.value_label = value_label or _("Value")
-        self.add_label = add_label or _("Add row")
         self.add_child_label = add_child_label or _("Add child row")
-        self.remove_label = remove_label or _("Remove row")
 
     def validate_max_depth(self, max_depth: int) -> None:
         """ Validate the configured maximum nesting depth.
@@ -90,40 +91,6 @@ class NestedJsonKeyValueWidget(forms.Widget):
         context["widget"]["remove_button_classes"] = self.get_remove_button_classes()
         return context
 
-    def get_input_classes(self) -> str:
-        """ Return Unfold-compatible text input classes for widget rows.
-
-        Returns:
-            str: CSS classes aligned with Unfold text inputs.
-        """
-        return " ".join(INPUT_CLASSES)
-
-    def get_add_button_classes(self) -> str:
-        """ Return Unfold-compatible classes for the add-root-row action.
-
-        Returns:
-            str: CSS classes aligned with a secondary admin action.
-        """
-        classes = [
-            "border",
-            "border-base-200",
-            "cursor-pointer",
-            "font-medium",
-            "px-3",
-            "py-2",
-            "rounded-default",
-            "shadow-xs",
-            "text-font-important-light",
-            "text-sm",
-            "transition-all",
-            "whitespace-nowrap",
-            "hover:bg-base-50",
-            "dark:border-base-700",
-            "dark:text-font-important-dark",
-            "dark:hover:bg-base-900",
-        ]
-        return " ".join(classes)
-
     def get_child_button_classes(self) -> str:
         """ Return Unfold-compatible classes for the add-child-row action.
 
@@ -131,37 +98,6 @@ class NestedJsonKeyValueWidget(forms.Widget):
             str: CSS classes aligned with the root add action.
         """
         return self.get_add_button_classes()
-
-    def get_remove_button_classes(self) -> str:
-        """ Return Unfold-compatible classes for the remove-row action.
-
-        Returns:
-            str: CSS classes aligned with a compact destructive admin action.
-        """
-        classes = [
-            "border",
-            "border-base-200",
-            "cursor-pointer",
-            "flex",
-            "font-medium",
-            "h-[38px]",
-            "items-center",
-            "justify-center",
-            "px-0",
-            "py-0",
-            "rounded-default",
-            "shadow-xs",
-            "text-center",
-            "text-red-600",
-            "text-sm",
-            "transition-all",
-            "w-[38px]",
-            "hover:bg-red-50",
-            "dark:border-base-700",
-            "dark:text-red-500",
-            "dark:hover:bg-red-500/20",
-        ]
-        return " ".join(classes)
 
     def build_rows(self, value: Any) -> list[dict[str, Any]]:
         """ Convert one nested JSON value into flat template row dictionaries.
@@ -409,22 +345,6 @@ class NestedJsonKeyValueWidget(forms.Widget):
             for index in range(row_count)
         ]
 
-    def has_submitted_widget(self, data: Any, name: str) -> bool:
-        """ Return whether the widget was present in submitted form data.
-
-        Args:
-            data: Submitted form data.
-            name: Bound field name, including form prefixes.
-
-        Returns:
-            bool: ``True`` when the widget's presence marker was submitted.
-        """
-        present_key = f"{name}__present"
-        if hasattr(data, "getlist"):
-            return bool(data.getlist(present_key))
-
-        return present_key in data
-
     def value_omitted_from_data(self, data: Any, files: Any, name: str) -> bool:
         """ Return whether the nested key-value widget was absent from submitted data.
 
@@ -436,28 +356,8 @@ class NestedJsonKeyValueWidget(forms.Widget):
         Returns:
             bool: ``True`` only when none of the widget-owned inputs were submitted.
         """
-        return not (
-            self.has_submitted_widget(data, name)
-            or self.get_repeated_values(data, f"{name}__row_id")
-            or self.get_repeated_values(data, f"{name}__key")
-            or self.get_repeated_values(data, f"{name}__value")
+        return self.value_omitted_from_owned_data(
+            data,
+            name,
+            suffixes=("row_id", "parent_id", "key", "value"),
         )
-
-    def get_repeated_values(self, data: Any, key: str) -> list[Any]:
-        """ Return submitted values from QueryDict-like or plain dictionary data.
-
-        Args:
-            data: Submitted form data.
-            key: Submitted input name.
-
-        Returns:
-            list[Any]: Values submitted for the provided key.
-        """
-        if hasattr(data, "getlist"):
-            return list(data.getlist(key))
-
-        value = data.get(key, "")
-        if isinstance(value, list | tuple):
-            return list(value)
-
-        return [value] if value != "" else []

@@ -74,13 +74,17 @@ class TestJsonKeyValueField(LoggedSimpleTestCase):
         self.assertFalse(omitted)
 
     def test_widget_context_uses_unfold_compatible_classes(self) -> None:
-        """ Verify rendered controls receive Unfold-compatible form classes. """
+        """ Verify rendered controls receive Unfold-compatible form classes and media. """
         field = JsonKeyValueField(required=False)
         context = field.widget.get_context("variant-attributes_json", {}, {})
+        rendered_media = str(field.widget.media)
 
         self.assertIn("border-base-200", context["widget"]["input_classes"])
         self.assertIn("rounded-default", context["widget"]["add_button_classes"])
         self.assertIn("text-red-600", context["widget"]["remove_button_classes"])
+        self.assertIn("core/forms/widgets/json_key_value_base.css", rendered_media)
+        self.assertIn("core/forms/widgets/json_key_value_widget.css", rendered_media)
+        self.assertIn("core/forms/widgets/json_key_value_widget.js", rendered_media)
 
     def test_widget_builds_rows_from_bound_submitted_values(self) -> None:
         """ Verify invalid bound forms can re-render submitted flat rows. """

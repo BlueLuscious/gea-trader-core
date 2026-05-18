@@ -27,6 +27,21 @@ These are re-exported from:
 
 - `core/forms/__init__.py`
 
+Internal field modules live in:
+
+- `core/forms/fields/`
+
+Internal widget modules live in:
+
+- `core/forms/widgets/`
+
+Widget static assets live in:
+
+- `core/static/core/forms/widgets/`
+
+`BaseJsonKeyValueWidget` is an internal extension point for shared widget labels, Unfold-compatible classes, submitted-data helpers, and shared CSS.
+Public consumers should import the concrete fields or widgets from `core.forms`, not from internal modules.
+
 ## `JsonKeyValueField`
 
 `JsonKeyValueField` normalizes repeated key-value rows into a flat JSON-compatible dictionary.
@@ -113,7 +128,7 @@ Current behavior:
 - can add root rows and child rows up to the configured `max_depth`
 - removes descendant rows when a parent row is removed
 - clears a scalar value when a child row is added to that row
-- loads its own CSS and JavaScript through the widget `Media` contract
+- loads shared base CSS plus its own CSS and JavaScript through the widget `Media` contract
 
 The widget uses Unfold-compatible classes for its visible controls.
 Keep additional CSS focused on nested layout and indentation only.
@@ -133,7 +148,7 @@ Current behavior:
 - supports Django admin inline prefixes
 - skips hidden `.empty-form` templates during JavaScript initialization
 - initializes newly added inline rows through Django admin `formset:added`
-- loads its own CSS and JavaScript through the widget `Media` contract
+- loads shared base CSS plus its own CSS and JavaScript through the widget `Media` contract
 
 The widget uses Unfold-compatible classes for its visible controls.
 Keep additional CSS focused on structure, spacing, and widget-specific layout only.

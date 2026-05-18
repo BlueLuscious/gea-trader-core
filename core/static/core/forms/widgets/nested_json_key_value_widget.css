@@ -1,0 +1,15 @@
+.core-nested-json-key-value__header,
+.core-nested-json-key-value__row {
+  display: grid;
+  grid-template-columns: minmax(8rem, min(100%, 36rem)) minmax(8rem, min(100%, 36rem)) auto;
+}
+
+.core-nested-json-key-value__row {
+  padding-inline-start: calc((var(--nested-json-key-value-depth, 1) - 1) * 1.5rem);
+}
+
+.core-nested-json-key-value__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

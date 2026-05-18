@@ -259,12 +259,16 @@ class TestNestedJsonKeyValueField(LoggedSimpleTestCase):
         self.assertFalse(omitted)
 
     def test_widget_context_includes_unfold_classes_and_max_depth(self) -> None:
-        """ Verify rendered controls receive Unfold-compatible classes and depth metadata. """
+        """ Verify rendered controls receive Unfold-compatible classes, media, and depth metadata. """
         field = NestedJsonKeyValueField(required=False, max_depth=3)
         context = field.widget.get_context("metadata", {"packaging": {"type": "drum"}}, {})
+        rendered_media = str(field.widget.media)
 
         self.assertEqual(context["widget"]["max_depth"], 3)
         self.assertIn("border-base-200", context["widget"]["input_classes"])
         self.assertIn("rounded-default", context["widget"]["add_button_classes"])
         self.assertEqual(context["widget"]["child_button_classes"], context["widget"]["add_button_classes"])
         self.assertIn("text-red-600", context["widget"]["remove_button_classes"])
+        self.assertIn("core/forms/widgets/json_key_value_base.css", rendered_media)
+        self.assertIn("core/forms/widgets/nested_json_key_value_widget.css", rendered_media)
+        self.assertIn("core/forms/widgets/nested_json_key_value_widget.js", rendered_media)

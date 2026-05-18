@@ -4,7 +4,7 @@ from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from core.forms.json_key_value_widget import JsonKeyValueWidget
+from core.forms.widgets import JsonKeyValueWidget
 
 
 class JsonKeyValueField(forms.Field):
