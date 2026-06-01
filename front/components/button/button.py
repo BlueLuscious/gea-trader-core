@@ -23,6 +23,8 @@ class ButtonController(Component):
         id: str = ""
         type: str = "button"
         href: str = ""
+        target: str = ""
+        rel: str = ""
         variant: str = ButtonVariant.SOLID.value
         size: str = ButtonSize.MD.value
         font_size: str = ""
@@ -51,10 +53,15 @@ class ButtonController(Component):
             ButtonSize.FULL.value: FontSize.MD.value,
         }.get(size, FontSize.MD.value)
 
+        target = kwargs.target.strip()
+        rel = kwargs.rel.strip() or ("noopener noreferrer" if kwargs.href and target == "_blank" else "")
+
         return dict(
             id=component_id,
             type=kwargs.type if kwargs.type in {"button", "submit", "reset"} else "button",
             href=kwargs.href,
+            target=target,
+            rel=rel,
             variant=normalize_enum(kwargs.variant, ButtonVariant, ButtonVariant.SOLID).value,
             size=size,
             font_size=normalize_enum(derived_font_size, FontSize, FontSize.MD).value,

@@ -6,6 +6,8 @@
   class="gc-button gc-button--{{ variant }} gc-button--{{ size }} gc-button--font-{{ font_size }} gc-button--radius-{{ radius }} {% if icon_only %}gc-button--icon-only{% endif %} {{ class_name }}"
   {% if href %}
     href="{{ href }}"
+    {% if target %}target="{{ target }}"{% endif %}
+    {% if rel %}rel="{{ rel }}"{% endif %}
   {% else %}
     type="{{ type }}"
     {% if disabled %}disabled{% endif %}

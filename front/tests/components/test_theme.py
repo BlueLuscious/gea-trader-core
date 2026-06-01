@@ -69,6 +69,32 @@ class ThemeLayoutTests(LoggedTestCase):
         self.assertIn('data-carousel-prev="true"', html)
         self.assertIn('data-tracking-id="123"', html)
 
+    def test_button_renders_anchor_target_and_rel(self):
+        html = self.render_template(
+            """
+            {% component "button" href="https://example.com" target="_blank" rel="external" %}
+              {% fill "content" %}External{% endfill %}
+            {% endcomponent %}
+            """
+        )
+
+        self.assertIn("<a", html)
+        self.assertIn('href="https://example.com"', html)
+        self.assertIn('target="_blank"', html)
+        self.assertIn('rel="external"', html)
+
+    def test_button_defaults_blank_anchor_rel_to_noopener_noreferrer(self):
+        html = self.render_template(
+            """
+            {% component "button" href="https://example.com" target="_blank" %}
+              {% fill "content" %}External{% endfill %}
+            {% endcomponent %}
+            """
+        )
+
+        self.assertIn('target="_blank"', html)
+        self.assertIn('rel="noopener noreferrer"', html)
+
     def test_switch_renders_as_generic_control(self):
         html = self.render_template(
             """
