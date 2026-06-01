@@ -196,6 +196,7 @@ Current concrete use cases:
 - display tenant-aware owner admin metadata such as title and header
 - switch tenant context explicitly from the owner admin dropdown
 - let active tenant owners update tenant branding from the owner admin business settings screen
+- present owner branding settings as display metadata, visual assets, and social links in separate admin sections
 - prefix uploaded media under `tenants/<tenant-slug>/...`
 
 These are internal or admin-facing use cases.

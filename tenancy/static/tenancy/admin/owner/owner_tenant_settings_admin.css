@@ -1,3 +1,7 @@
 #branding-group .inline-related > h3 {
     display: none;
 }
+
+#branding-group .inline-related fieldset.module > .leading-relaxed {
+    padding-inline: 0.75rem;
+}

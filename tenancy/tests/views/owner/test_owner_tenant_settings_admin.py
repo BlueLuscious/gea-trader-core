@@ -5,8 +5,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from core.testing.base import LoggedTestCase
+from core.adminsites.site_instances import owner_admin_site
 from accounts.models import UserModel
 from tenancy.choices import TenantRole
+from tenancy.admin.owner.tenant_branding_inline import TenantBrandingInline
+from tenancy.admin.owner.tenant_branding_inline_form import TenantBrandingInlineForm
+from tenancy.admin.owner.owner_tenant_settings_admin import OwnerTenantSettingsAdmin
 from tenancy.models import TenantBrandingModel, TenantMembershipModel, TenantModel
 
 
@@ -94,6 +98,47 @@ class TestOwnerTenantSettingsAdmin(LoggedTestCase):
         )
 
         self.assertEqual(403, response.status_code)
+
+    def test_branding_inline_form_exposes_owner_friendly_copy(self) -> None:
+        """ Verify the branding inline form uses owner-facing labels and guidance. """
+        form = TenantBrandingInlineForm()
+
+        self.assertEqual(_("Public display name"), form.fields["display_name"].label)
+        self.assertEqual(
+            _("Optional name shown on public and admin surfaces instead of the business name."),
+            form.fields["display_name"].help_text,
+        )
+        self.assertEqual(
+            _("Browser icon variant intended for light browser themes."),
+            form.fields["favicon_light"].help_text,
+        )
+        self.assertEqual(
+            _("Optional public LinkedIn profile or company page shown on contact surfaces."),
+            form.fields["linkedin_url"].help_text,
+        )
+
+    def test_branding_inline_groups_display_assets_and_social_links(self) -> None:
+        """ Verify the branding inline keeps display, assets, and social links separate. """
+        self.assertEqual(
+            [_("Display"), _("Visual assets"), _("Social links")],
+            [fieldset[0] for fieldset in TenantBrandingInline.fieldsets],
+        )
+        self.assertEqual(
+            [None, None, None],
+            [fieldset[1].get("classes") for fieldset in TenantBrandingInline.fieldsets],
+        )
+        self.assertEqual(("display_name",), TenantBrandingInline.fieldsets[0][1]["fields"][0])
+        self.assertIn(("logo_light", "logo_dark"), TenantBrandingInline.fieldsets[1][1]["fields"])
+        self.assertIn(("instagram_url", "facebook_url"), TenantBrandingInline.fieldsets[2][1]["fields"])
+
+    def test_owner_tenant_settings_admin_loads_custom_css_for_fieldset_description_spacing(self) -> None:
+        """ Verify the tenant settings admin loads the CSS tweak for fieldset descriptions. """
+        tenant_admin = OwnerTenantSettingsAdmin(TenantModel, owner_admin_site)
+
+        self.assertIn(
+            "tenancy/admin/owner/owner_tenant_settings_admin.css",
+            str(tenant_admin.media),
+        )
 
     def test_post_creates_branding_record_for_active_tenant(self) -> None:
         """ Verify posting valid inline data creates one branding record for the active tenant. """

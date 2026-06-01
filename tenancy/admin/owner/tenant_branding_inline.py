@@ -24,14 +24,30 @@ class TenantBrandingInline(StackedInline):
     verbose_name_plural = _("Business branding")
     fieldsets = (
         (
-            None,
+            _("Display"),
             {
-                "classes": ("tab",),
+                "description": _("Control the name shown when branding is rendered for this business."),
                 "fields": (
                     ("display_name",),
+                ),
+            },
+        ),
+        (
+            _("Visual assets"),
+            {
+                "description": _("Upload light and dark variants so each surface can pick the best fit."),
+                "fields": (
                     ("logo_light", "logo_dark",),
                     ("icon_light", "icon_dark",),
                     ("favicon_light", "favicon_dark",),
+                ),
+            },
+        ),
+        (
+            _("Social links"),
+            {
+                "description": _("Optional public social profiles shown on storefront contact surfaces."),
+                "fields": (
                     ("instagram_url", "facebook_url",),
                     ("linkedin_url",),
                 ),

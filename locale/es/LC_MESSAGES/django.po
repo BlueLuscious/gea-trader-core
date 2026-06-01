@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-17 05:35-0300\n"
+"POT-Creation-Date: 2026-06-01 18:17-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -890,63 +890,60 @@ msgstr "Admin del negocio"
 msgid "Business operations"
 msgstr "Operaciones del negocio"
 
-#: .\core\forms\json_key_value_field.py:15
+#: .\core\forms\fields\json_key_value_field.py:15
 msgid "Enter a valid key-value list."
 msgstr "Ingresa una lista clave-valor válida."
 
-#: .\core\forms\json_key_value_field.py:16
+#: .\core\forms\fields\json_key_value_field.py:16
 msgid "Keys are required when a value is provided."
 msgstr "Las claves son obligatorias cuando se proporciona un valor."
 
-#: .\core\forms\json_key_value_field.py:17
+#: .\core\forms\fields\json_key_value_field.py:17
 msgid "Keys must be unique."
 msgstr "Las claves deben ser únicas."
 
-#: .\core\forms\json_key_value_widget.py:41
-#: .\core\forms\nested_json_key_value_widget.py:48
-msgid "Key"
-msgstr "Clave"
-
-#: .\core\forms\json_key_value_widget.py:42
-#: .\core\forms\nested_json_key_value_widget.py:49
-msgid "Value"
-msgstr "Valor"
-
-#: .\core\forms\json_key_value_widget.py:43
-#: .\core\forms\nested_json_key_value_widget.py:50
-msgid "Add row"
-msgstr "Agregar fila"
-
-#: .\core\forms\json_key_value_widget.py:44
-#: .\core\forms\nested_json_key_value_widget.py:52
-msgid "Remove row"
-msgstr "Eliminar fila"
-
-#: .\core\forms\nested_json_key_value_field.py:18
+#: .\core\forms\fields\nested_json_key_value_field.py:18
 msgid "Enter a valid nested key-value list."
 msgstr "Ingresa una lista clave-valor anidada válida."
 
-#: .\core\forms\nested_json_key_value_field.py:19
+#: .\core\forms\fields\nested_json_key_value_field.py:19
 msgid "Nested key-value depth is not valid."
 msgstr "La profundidad de clave-valor anidada no es válida."
 
-#: .\core\forms\nested_json_key_value_field.py:20
+#: .\core\forms\fields\nested_json_key_value_field.py:20
 msgid "Keys are required when a value or child rows are provided."
-msgstr "Las claves son obligatorias cuando se proporciona un valor o filas hijas."
+msgstr ""
+"Las claves son obligatorias cuando se proporciona un valor o filas hijas."
 
-#: .\core\forms\nested_json_key_value_field.py:21
+#: .\core\forms\fields\nested_json_key_value_field.py:21
 msgid "Keys must be unique within the same level."
 msgstr "Las claves deben ser únicas dentro del mismo nivel."
 
-#: .\core\forms\nested_json_key_value_field.py:22
+#: .\core\forms\fields\nested_json_key_value_field.py:22
 msgid "Nested key-value rows exceed the allowed depth."
 msgstr "Las filas clave-valor anidadas superan la profundidad permitida."
 
-#: .\core\forms\nested_json_key_value_field.py:23
+#: .\core\forms\fields\nested_json_key_value_field.py:23
 msgid "A key cannot have both a value and child rows."
 msgstr "Una clave no puede tener un valor y filas hijas al mismo tiempo."
 
-#: .\core\forms\nested_json_key_value_widget.py:51
+#: .\core\forms\widgets\base_json_key_value_widget.py:38
+msgid "Key"
+msgstr "Clave"
+
+#: .\core\forms\widgets\base_json_key_value_widget.py:39
+msgid "Value"
+msgstr "Valor"
+
+#: .\core\forms\widgets\base_json_key_value_widget.py:40
+msgid "Add row"
+msgstr "Agregar fila"
+
+#: .\core\forms\widgets\base_json_key_value_widget.py:41
+msgid "Remove row"
+msgstr "Eliminar fila"
+
+#: .\core\forms\widgets\nested_json_key_value_widget.py:53
 msgid "Add child row"
 msgstr "Agregar fila hija"
 
@@ -1818,25 +1815,25 @@ msgstr ""
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:22
 #: .\tenancy\models\tenant_model.py:37
-#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:60
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:64
 msgid "Business email"
 msgstr "Correo del negocio"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:23
 #: .\tenancy\models\tenant_model.py:42
-#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:61
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:65
 msgid "Support email"
 msgstr "Correo de soporte"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:24
 #: .\tenancy\models\tenant_model.py:48
-#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:62
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:66
 msgid "Phone number"
 msgstr "Teléfono"
 
 #: .\tenancy\admin\owner\owner_tenant_settings_form.py:25
 #: .\tenancy\models\tenant_model.py:53
-#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:63
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:67
 msgid "Website"
 msgstr "Sitio web"
 
@@ -1870,6 +1867,138 @@ msgstr "URL pública opcional del sitio web de este negocio."
 msgid "Business branding"
 msgstr "Marca del negocio"
 
+#: .\tenancy\admin\owner\tenant_branding_inline.py:27
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:123
+msgid "Display"
+msgstr "Presentación"
+
+#: .\tenancy\admin\owner\tenant_branding_inline.py:29
+msgid "Control the name shown when branding is rendered for this business."
+msgstr "Controla el nombre que se muestra cuando se renderiza la marca de este negocio."
+
+#: .\tenancy\admin\owner\tenant_branding_inline.py:36
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:123
+msgid "Visual assets"
+msgstr "Recursos visuales"
+
+#: .\tenancy\admin\owner\tenant_branding_inline.py:38
+msgid "Upload light and dark variants so each surface can pick the best fit."
+msgstr "Sube variantes claras y oscuras para que cada superficie pueda elegir la más adecuada."
+
+#: .\tenancy\admin\owner\tenant_branding_inline.py:47
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:123
+msgid "Social links"
+msgstr "Enlaces sociales"
+
+#: .\tenancy\admin\owner\tenant_branding_inline.py:49
+msgid "Optional public social profiles shown on storefront contact surfaces."
+msgstr "Perfiles sociales públicos opcionales que se muestran en superficies de contacto de la tienda."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:28
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:106
+msgid "Public display name"
+msgstr "Nombre público visible"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:29
+#: .\tenancy\models\tenant_branding_model.py:31
+msgid "Light logo"
+msgstr "Logo claro"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:30
+#: .\tenancy\models\tenant_branding_model.py:37
+msgid "Dark logo"
+msgstr "Logo oscuro"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:31
+#: .\tenancy\models\tenant_branding_model.py:43
+msgid "Light icon"
+msgstr "Ícono claro"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:32
+#: .\tenancy\models\tenant_branding_model.py:49
+msgid "Dark icon"
+msgstr "Ícono oscuro"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:33
+#: .\tenancy\models\tenant_branding_model.py:55
+msgid "Light favicon"
+msgstr "Favicon claro"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:34
+#: .\tenancy\models\tenant_branding_model.py:61
+msgid "Dark favicon"
+msgstr "Favicon oscuro"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:35
+#: .\tenancy\models\tenant_branding_model.py:66
+msgid "Instagram URL"
+msgstr "URL de Instagram"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:36
+#: .\tenancy\models\tenant_branding_model.py:71
+msgid "Facebook URL"
+msgstr "URL de Facebook"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:37
+#: .\tenancy\models\tenant_branding_model.py:76
+msgid "LinkedIn URL"
+msgstr "URL de LinkedIn"
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:40
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:108
+msgid ""
+"Optional name shown on public and admin surfaces instead of the business "
+"name."
+msgstr ""
+"Nombre opcional que se muestra en superficies públicas y de admin en lugar "
+"del nombre del negocio."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:41
+msgid ""
+"Logo for light backgrounds, such as light storefront sections or emails."
+msgstr ""
+"Logo para fondos claros, como secciones claras de la tienda o correos."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:42
+msgid ""
+"Logo for dark backgrounds, such as dark storefront sections or admin chrome."
+msgstr ""
+"Logo para fondos oscuros, como secciones oscuras de la tienda o la interfaz "
+"del admin."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:43
+msgid "Compact icon for light backgrounds when a full logo would be too large."
+msgstr "Ícono compacto para fondos claros cuando un logo completo sería demasiado grande."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:44
+msgid "Compact icon for dark backgrounds when a full logo would be too large."
+msgstr "Ícono compacto para fondos oscuros cuando un logo completo sería demasiado grande."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:45
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:112
+msgid "Browser icon variant intended for light browser themes."
+msgstr "Variante del ícono del navegador pensada para temas claros del navegador."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:46
+msgid "Browser icon variant intended for dark browser themes."
+msgstr "Variante del ícono del navegador pensada para temas oscuros del navegador."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:47
+msgid "Optional public Instagram profile shown on contact surfaces."
+msgstr "Perfil público opcional de Instagram que se muestra en superficies de contacto."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:48
+msgid "Optional public Facebook page shown on contact surfaces."
+msgstr "Página pública opcional de Facebook que se muestra en superficies de contacto."
+
+#: .\tenancy\admin\owner\tenant_branding_inline_form.py:49
+#: .\tenancy\tests\views\owner\test_owner_tenant_settings_admin.py:116
+msgid ""
+"Optional public LinkedIn profile or company page shown on contact surfaces."
+msgstr ""
+"Perfil público o página de empresa opcional de LinkedIn que se muestra en "
+"superficies de contacto."
+
 #: .\tenancy\choices\tenant_role.py:10
 msgid "Master"
 msgstr "Maestro"
@@ -1890,60 +2019,32 @@ msgstr ""
 "Nombre público opcional que se usa en lugar del nombre del negocio cuando se "
 "muestra el branding."
 
-#: .\tenancy\models\tenant_branding_model.py:31
-msgid "Light logo"
-msgstr "Logo claro"
-
 #: .\tenancy\models\tenant_branding_model.py:32
 msgid "Logo variant intended for light backgrounds."
 msgstr "Variante del logo pensada para fondos claros."
-
-#: .\tenancy\models\tenant_branding_model.py:37
-msgid "Dark logo"
-msgstr "Logo oscuro"
 
 #: .\tenancy\models\tenant_branding_model.py:38
 msgid "Logo variant intended for dark backgrounds."
 msgstr "Variante del logo pensada para fondos oscuros."
 
-#: .\tenancy\models\tenant_branding_model.py:43
-msgid "Light icon"
-msgstr "Ícono claro"
-
 #: .\tenancy\models\tenant_branding_model.py:44
 msgid "Compact icon variant intended for light backgrounds."
 msgstr "Variante compacta del ícono pensada para fondos claros."
 
-#: .\tenancy\models\tenant_branding_model.py:49
-msgid "Dark icon"
-msgstr "Ícono oscuro"
-
 #: .\tenancy\models\tenant_branding_model.py:50
 msgid "Compact icon variant intended for dark backgrounds."
 msgstr "Variante compacta del ícono pensada para fondos oscuros."
-
-#: .\tenancy\models\tenant_branding_model.py:55
-msgid "Light favicon"
-msgstr "Favicon claro"
 
 #: .\tenancy\models\tenant_branding_model.py:56
 msgid "Favicon variant intended for light browser themes or light backgrounds."
 msgstr ""
 "Variante del favicon pensada para temas claros del navegador o fondos claros."
 
-#: .\tenancy\models\tenant_branding_model.py:61
-msgid "Dark favicon"
-msgstr "Favicon oscuro"
-
 #: .\tenancy\models\tenant_branding_model.py:62
 msgid "Favicon variant intended for dark browser themes or dark backgrounds."
 msgstr ""
 "Variante del favicon pensada para temas oscuros del navegador o fondos "
 "oscuros."
-
-#: .\tenancy\models\tenant_branding_model.py:66
-msgid "Instagram URL"
-msgstr "URL de Instagram"
 
 #: .\tenancy\models\tenant_branding_model.py:67
 msgid ""
@@ -1952,20 +2053,12 @@ msgstr ""
 "Perfil público de Instagram que se usa en el pie del sitio y en las "
 "superficies de contacto."
 
-#: .\tenancy\models\tenant_branding_model.py:71
-msgid "Facebook URL"
-msgstr "URL de Facebook"
-
 #: .\tenancy\models\tenant_branding_model.py:72
 msgid ""
 "Public Facebook page used in the storefront footer and contact surfaces."
 msgstr ""
 "Página pública de Facebook que se usa en el pie del sitio y en las "
 "superficies de contacto."
-
-#: .\tenancy\models\tenant_branding_model.py:76
-msgid "LinkedIn URL"
-msgstr "URL de LinkedIn"
 
 #: .\tenancy\models\tenant_branding_model.py:77
 msgid ""
