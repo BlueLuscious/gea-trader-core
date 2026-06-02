@@ -2,7 +2,9 @@
 
 from django.http import HttpRequest
 from django import forms
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from core.forms import ActionInputWidget
 from masterdata.models import CategoryModel
 
 
@@ -25,6 +27,38 @@ class CategoryModelAdminForm(forms.ModelForm):
         active_tenant = getattr(request, "tenant", None)
         if active_tenant is not None:
             self.instance.tenant = active_tenant
+
+        self.configure_slug_widget()
+
+    def configure_slug_widget(self) -> None:
+        """ Configure the slug field with the reusable action input widget.
+
+        Returns:
+            None: The form field widget is updated in place.
+        """
+        slug_field = self.fields["slug"]
+        existing_attrs = slug_field.widget.attrs.copy()
+        self.fields["slug"].widget = ActionInputWidget(
+            attrs=existing_attrs,
+            action_url=reverse("owner_admin:masterdata_categorymodel_suggest_slug"),
+            action_label=_("Suggest slug"),
+            response_value_key="slug",
+            source_params=[
+                {
+                    "name": "name",
+                    "selector": "#id_name",
+                    "scope": "document",
+                },
+                {
+                    "name": "parent",
+                    "selector": "#id_parent",
+                    "scope": "document",
+                },
+            ],
+            static_params={
+                "object_id": str(self.instance.pk or ""),
+            },
+        )
 
     def clean_slug(self) -> str:
         """ Validate that the category slug stays unique inside the active tenant.

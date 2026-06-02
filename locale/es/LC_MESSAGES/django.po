@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-02 01:13-0300\n"
+"POT-Creation-Date: 2026-06-02 04:02-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -469,7 +469,7 @@ msgstr ""
 
 #: .\catalog\admin\owner\product_model_admin.py:81
 #: .\masterdata\admin\owner\brand_model_admin.py:54
-#: .\masterdata\admin\owner\category_model_admin.py:81
+#: .\masterdata\admin\owner\category_model_admin.py:83
 msgid "Advanced details"
 msgstr "Detalles avanzados"
 
@@ -522,8 +522,8 @@ msgstr "Nombre del producto"
 #: .\catalog\admin\owner\product_model_admin_form.py:25
 #: .\catalog\models\product_model.py:57
 #: .\masterdata\admin\owner\brand_model_admin_form.py:18
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:23
-#: .\masterdata\admin\owner\category_model_admin_form.py:64
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:66
+#: .\masterdata\admin\owner\category_model_admin_form.py:98
 #: .\masterdata\models\brand_model.py:33
 #: .\masterdata\models\category_model.py:36
 msgid "URL slug"
@@ -646,8 +646,8 @@ msgstr "Disponible para seleccionar"
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:53
 #: .\catalog\models\product_image_model.py:47
 #: .\catalog\models\product_variant_model.py:65
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:24
-#: .\masterdata\admin\owner\category_model_admin_form.py:68
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:67
+#: .\masterdata\admin\owner\category_model_admin_form.py:102
 #: .\masterdata\models\category_model.py:62
 msgid "Display order"
 msgstr "Orden de visualización"
@@ -1295,15 +1295,15 @@ msgid "Brand name"
 msgstr "Nombre de la marca"
 
 #: .\masterdata\admin\owner\brand_model_admin_form.py:19
-#: .\masterdata\admin\owner\category_model_admin_form.py:65
+#: .\masterdata\admin\owner\category_model_admin_form.py:99
 #: .\masterdata\models\brand_model.py:39
 #: .\masterdata\models\category_model.py:42
 msgid "Description"
 msgstr "Descripción"
 
 #: .\masterdata\admin\owner\brand_model_admin_form.py:20
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:25
-#: .\masterdata\admin\owner\category_model_admin_form.py:69
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:68
+#: .\masterdata\admin\owner\category_model_admin_form.py:103
 #: .\masterdata\models\brand_model.py:44
 #: .\masterdata\models\category_model.py:67
 msgid "Available for products"
@@ -1342,11 +1342,16 @@ msgstr "Subcategoría"
 msgid "Subcategories"
 msgstr "Subcategorías"
 
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:22
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:34
+#: .\masterdata\admin\owner\category_model_admin_form.py:44
+msgid "Suggest slug"
+msgstr "Sugerir slug"
+
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:65
 msgid "Subcategory name"
 msgstr "Nombre de la subcategoría"
 
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:28
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:71
 msgid ""
 "Usually created from the subcategory name. Adjust it only when you need a "
 "custom URL."
@@ -1354,25 +1359,25 @@ msgstr ""
 "Normalmente se crea a partir del nombre de la subcategoría. Ajústalo solo si "
 "necesitas una URL personalizada."
 
-#: .\masterdata\admin\owner\category_child_model_inline_form.py:29
+#: .\masterdata\admin\owner\category_child_model_inline_form.py:72
 msgid "Lower values appear first inside this parent category."
 msgstr "Los valores más bajos aparecen primero dentro de esta categoría padre."
 
-#: .\masterdata\admin\owner\category_model_admin.py:46
+#: .\masterdata\admin\owner\category_model_admin.py:48
 msgid "Category details"
 msgstr "Detalles de la categoría"
 
-#: .\masterdata\admin\owner\category_model_admin.py:49
+#: .\masterdata\admin\owner\category_model_admin.py:51
 msgid "Create reusable category references for the active business catalog."
 msgstr ""
 "Crea referencias de categorías reutilizables para el catálogo activo del "
 "negocio."
 
-#: .\masterdata\admin\owner\category_model_admin.py:57
+#: .\masterdata\admin\owner\category_model_admin.py:59
 msgid "Storefront presentation"
 msgstr "Presentación en la vitrina"
 
-#: .\masterdata\admin\owner\category_model_admin.py:61
+#: .\masterdata\admin\owner\category_model_admin.py:63
 msgid ""
 "Control how this category should appear on public category pages and curated "
 "storefront sections."
@@ -1380,11 +1385,11 @@ msgstr ""
 "Controla cómo debe aparecer esta categoría en páginas públicas de categoría "
 "y secciones curadas de la vitrina."
 
-#: .\masterdata\admin\owner\category_model_admin.py:70
+#: .\masterdata\admin\owner\category_model_admin.py:72
 msgid "Catalog organization"
 msgstr "Organización del catálogo"
 
-#: .\masterdata\admin\owner\category_model_admin.py:73
+#: .\masterdata\admin\owner\category_model_admin.py:75
 msgid ""
 "Set the parent relationship, display order, and availability for this "
 "category."
@@ -1392,11 +1397,11 @@ msgstr ""
 "Define la relación padre, el orden de visualización y la disponibilidad de "
 "esta categoría."
 
-#: .\masterdata\admin\owner\category_model_admin.py:84
+#: .\masterdata\admin\owner\category_model_admin.py:86
 msgid "Read-only audit details for this category."
 msgstr "Detalles de auditoría de solo lectura para esta categoría."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:37
+#: .\masterdata\admin\owner\category_model_admin_form.py:86
 msgid ""
 "This URL slug is already used by another category in this business. Choose a "
 "different slug."
@@ -1404,27 +1409,27 @@ msgstr ""
 "Este slug de URL ya está siendo usado por otra categoría en este negocio. "
 "Elige un slug diferente."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:63
+#: .\masterdata\admin\owner\category_model_admin_form.py:97
 #: .\masterdata\models\category_model.py:31
 msgid "Category name"
 msgstr "Nombre de la categoría"
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:66
+#: .\masterdata\admin\owner\category_model_admin_form.py:100
 #: .\masterdata\models\category_model.py:48
 msgid "Banner"
 msgstr "Banner"
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:67
+#: .\masterdata\admin\owner\category_model_admin_form.py:101
 #: .\masterdata\models\category_model.py:57
 msgid "Parent category"
 msgstr "Categoría padre"
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:70
+#: .\masterdata\admin\owner\category_model_admin_form.py:104
 #: .\masterdata\models\category_model.py:72
 msgid "Featured on the site"
 msgstr "Destacada en el sitio"
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:73
+#: .\masterdata\admin\owner\category_model_admin_form.py:107
 #: .\masterdata\models\category_model.py:37
 msgid ""
 "Usually created from the category name. Adjust it only when you need a "
@@ -1433,7 +1438,7 @@ msgstr ""
 "Normalmente se crea a partir del nombre de la categoría. Ajústalo solo si "
 "necesitas una URL personalizada."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:74
+#: .\masterdata\admin\owner\category_model_admin_form.py:108
 #: .\masterdata\models\category_model.py:43
 msgid ""
 "Optional. Add short guidance so your team understands when to use this "
@@ -1442,7 +1447,7 @@ msgstr ""
 "Opcional. Agrega una breve guía para que tu equipo entienda cuándo usar esta "
 "categoría."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:75
+#: .\masterdata\admin\owner\category_model_admin_form.py:109
 #: .\masterdata\models\category_model.py:49
 msgid ""
 "Optional public banner image for category pages and featured category cards."
@@ -1450,7 +1455,7 @@ msgstr ""
 "Imagen de banner pública opcional para páginas de categoría y tarjetas de "
 "categorías destacadas."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:76
+#: .\masterdata\admin\owner\category_model_admin_form.py:110
 #: .\masterdata\models\category_model.py:58
 msgid ""
 "Optional. Leave empty to keep this category at the root level of the "
@@ -1459,13 +1464,13 @@ msgstr ""
 "Opcional. Déjalo vacío para mantener esta categoría en el nivel raíz del "
 "catálogo del negocio."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:77
+#: .\masterdata\admin\owner\category_model_admin_form.py:111
 #: .\masterdata\models\category_model.py:63
 msgid "Lower values appear first when categories are listed."
 msgstr ""
 "Los valores más bajos aparecen primero cuando se listan las categorías."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:78
+#: .\masterdata\admin\owner\category_model_admin_form.py:112
 #: .\masterdata\models\category_model.py:68
 msgid ""
 "Disable this category when you want to stop offering it without deleting its "
@@ -1474,7 +1479,7 @@ msgstr ""
 "Desactiva esta categoría cuando quieras dejar de ofrecerla sin borrar su "
 "historial."
 
-#: .\masterdata\admin\owner\category_model_admin_form.py:79
+#: .\masterdata\admin\owner\category_model_admin_form.py:113
 #: .\masterdata\models\category_model.py:73
 msgid ""
 "Highlight this root category when building curated public storefront "
@@ -1482,6 +1487,10 @@ msgid ""
 msgstr ""
 "Destaca esta categoría raíz al construir secciones curadas de la vitrina "
 "pública."
+
+#: .\masterdata\admin\owner\views\category_slug_suggestion_view.py:31
+msgid "Category slug suggestions require an active business."
+msgstr "Las sugerencias de slug de categoría requieren un negocio activo."
 
 #: .\masterdata\apps.py:10
 msgid "Reference data"

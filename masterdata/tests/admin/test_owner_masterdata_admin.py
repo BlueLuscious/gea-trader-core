@@ -8,10 +8,12 @@ from django.urls import reverse
 from django.utils.translation import override
 from accounts.models import UserModel
 from core.adminsites.site_instances import owner_admin_site
+from core.forms import ActionInputWidget
 from core.testing.base import LoggedTestCase
 from masterdata.admin.owner.brand_model_admin import BrandModelAdmin
 from masterdata.admin.owner.category_child_model_inline import CategoryChildModelInline
 from masterdata.admin.owner.category_model_admin import CategoryModelAdmin
+from masterdata.admin.owner.category_slug_suggestion_builder import CategorySlugSuggestionBuilder
 from masterdata.models import BrandModel, CategoryModel
 from tenancy.choices import TenantRole
 from tenancy.models import TenantMembershipModel, TenantModel
@@ -342,9 +344,121 @@ class TestOwnerMasterdataAdmin(LoggedTestCase):
             }
         )
 
-        self.assertFalse(form.is_valid())
-        self.assertIn("slug", form.errors)
-        self.assertIn("already used by another category", form.errors["slug"][0])
+        with override("en"):
+            self.assertFalse(form.is_valid())
+            self.assertIn("slug", form.errors)
+            self.assertIn("already used by another category", form.errors["slug"][0])
+
+    def test_category_admin_form_uses_action_input_widget_for_slug_suggestions(self) -> None:
+        """ Verify the owner category form wires slug suggestions through the reusable widget. """
+        request = self.build_request(self.operator, self.tenant)
+        form_class = self.category_admin.get_form(request, obj=self.in_scope_category, change=True)
+        form = form_class(instance=self.in_scope_category)
+        widget = form.fields["slug"].widget
+
+        self.assertIsInstance(widget, ActionInputWidget)
+        self.assertEqual("255", widget.attrs.get("maxlength"))
+        self.assertEqual("slug", widget.response_value_key)
+        self.assertEqual({"object_id": str(self.in_scope_category.pk)}, widget.static_params)
+        self.assertIn({"name": "name", "selector": "#id_name", "scope": "document"}, widget.source_params)
+        self.assertIn({"name": "parent", "selector": "#id_parent", "scope": "document"}, widget.source_params)
+
+    def test_category_child_inline_form_uses_action_input_widget_for_slug_suggestions(self) -> None:
+        """ Verify child category inlines wire slug suggestions through the reusable widget. """
+        inline = CategoryChildModelInline(CategoryModel, owner_admin_site)
+        request = self.build_request(self.operator, self.tenant)
+        formset_class = inline.get_formset(request, obj=self.in_scope_category)
+        formset = formset_class(instance=self.in_scope_category)
+        widget = formset.forms[0].fields["slug"].widget
+
+        self.assertIsInstance(widget, ActionInputWidget)
+        self.assertEqual("255", widget.attrs.get("maxlength"))
+        self.assertEqual("slug", widget.response_value_key)
+        self.assertIn(
+            {
+                "name": "name",
+                "selector": 'input[id$="-name"]',
+                "scope": "closest",
+                "closest_selector": "tr",
+            },
+            widget.source_params,
+        )
+        self.assertIn(
+            {"name": "parent_slug", "selector": "#id_slug", "scope": "document"},
+            widget.source_params,
+        )
+
+    def test_category_add_view_renders_action_input_widget_assets(self) -> None:
+        """ Verify the owner category add view includes generic action input assets. """
+        self.client.force_login(self.operator)
+        session = self.client.session
+        session["active_tenant_id"] = str(self.tenant.pk)
+        session.save()
+
+        response = self.client.get(reverse("owner_admin:masterdata_categorymodel_add"))
+
+        self.assertEqual(200, response.status_code)
+        self.assertContains(response, "core/forms/widgets/action_input_widget.css")
+        self.assertContains(response, "core/forms/widgets/action_input_widget.js")
+        self.assertContains(response, "data-action-input-widget")
+        self.assertContains(response, reverse("owner_admin:masterdata_categorymodel_suggest_slug"))
+
+    def test_category_slug_suggestion_uses_incremental_suffix_for_duplicate_roots(self) -> None:
+        """ Verify root category slug suggestions stay readable when the base slug exists. """
+        suggested_slug = CategorySlugSuggestionBuilder.build(
+            tenant=self.tenant,
+            name=self.in_scope_category.name,
+        )
+
+        self.assertEqual("industrial-2", suggested_slug)
+
+    def test_category_slug_suggestion_prefixes_children_with_the_parent_slug(self) -> None:
+        """ Verify child category slug suggestions include the persisted parent slug. """
+        suggested_slug = CategorySlugSuggestionBuilder.build(
+            tenant=self.tenant,
+            name="Hydraulic Oils",
+            parent_id=str(self.in_scope_category.pk),
+        )
+
+        self.assertEqual("industrial-hydraulic-oils", suggested_slug)
+
+    def test_category_slug_suggestion_accepts_unsaved_parent_slug_for_inlines(self) -> None:
+        """ Verify add-page inline children can use the unsaved parent slug as prefix. """
+        suggested_slug = CategorySlugSuggestionBuilder.build(
+            tenant=self.tenant,
+            name="Hydraulic Oils",
+            parent_slug="New Industrial",
+        )
+
+        self.assertEqual("new-industrial-hydraulic-oils", suggested_slug)
+
+    def test_category_slug_suggestion_ignores_invalid_parent_ids(self) -> None:
+        """ Verify invalid querystring parent ids do not break slug suggestions. """
+        suggested_slug = CategorySlugSuggestionBuilder.build(
+            tenant=self.tenant,
+            name="Hydraulic Oils",
+            parent_id="not-a-number",
+        )
+
+        self.assertEqual("hydraulic-oils", suggested_slug)
+
+    def test_category_slug_suggestion_endpoint_returns_one_unique_slug(self) -> None:
+        """ Verify the owner admin JSON helper returns one unique slug suggestion. """
+        self.client.force_login(self.operator)
+        session = self.client.session
+        session["active_tenant_id"] = str(self.tenant.pk)
+        session.save()
+
+        response = self.client.get(
+            reverse("owner_admin:masterdata_categorymodel_suggest_slug"),
+            {
+                "name": "Hydraulic Oils",
+                "parent": str(self.in_scope_category.pk),
+            },
+        )
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual({"slug": "industrial-hydraulic-oils"}, response.json())
 
     def test_category_admin_splits_storefront_and_organization_fields(self) -> None:
         """ Verify the owner category admin keeps storefront fields separate from hierarchy controls. """

@@ -108,6 +108,9 @@ Current owner-admin direction:
 - the add flow can persist one parented category together with inline child categories in one submission
 - duplicate subcategory names are allowed when each category keeps a tenant-unique URL slug
 - duplicate slugs are reported as owner-facing slug field errors before saving
+- the owner category form exposes a local slug suggestion helper through `core.forms.ActionInputWidget`
+- root category suggestions use the category name, while child suggestions prefix the parent slug
+- duplicate slug suggestions receive incremental suffixes such as `-2` or `-3`
 - categories can expose one optional banner image for future public category pages
 - categories can be curated explicitly through `is_featured` for future storefront sections
 - the category screen separates core details, storefront presentation, and catalog organization into distinct sections

@@ -5,12 +5,14 @@ from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.db.models import ForeignKey
 from django.http import HttpRequest, HttpResponse
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from unfold.admin import ModelAdmin
+from unfold.admin import ModelAdmin, URLPattern
 from core.adminsites.site_instances import owner_admin_site
 from masterdata.access import CategoryAccessPolicy
 from masterdata.admin.owner.category_child_model_inline import CategoryChildModelInline
 from masterdata.admin.owner.category_model_admin_form import CategoryModelAdminForm
+from masterdata.admin.owner.views import CategorySlugSuggestionView
 from masterdata.models import CategoryModel
 
 if TYPE_CHECKING:
@@ -86,6 +88,21 @@ class CategoryModelAdmin(ModelAdmin):
             },
         ),
     )
+
+    def get_urls(self) -> list[URLPattern]:
+        """ Extend category admin URLs with owner-local helpers.
+
+        Returns:
+            list[URLPattern]: URL patterns for the category owner admin.
+        """
+        custom_urls = [
+            path(
+                "suggest-slug/",
+                self.admin_site.admin_view(CategorySlugSuggestionView.as_view()),
+                name="masterdata_categorymodel_suggest_slug",
+            ),
+        ]
+        return custom_urls + super().get_urls()
 
     def get_queryset(self, request: HttpRequest) -> "CategoryModelQuerySet":
         """ Return only categories that belong to the active tenant.
