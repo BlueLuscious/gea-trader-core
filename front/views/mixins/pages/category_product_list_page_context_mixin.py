@@ -14,13 +14,13 @@ class CategoryProductListPageContextMixin:
     paginate_by = 12
 
     def get_queryset(self) -> QuerySet[CategoryModel]:
-        """ Return active tenant-scoped categories for public browsing.
+        """ Return active tenant-scoped root categories for public browsing.
 
         Returns:
-            QuerySet[CategoryModel]: Tenant-scoped active categories.
+            QuerySet[CategoryModel]: Tenant-scoped active root categories.
         """
         tenant = self.get_tenant()
-        return CategoryModel.objects.for_tenant(tenant).active().select_related("parent")
+        return CategoryModel.objects.for_tenant(tenant).active().roots()
 
     def get_subcategory_filter(self, category: CategoryModel) -> CategoryModel | None:
         """ Resolve the optional subcategory filter for the current category page.

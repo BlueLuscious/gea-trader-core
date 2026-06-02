@@ -26,6 +26,34 @@ class CategoryModelAdminForm(forms.ModelForm):
         if active_tenant is not None:
             self.instance.tenant = active_tenant
 
+    def clean_slug(self) -> str:
+        """ Validate that the category slug stays unique inside the active tenant.
+
+        Returns:
+            str: Cleaned slug value.
+
+        Raises:
+            ValidationError: When another category in the same tenant already uses
+            the submitted slug.
+        """
+        slug = self.cleaned_data["slug"]
+        active_tenant = getattr(self.request, "tenant", None)
+        if active_tenant is None:
+            return slug
+
+        duplicated_slug_exists = (
+            CategoryModel.objects.for_tenant(active_tenant)
+            .filter(slug=slug)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        )
+        if duplicated_slug_exists:
+            raise forms.ValidationError(
+                _("This URL slug is already used by another category in this business. Choose a different slug.")
+            )
+
+        return slug
+
     class Meta:
         """ Configure the form for the owner category admin. """
 

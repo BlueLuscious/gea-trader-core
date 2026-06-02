@@ -4,7 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 from django.contrib import admin
 from django.db.models import ForeignKey
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
 from core.adminsites.site_instances import owner_admin_site
@@ -107,7 +107,23 @@ class CategoryModelAdmin(ModelAdmin):
             tenant.pk,
             tenant_queryset.count(),
         )
+        if getattr(request, "_owner_category_roots_only", False):
+            return tenant_queryset.roots()
+
         return tenant_queryset
+
+    def changelist_view(self, request: HttpRequest, extra_context: dict | None = None) -> HttpResponse:
+        """ Render only root categories in the owner-admin changelist.
+
+        Args:
+            request: Current admin request.
+            extra_context: Optional extra template context.
+
+        Returns:
+            HttpResponse: Admin changelist response.
+        """
+        request._owner_category_roots_only = True
+        return super().changelist_view(request, extra_context=extra_context)
 
     def save_model(self, request: HttpRequest, obj: CategoryModel, form, change: bool) -> None:
         """ Persist categories under the active tenant in owner admin.

@@ -1,6 +1,8 @@
 """ Page-scoped context assembly for the public storefront category list. """
 
+from urllib.parse import urlencode
 from django.core.paginator import Paginator
+from django.urls import reverse
 from masterdata.models import CategoryModel
 
 
@@ -36,7 +38,7 @@ class CategoryListPageContextMixin:
         category_groups: list[dict[str, object]] = []
         for category in categories:
             children = [
-                self.build_category_card_data(child)
+                self.build_child_category_card_data(category, child)
                 for child in category.children.all()
                 if child.is_active
             ]
@@ -50,6 +52,25 @@ class CategoryListPageContextMixin:
                 }
             )
         return category_groups
+
+    def build_child_category_card_data(
+        self,
+        root_category: CategoryModel,
+        child_category: CategoryModel,
+    ) -> dict[str, object]:
+        """ Build one child-category card pointing to its root category page.
+
+        Args:
+            root_category: Root category that owns the child category.
+            child_category: Child category used as the selected subcategory filter.
+
+        Returns:
+            dict[str, object]: Child-category presentation payload.
+        """
+        card_data = self.build_category_card_data(child_category)
+        root_url = reverse("category_product_list", kwargs={"slug": root_category.slug})
+        card_data["url"] = f"{root_url}?{urlencode({'subcategoria': child_category.slug})}"
+        return card_data
 
     def build_page_url(self, page_number: int) -> str:
         """ Build one root-category index URL.

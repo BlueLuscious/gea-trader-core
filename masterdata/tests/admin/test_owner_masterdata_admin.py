@@ -107,13 +107,38 @@ class TestOwnerMasterdataAdmin(LoggedTestCase):
 
     def test_category_admin_get_queryset_is_scoped_to_the_active_tenant(self) -> None:
         """ Verify the owner category queryset only returns categories from the active tenant. """
+        child_category = CategoryModel.objects.create(
+            tenant=self.tenant,
+            name="Industrial child",
+            slug="industrial-child",
+            parent=self.in_scope_category,
+        )
         request = self.build_request(self.operator, self.tenant)
 
         with patch("masterdata.admin.owner.category_model_admin.logger.info") as logger_info_mock:
             queryset = self.category_admin.get_queryset(request)
 
-        self.assertEqual([self.in_scope_category], list(queryset))
+        self.assertEqual([self.in_scope_category, child_category], list(queryset))
         logger_info_mock.assert_called_once()
+
+    def test_category_admin_changelist_only_lists_root_categories(self) -> None:
+        """ Verify the owner category changelist stays focused on root categories. """
+        CategoryModel.objects.create(
+            tenant=self.tenant,
+            name="Industrial child",
+            slug="industrial-child",
+            parent=self.in_scope_category,
+        )
+        self.client.force_login(self.operator)
+        session = self.client.session
+        session["active_tenant_id"] = str(self.tenant.pk)
+        session.save()
+
+        response = self.client.get(reverse("owner_admin:masterdata_categorymodel_changelist"))
+
+        self.assertEqual(200, response.status_code)
+        self.assertContains(response, "Industrial")
+        self.assertNotContains(response, "Industrial child")
 
     def test_brand_admin_get_queryset_logs_when_no_active_tenant_exists(self) -> None:
         """ Verify the owner brand queryset logs when no tenant is bound to the request. """
@@ -301,6 +326,25 @@ class TestOwnerMasterdataAdmin(LoggedTestCase):
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(self.tenant, form.instance.tenant)
         self.assertTrue(form.instance.is_featured)
+
+    def test_category_admin_form_rejects_duplicate_slug_inside_active_tenant(self) -> None:
+        """ Verify the owner category form reports duplicate slugs as a clear field error. """
+        request = self.build_request(self.operator, self.tenant)
+        form_class = self.category_admin.get_form(request)
+        form = form_class(
+            data={
+                "name": "Industrial duplicate",
+                "slug": self.in_scope_category.slug,
+                "description": "",
+                "parent": "",
+                "sort_order": "0",
+                "is_active": "on",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("slug", form.errors)
+        self.assertIn("already used by another category", form.errors["slug"][0])
 
     def test_category_admin_splits_storefront_and_organization_fields(self) -> None:
         """ Verify the owner category admin keeps storefront fields separate from hierarchy controls. """

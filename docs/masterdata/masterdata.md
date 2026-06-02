@@ -93,16 +93,21 @@ Current hierarchy rules:
 
 - every category belongs to one `TenantModel`
 - slug uniqueness is scoped per tenant instead of globally
+- category display names may repeat, including similarly named subcategories under different roots
+- repeated category names must still use different slugs inside the same tenant
 - parent categories must belong to the same tenant
 - a category cannot parent itself
 - category trees cannot contain cycles
 
 Current owner-admin direction:
 
+- the category changelist is focused on root categories
 - parent choices are scoped to the active tenant
 - current and descendant categories are excluded from parent choices on change views
 - direct child categories can be created inline from the category screen
 - the add flow can persist one parented category together with inline child categories in one submission
+- duplicate subcategory names are allowed when each category keeps a tenant-unique URL slug
+- duplicate slugs are reported as owner-facing slug field errors before saving
 - categories can expose one optional banner image for future public category pages
 - categories can be curated explicitly through `is_featured` for future storefront sections
 - the category screen separates core details, storefront presentation, and catalog organization into distinct sections

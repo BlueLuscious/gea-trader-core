@@ -37,6 +37,69 @@ class TestMasterdataModel(LoggedTestCase):
         self.assertEqual(child.parent, parent)
         self.assertEqual(parent.children.get(), child)
 
+    def test_category_child_names_can_repeat_when_slugs_are_different(self) -> None:
+        """ Verify similarly named child categories can live under different roots. """
+        tenant = self._create_tenant("duplicate-category-names")
+        first_root = CategoryModel.objects.create(tenant=tenant, name="Industrial", slug="industrial")
+        second_root = CategoryModel.objects.create(tenant=tenant, name="Agriculture", slug="agriculture")
+        first_child = CategoryModel.objects.create(
+            tenant=tenant,
+            name="Hydraulic Oils",
+            slug="industrial-hydraulic-oils",
+            parent=first_root,
+        )
+        second_child = CategoryModel.objects.create(
+            tenant=tenant,
+            name="Hydraulic Oils",
+            slug="agriculture-hydraulic-oils",
+            parent=second_root,
+        )
+
+        self.assertEqual(first_child.name, second_child.name)
+        self.assertEqual(first_root.children.get(), first_child)
+        self.assertEqual(second_root.children.get(), second_child)
+
+    def test_category_slug_must_be_unique_inside_one_tenant(self) -> None:
+        """ Verify duplicate category slugs are rejected inside one tenant. """
+        tenant = self._create_tenant("duplicate-category-slugs")
+        first_root = CategoryModel.objects.create(tenant=tenant, name="Industrial", slug="industrial")
+        second_root = CategoryModel.objects.create(tenant=tenant, name="Agriculture", slug="agriculture")
+        CategoryModel.objects.create(
+            tenant=tenant,
+            name="Hydraulic Oils",
+            slug="hydraulic-oils",
+            parent=first_root,
+        )
+        duplicated_slug_category = CategoryModel(
+            tenant=tenant,
+            name="Hydraulic Oils",
+            slug="hydraulic-oils",
+            parent=second_root,
+        )
+
+        with self.assertRaises(ValidationError):
+            duplicated_slug_category.full_clean()
+
+    def test_category_slug_can_repeat_across_different_tenants(self) -> None:
+        """ Verify the category slug uniqueness boundary is scoped per tenant. """
+        first_tenant = self._create_tenant("first-duplicate-slug-tenant")
+        second_tenant = self._create_tenant("second-duplicate-slug-tenant")
+        first_category = CategoryModel.objects.create(
+            tenant=first_tenant,
+            name="Hydraulic Oils",
+            slug="hydraulic-oils",
+        )
+        second_category = CategoryModel(
+            tenant=second_tenant,
+            name="Hydraulic Oils",
+            slug="hydraulic-oils",
+        )
+
+        second_category.full_clean()
+        second_category.save()
+
+        self.assertEqual(first_category.slug, second_category.slug)
+
     def test_category_parent_must_belong_to_the_same_tenant(self) -> None:
         """ Reject category trees that try to cross tenant boundaries. """
         first_tenant = self._create_tenant("north-masterdata")

@@ -165,6 +165,11 @@ class TestFrontViews(LoggedTestCase):
         self.assertContains(response, "Greases")
         self.assertContains(response, self.hydraulic_subcategory.name)
         self.assertContains(response, f"/categorias/{self.lubricants_category.slug}/")
+        self.assertContains(
+            response,
+            f"/categorias/{self.lubricants_category.slug}/?subcategoria={self.hydraulic_subcategory.slug}",
+        )
+        self.assertNotContains(response, f"/categorias/{self.hydraulic_subcategory.slug}/")
 
     def test_category_list_paginates_root_categories_twelve_per_page(self) -> None:
         """ Verify the public category index paginates root categories with twelve groups per page. """
@@ -195,6 +200,12 @@ class TestFrontViews(LoggedTestCase):
         self.assertContains(response, self.featured_product.name)
         self.assertContains(response, self.subcategory_product.name)
         self.assertContains(response, self.hydraulic_subcategory.name)
+
+    def test_category_page_returns_not_found_for_direct_subcategory_slug(self) -> None:
+        """ Verify public category pages only resolve root-category slugs directly. """
+        response = self.client.get(f"/categorias/{self.hydraulic_subcategory.slug}/")
+
+        self.assertEqual(response.status_code, 404)
 
     def test_category_page_filters_products_by_selected_subcategory(self) -> None:
         """ Verify the category page narrows the grid when one subcategory filter is selected. """
