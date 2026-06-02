@@ -1,0 +1,20 @@
+.core-action-input {
+    align-items: stretch;
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.core-action-input__control {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.core-action-input__button {
+    flex: 0 0 auto;
+}
+
+.core-action-input__button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}

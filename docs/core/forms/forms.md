@@ -18,6 +18,7 @@ Do not place app-specific admin forms here. Those should stay inside the app tha
 
 Current public exports:
 
+- `ActionInputWidget`
 - `JsonKeyValueField`
 - `JsonKeyValueWidget`
 - `NestedJsonKeyValueField`
@@ -41,6 +42,69 @@ Widget static assets live in:
 
 `BaseJsonKeyValueWidget` is an internal extension point for shared widget labels, Unfold-compatible classes, submitted-data helpers, and shared CSS.
 Public consumers should import the concrete fields or widgets from `core.forms`, not from internal modules.
+
+## `ActionInputWidget`
+
+`ActionInputWidget` renders a normal text input with one inline action button.
+
+Current contract:
+
+- keeps the original field value contract unchanged
+- renders input and action button from a Django widget template
+- receives an `action_url` used by the generic JavaScript controller
+- receives an `action_label` for the button text
+- reads one response key, configured by `response_value_key`, and writes that value back to the input
+- supports static request params through `static_params`
+- supports dynamic request params through `source_params`
+- uses Unfold-compatible input and button classes, keeping custom CSS limited to inline layout
+- keeps domain-specific generation logic outside `core/forms/`
+
+`source_params` entries are dictionaries with:
+
+- `name`: request query parameter name
+- `selector`: CSS selector used to find the source element
+- `scope`: `document` for global lookup or `closest` for lookup inside a nearby container
+- `closest_selector`: optional ancestor selector used when `scope` is `closest`
+- `attribute`: optional attribute name to read instead of the source element value
+
+Good fit:
+
+- admin slug suggestion buttons
+- small server-backed value suggestions
+- reusable input actions where the field remains a plain text-like field
+
+Not a good fit:
+
+- actions that mutate persisted data immediately
+- rich multi-input editors
+- domain-specific validation or slug generation logic
+
+Example:
+
+```python
+from django import forms
+from django.utils.translation import gettext_lazy as _
+from core.forms import ActionInputWidget
+
+
+class ExampleForm(forms.Form):
+    """ Example form that suggests a value from a server endpoint. """
+
+    slug = forms.SlugField(
+        widget=ActionInputWidget(
+            action_url="/owner-admin/example/suggest-slug/",
+            action_label=_("Suggest slug"),
+            response_value_key="slug",
+            source_params=[
+                {
+                    "name": "name",
+                    "selector": "#id_name",
+                    "scope": "document",
+                }
+            ],
+        )
+    )
+```
 
 ## `JsonKeyValueField`
 
@@ -190,6 +254,7 @@ This keeps editable form behavior separate from snapshot presentation.
 
 Current tests live in:
 
+- `core/tests/forms/test_action_input_widget.py`
 - `core/tests/forms/test_json_key_value_field.py`
 - `core/tests/forms/test_nested_json_key_value_field.py`
 
@@ -209,3 +274,6 @@ The tests cover:
 - nested widget row flattening
 - nested widget submitted row extraction
 - nested widget empty-submit handling
+- action input widget context
+- action input widget rendered data contract
+- action input widget media assets

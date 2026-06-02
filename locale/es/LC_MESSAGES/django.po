@@ -927,6 +927,10 @@ msgstr "Las filas clave-valor anidadas superan la profundidad permitida."
 msgid "A key cannot have both a value and child rows."
 msgstr "Una clave no puede tener un valor y filas hijas al mismo tiempo."
 
+#: .\core\forms\widgets\action_input_widget.py:47
+msgid "Run action"
+msgstr "Ejecutar acción"
+
 #: .\core\forms\widgets\base_json_key_value_widget.py:38
 msgid "Key"
 msgstr "Clave"

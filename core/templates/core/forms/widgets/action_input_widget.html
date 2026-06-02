@@ -1,0 +1,24 @@
+<div
+  class="core-action-input"
+  data-action-input-widget
+  data-action-input-url="{{ widget.action_url }}"
+  data-action-input-response-key="{{ widget.response_value_key }}"
+  data-action-input-source-params="{{ widget.source_params_json }}"
+  data-action-input-static-params="{{ widget.static_params_json }}"
+>
+  <input
+    type="{{ widget.type }}"
+    name="{{ widget.name }}"
+    {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}
+    {{ widget.attrs_html }}
+    data-action-input-control
+  >
+
+  <button
+    type="button"
+    class="{{ widget.button_classes }}"
+    data-action-input-button
+  >
+    {{ widget.action_label }}
+  </button>
+</div>
