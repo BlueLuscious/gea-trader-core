@@ -86,7 +86,6 @@ It now includes:
 - one hero section with featured products and highlighted root categories
 - one recent-products section
 - one root-categories section
-- one public footer with branding, contact details, social links, and a WhatsApp shortcut when configured
 - one favicon wired from tenant branding with light and dark variants when available
 
 This keeps the public site:
@@ -140,6 +139,7 @@ Current endpoints:
 - `POST /carrito/cotizar/`: validates the quote-request form, converts the active cart into a quote, and returns the updated cart state.
 
 The shared base layout exposes these endpoints through `data-cart-*` attributes on the page shell.
+The shared base layout also renders the public footer with storefront branding, contact details, and social links.
 `front/static/js/cart/cart-controller.js` owns shared cart state, transport, and events.
 `front/static/js/cart/cart-feedback-controller.js` owns public cart feedback messages.
 The cart sidebar component owns sidebar interaction, quantity animation, and quote-modal behavior for the rendered sidebar instance.

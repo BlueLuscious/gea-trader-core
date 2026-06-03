@@ -90,6 +90,8 @@
             {% block content %}{% endblock %}
         </main>
 
+        {% include "layout/site-footer.html" %}
+
         {% component "cart_sidebar" id="site-cart-sidebar" title="Carrito de cotización" quote_modal_id="site-quote-request-modal" %}{% endcomponent %}
 
         {% if site_whatsapp_url %}

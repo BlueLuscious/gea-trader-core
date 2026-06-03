@@ -154,6 +154,8 @@ class TestFrontViews(LoggedTestCase):
         self.assertContains(response, "2 productos")
         self.assertContains(response, self.featured_product.name)
         self.assertContains(response, self.subcategory_product.name)
+        self.assertContains(response, 'class="site-footer"')
+        self.assertContains(response, "mailto:info@geaoils.test")
 
     def test_category_list_renders_root_categories_and_active_children(self) -> None:
         """ Verify the public category index renders root categories and child shortcuts. """

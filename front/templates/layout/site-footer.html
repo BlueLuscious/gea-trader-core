@@ -1,0 +1,59 @@
+{% load component_tags %}
+
+<footer class="site-footer" aria-labelledby="site-footer-title">
+    <div class="site-footer__inner">
+        <div class="site-footer__brand-block">
+            <div class="site-footer__brand">
+                {% if site_logo_light_url %}
+                <img src="{{ site_logo_light_url }}" alt="{{ site_brand_name }}" class="site-footer__logo site-footer__logo--light" />
+                {% endif %}
+                {% if site_logo_dark_url %}
+                <img src="{{ site_logo_dark_url }}" alt="{{ site_brand_name }}" class="site-footer__logo site-footer__logo--dark" />
+                {% endif %}
+                <div class="site-footer__brand-copy">
+                    <h2 id="site-footer-title" class="site-footer__title">{{ site_brand_name }}</h2>
+                    <p class="site-footer__lead">
+                        Catálogo técnico y contacto comercial directo para avanzar desde el sitio hacia una cotización real.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-footer__contacts">
+            <h3 class="site-footer__heading">Contacto</h3>
+            <div class="site-footer__contact-list">
+                {% if site_contact_email %}
+                <a href="mailto:{{ site_contact_email }}" class="site-footer__contact-link">
+                    {% component "icon" name="envelope" class_name="site-footer__contact-icon" %}{% endcomponent %}
+                    <span>{{ site_contact_email }}</span>
+                </a>
+                {% endif %}
+                {% if site_phone_number %}
+                <a href="tel:{{ site_phone_number }}" class="site-footer__contact-link">
+                    {% component "icon" name="phone" class_name="site-footer__contact-icon" %}{% endcomponent %}
+                    <span>{{ site_phone_number }}</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if site_social_links %}
+        <div class="site-footer__socials">
+            <h3 class="site-footer__heading">Redes</h3>
+            <div class="site-footer__social-list">
+                {% for social in site_social_links %}
+                <a
+                    href="{{ social.url }}"
+                    class="site-footer__social-link"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="{{ social.label }}"
+                >
+                    {% component "icon" name=social.icon style="brands" %}{% endcomponent %}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</footer>
