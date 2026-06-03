@@ -5,7 +5,7 @@ from django.http import HttpRequest, JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from masterdata.access import CategoryAccessPolicy
-from masterdata.admin.owner.category_slug_suggestion_builder import CategorySlugSuggestionBuilder
+from masterdata.admin.owner.services import CategorySlugSuggestionBuilder
 
 if TYPE_CHECKING:
     from tenancy.models import TenantModel

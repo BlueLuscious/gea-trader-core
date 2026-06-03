@@ -13,7 +13,7 @@ from core.testing.base import LoggedTestCase
 from masterdata.admin.owner.brand_model_admin import BrandModelAdmin
 from masterdata.admin.owner.category_child_model_inline import CategoryChildModelInline
 from masterdata.admin.owner.category_model_admin import CategoryModelAdmin
-from masterdata.admin.owner.category_slug_suggestion_builder import CategorySlugSuggestionBuilder
+from masterdata.admin.owner.services import CategorySlugSuggestionBuilder
 from masterdata.models import BrandModel, CategoryModel
 from tenancy.choices import TenantRole
 from tenancy.models import TenantMembershipModel, TenantModel
