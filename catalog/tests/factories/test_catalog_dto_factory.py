@@ -115,6 +115,22 @@ class TestCatalogDTOFactory(LoggedTestCase):
         self.assertEqual(dto.price_value, '15.00')
         self.assertEqual(dto.price_text, 'ARS 15.00')
 
+    def test_variant_factory_uses_effective_sku(self) -> None:
+        """ Verify ProductVariantModelDTOFactory exposes the product SKU fallback. """
+        tenant = self._create_tenant("variant-dto-sku-fallback")
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name="Filtro",
+            slug="filtro",
+            sku_base="FIL-BASE",
+        )
+        variant = ProductVariantModel.objects.create(product=product, sku="")
+
+        dto = ProductVariantModelDTOFactory.build(variant)
+
+        self.assertEqual(dto.sku, "FIL-BASE")
+        self.assertEqual(dto.display_name, "FIL-BASE")
+
     def test_image_factory_build_many_returns_expected_names(self) -> None:
         """ Verify ProductImageModelDTOFactory.build_many keeps image metadata. """
         tenant = self._create_tenant("north")

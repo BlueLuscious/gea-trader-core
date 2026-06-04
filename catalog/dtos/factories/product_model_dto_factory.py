@@ -36,7 +36,7 @@ class ProductModelDTOFactory:
             active_variant_count=instance.get_active_variant_count(),
             has_multiple_active_variants=instance.has_multiple_active_variants(),
             default_variant_name=(
-                default_variant.name or default_variant.sku
+                default_variant.name or default_variant.effective_sku
                 if default_variant is not None
                 else ""
             ),

@@ -47,6 +47,22 @@ class TestCatalogModel(LoggedTestCase):
         self.assertEqual(str(variant), "Linea A")
         self.assertEqual(str(image), "Bomba frontal")
 
+    def test_variant_effective_sku_falls_back_to_product_base_sku(self) -> None:
+        """ Resolve the public SKU from the variant or parent product fallback. """
+        tenant = self._create_tenant("variant-sku-fallback")
+        product = ProductModel.objects.create(
+            tenant=tenant,
+            name="Pump",
+            slug="pump",
+            sku_base="PUMP-BASE",
+        )
+        inherited_variant = ProductVariantModel.objects.create(product=product, sku="")
+        custom_variant = ProductVariantModel.objects.create(product=product, sku="PUMP-CUSTOM")
+
+        self.assertEqual(inherited_variant.effective_sku, "PUMP-BASE")
+        self.assertEqual(custom_variant.effective_sku, "PUMP-CUSTOM")
+        self.assertEqual(str(inherited_variant), "PUMP-BASE")
+
     def test_product_image_rejects_variant_from_another_product(self) -> None:
         """ Verify product images cannot point to a variant owned by another product. """
         tenant = self._create_tenant("image-variant-scope")
@@ -232,10 +248,11 @@ class TestCatalogModel(LoggedTestCase):
             "name": ("Product name", "Customer-facing name shown across the catalog."),
             "slug": ("URL slug", "Short URL-friendly identifier used in product links."),
             "short_description": ("Short description", "Short summary for compact cards and product lists."),
+            "sku_base": ("Base SKU", "Required product-family reference used when variants do not define their own SKU."),
             "requires_quote": ("Request through quote", "Enable this when customers should request a quote instead of buying directly."),
         }
         variant_field_expectations = {
-            "sku": ("Variant SKU", "Unique internal reference for this variant."),
+            "sku": ("Variant SKU", "Optional unique internal reference. Leave it empty to use the parent product base SKU."),
             "price": ("Price", "Optional direct price for this variant when it does not rely only on quotes."),
             "is_active": ("Available for selection", "Turn this off to keep the variant without offering it."),
         }

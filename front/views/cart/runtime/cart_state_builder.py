@@ -42,7 +42,7 @@ class CartStateBuilder:
             "variant_id": variant.id if variant is not None else None,
             "title": title,
             "subtitle": subtitle,
-            "sku": variant.sku if variant is not None else product.sku_base,
+            "sku": variant.effective_sku if variant is not None else product.sku_base,
             "image_url": image_url,
             "href": reverse("product_detail", kwargs={"slug": product.slug}),
             "quantity": item.quantity,

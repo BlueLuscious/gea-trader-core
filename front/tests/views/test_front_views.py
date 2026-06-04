@@ -326,6 +326,35 @@ class TestFrontViews(LoggedTestCase):
         self.assertIn("HYD-46-205L", payload["items_html"])
         self.assertNotIn("Subtotal estimado", payload["summary_html"])
 
+    def test_cart_add_item_uses_product_base_sku_when_variant_sku_is_empty(self) -> None:
+        """ Verify cart runtime payloads expose the effective variant SKU. """
+        product = ProductModel.objects.create(
+            tenant=self.tenant,
+            category=self.lubricants_category,
+            name="Fallback SKU Oil",
+            slug="fallback-sku-oil",
+            sku_base="FALLBACK-SKU",
+            is_active=True,
+        )
+        ProductVariantModel.objects.create(
+            product=product,
+            name="Base package",
+            sku="",
+            is_default=True,
+            is_active=True,
+        )
+
+        response = self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % product.id,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["items"][0]["sku"], "FALLBACK-SKU")
+        self.assertIn("FALLBACK-SKU", payload["items_html"])
+
     def test_cart_update_quantity_keeps_one_line_item_in_the_public_count(self) -> None:
         """ Verify quantity changes do not inflate the public cart count beyond one line item. """
         self.client.post(

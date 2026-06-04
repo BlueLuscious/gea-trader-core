@@ -26,7 +26,7 @@ class QuoteItemSnapshotFactory:
             product=product,
             variant=variant,
             product_name_snapshot=product.name,
-            sku_snapshot=variant.sku if variant is not None else product.sku_base,
+            sku_snapshot=variant.effective_sku if variant is not None else product.sku_base,
             attributes_snapshot=dict(variant.attributes_json or {}) if variant is not None else {},
             unit_price_snapshot=unit_price,
             quantity=cart_item.quantity,

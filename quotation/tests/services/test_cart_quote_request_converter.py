@@ -64,6 +64,34 @@ class TestCartQuoteRequestConverter(LoggedTestCase):
         self.cart.refresh_from_db()
         self.assertEqual(self.cart.status, CartStatus.CONVERTED)
 
+    def test_convert_snapshots_product_base_sku_when_variant_sku_is_empty(self) -> None:
+        """ Verify quote snapshots use the effective variant SKU. """
+        product = ProductModel.objects.create(
+            tenant=self.tenant,
+            name="Fallback SKU Oil",
+            slug="fallback-sku-oil-converter",
+            sku_base="FALLBACK-SKU",
+            is_active=True,
+        )
+        variant = ProductVariantModel.objects.create(
+            product=product,
+            name="Base package",
+            sku="",
+            is_default=True,
+            is_active=True,
+        )
+        cart = CartModel.objects.create(tenant=self.tenant, session_key="session-fallback")
+        CartItemModel.objects.create(cart=cart, product=product, variant=variant, quantity=1)
+
+        quote = CartQuoteRequestConverter.convert(
+            cart=cart,
+            customer_name="Ada Lovelace",
+            customer_email="ada@example.com",
+            customer_phone="",
+        )
+
+        self.assertEqual(quote.items.get().sku_snapshot, "FALLBACK-SKU")
+
     def test_convert_rejects_inactive_carts(self) -> None:
         """ Verify converted carts cannot be converted again. """
         self.cart.status = CartStatus.CONVERTED

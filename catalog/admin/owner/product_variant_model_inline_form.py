@@ -38,6 +38,8 @@ class ProductVariantModelInlineForm(forms.ModelForm):
                 "Required on the default variant when the product is directly purchasable."
             )
 
+        self.fields["sku"].required = False
+
     class Meta:
         """ Configure the owner inline variant form. """
 
@@ -54,7 +56,7 @@ class ProductVariantModelInlineForm(forms.ModelForm):
         }
         help_texts = {
             "name": _("Optional customer-facing name for this specific variant."),
-            "sku": _("Unique internal reference for this variant."),
+            "sku": _("Optional unique internal reference. Leave it empty to use the product base SKU."),
             "attributes_json": _("Add public variant details as key-value pairs, such as size or packaging."),
             "price": _("Optional direct price for this variant when it does not rely only on quotes."),
             "is_default": _("Choose exactly one default variant for each product."),

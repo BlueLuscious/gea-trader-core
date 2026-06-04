@@ -16,9 +16,9 @@ class ProductVariantModelDTOFactory:
             instance: Product variant model instance.
 
         Returns:
-            str: Variant name or SKU fallback.
+            str: Variant name or effective SKU fallback.
         """
-        return instance.name or instance.sku
+        return instance.name or instance.effective_sku
 
     @staticmethod
     def build_attributes_display(instance: ProductVariantModel) -> list[str]:
@@ -82,7 +82,7 @@ class ProductVariantModelDTOFactory:
             product_id=instance.product_id,
             name=instance.name,
             display_name=display_name,
-            sku=instance.sku,
+            sku=instance.effective_sku,
             attributes_json=dict(instance.attributes_json or {}),
             attributes_display=ProductVariantModelDTOFactory.build_attributes_display(instance),
             price=instance.price,

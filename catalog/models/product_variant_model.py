@@ -32,9 +32,10 @@ class ProductVariantModel(models.Model):
     )
     sku = models.CharField(
         max_length=64,
-        unique=True,
+        blank=True,
+        default="",
         verbose_name=_("Variant SKU"),
-        help_text=_("Unique internal reference for this variant."),
+        help_text=_("Optional unique internal reference. Leave it empty to use the parent product base SKU."),
     )
     attributes_json = models.JSONField(
         blank=True,
@@ -92,6 +93,11 @@ class ProductVariantModel(models.Model):
                 condition=Q(is_default=True),
                 name="catalog_variant_one_default_per_product",
             ),
+            models.UniqueConstraint(
+                fields=["sku"],
+                condition=~Q(sku=""),
+                name="catalog_variant_sku_unique_when_present",
+            ),
         ]
         verbose_name = _("Product variant")
         verbose_name_plural = _("Product variants")
@@ -111,6 +117,15 @@ class ProductVariantModel(models.Model):
         """ Return the variant label.
 
         Returns:
-            str: Variant name or sku.
+            str: Variant name or effective SKU.
         """
-        return self.name or self.sku
+        return self.name or self.effective_sku
+
+    @property
+    def effective_sku(self) -> str:
+        """ Return the variant SKU resolved through the product base fallback.
+
+        Returns:
+            str: Variant-specific SKU, parent product base SKU, or an empty string.
+        """
+        return self.sku if self.sku else self.product.sku_base

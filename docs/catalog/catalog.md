@@ -52,6 +52,7 @@ Current fields cover:
 - tenant ownership
 - brand and category relations
 - customer-facing naming and description
+- required base SKU used as the product-family identity
 - catalog visibility flags
 - quote-flow behavior
 - audit timestamps
@@ -99,6 +100,8 @@ Current behavior:
 - only one default variant is allowed per product
 - variants are the current place where price lives
 - variants are used as the more concrete commercial layer for quoting or selling
+- variant SKUs are optional when the required parent product base SKU should be used as the public fallback
+- `ProductVariantModel.effective_sku` is the canonical read contract for public display, cart runtime payloads, and quote snapshots
 - variant attributes are stored as a flat JSON object and edited as key-value rows in owner admin through `core.forms.JsonKeyValueField`
 - public attribute display formatting remains owned by `ProductVariantModelDTOFactory`
 - the default variant must stay available for selection
@@ -106,6 +109,7 @@ Current behavior:
 - owner-admin product saves require at least one variant and exactly one default variant
 - directly purchasable products require a price on the default variant
 - quote-only products may keep the default variant price empty
+- a later migration must replace the previous global `sku` uniqueness with a non-empty-only unique constraint before multiple empty variant SKUs are fully database-safe
 
 Related files:
 

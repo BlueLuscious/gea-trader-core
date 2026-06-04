@@ -17,7 +17,7 @@ class ProductModelAdminForm(forms.ModelForm):
             "slug": _("Usually created from the product name. Adjust it only when you need a custom URL."),
             "short_description": _("Short summary for compact cards and product lists."),
             "description": _("Full product description with the details customers should read."),
-            "sku_base": _("Internal base reference used to identify this product family and its variants."),
+            "sku_base": _("Required product-family reference used when variants do not define their own SKU."),
             "requires_quote": _("Enable this when customers should request a quote instead of buying directly."),
         }
         labels = {

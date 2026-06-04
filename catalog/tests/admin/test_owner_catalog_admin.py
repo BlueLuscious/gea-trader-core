@@ -8,6 +8,7 @@ from django.utils.translation import override
 from accounts.models import UserModel
 from catalog.admin.owner.product_image_model_inline import ProductImageModelInline
 from catalog.admin.owner.product_model_admin import ProductModelAdmin
+from catalog.admin.owner.product_model_admin_form import ProductModelAdminForm
 from catalog.admin.owner.product_variant_model_inline import ProductVariantModelInline
 from catalog.models import ProductModel, ProductVariantModel
 from core.adminsites.site_instances import owner_admin_site
@@ -159,6 +160,22 @@ class TestOwnerCatalogAdmin(LoggedTestCase):
 
         self.assertEqual(self.tenant, product.tenant)
         logger_info_mock.assert_called_once()
+
+    def test_product_form_requires_base_sku(self) -> None:
+        """ Verify owner product forms require one product-family SKU. """
+        form = ProductModelAdminForm(
+            data={
+                "tenant": str(self.tenant.pk),
+                "name": "Valve",
+                "slug": "valve",
+                "sku_base": "",
+                "is_active": "on",
+                "requires_quote": "on",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("sku_base", form.errors)
 
     def test_view_and_change_permissions_reject_products_from_other_tenants(self) -> None:
         """ Verify object permissions stay scoped to products owned by the active tenant. """

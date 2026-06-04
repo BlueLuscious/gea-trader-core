@@ -72,10 +72,8 @@ class ProductModel(models.Model):
     )
     sku_base = models.CharField(
         max_length=64,
-        blank=True,
-        default="",
         verbose_name=_("Base SKU"),
-        help_text=_("Internal base reference used to identify this product family and its variants."),
+        help_text=_("Required product-family reference used when variants do not define their own SKU."),
     )
     is_active = models.BooleanField(
         default=True,
@@ -246,4 +244,4 @@ class ProductModel(models.Model):
         image = variant_primary_image or variant_fallback_image
         if image is not None and image.alt_text:
             return image.alt_text
-        return variant.name or variant.sku
+        return variant.name or variant.effective_sku

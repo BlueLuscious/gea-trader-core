@@ -84,7 +84,7 @@ class QuoteItemModelInlineFormSet(BaseInlineFormSet):
 
         instance.product_name_snapshot = product.name
         instance.variant = variant
-        instance.sku_snapshot = variant.sku
+        instance.sku_snapshot = variant.effective_sku
         instance.attributes_snapshot = dict(variant.attributes_json or {})
         instance.unit_price_snapshot = variant.price
 
