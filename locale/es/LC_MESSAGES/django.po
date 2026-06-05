@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 21:51-0300\n"
+"POT-Creation-Date: 2026-06-05 01:28-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -258,6 +258,7 @@ msgid "Abandoned"
 msgstr "Abandonado"
 
 #: .\cart\models\cart_item_model.py:22 .\cart\models\cart_model.py:83
+#: .\cart\models\cart_model.py:92
 msgid "Cart"
 msgstr "Carrito"
 
@@ -269,7 +270,7 @@ msgstr "Carrito al que pertenece esta línea."
 #: .\catalog\models\product_image_model.py:21
 #: .\catalog\models\product_model.py:124
 #: .\catalog\models\product_variant_model.py:23
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:19
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:31
 #: .\quotation\models\quote_item_model.py:30
 msgid "Product"
 msgstr "Producto"
@@ -281,7 +282,7 @@ msgstr "Producto seleccionado actualmente en esta línea del carrito."
 #: .\cart\models\cart_item_model.py:38
 #: .\catalog\admin\owner\product_variant_model_inline.py:26
 #: .\catalog\models\product_image_model.py:30
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:20
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:32
 #: .\quotation\models\quote_item_model.py:39
 msgid "Variant"
 msgstr "Variante"
@@ -292,7 +293,7 @@ msgstr ""
 "Variante opcional seleccionada actualmente para esta línea del carrito."
 
 #: .\cart\models\cart_item_model.py:43
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:21
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:33
 #: .\quotation\models\quote_item_model.py:71
 msgid "Quantity"
 msgstr "Cantidad"
@@ -589,18 +590,22 @@ msgstr ""
 "tamaño o presentación."
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:15
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:19
 msgid "Attribute key"
 msgstr "Clave del atributo"
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:16
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:20
 msgid "Attribute value"
 msgstr "Valor del atributo"
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:17
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:21
 msgid "Add attribute"
 msgstr "Agregar atributo"
 
 #: .\catalog\admin\owner\product_variant_model_inline_form.py:18
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:22
 msgid "Remove attribute"
 msgstr "Eliminar atributo"
 
@@ -767,7 +772,7 @@ msgid "Product images"
 msgstr "Imágenes del producto"
 
 #: .\catalog\models\product_image_model.py:98
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:59
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:73
 msgid "Choose a variant that belongs to the selected product."
 msgstr "Elige una variante que pertenezca al producto seleccionado."
 
@@ -938,23 +943,23 @@ msgstr "Las filas clave-valor anidadas superan la profundidad permitida."
 msgid "A key cannot have both a value and child rows."
 msgstr "Una clave no puede tener un valor y filas hijas al mismo tiempo."
 
-#: .\core\forms\widgets\action_input_widget.py:47
+#: .\core\forms\widgets\action_input_widget.py:49
 msgid "Run action"
 msgstr "Ejecutar acción"
 
-#: .\core\forms\widgets\base_json_key_value_widget.py:38
+#: .\core\forms\widgets\base_json_key_value_widget.py:39
 msgid "Key"
 msgstr "Clave"
 
-#: .\core\forms\widgets\base_json_key_value_widget.py:39
+#: .\core\forms\widgets\base_json_key_value_widget.py:40
 msgid "Value"
 msgstr "Valor"
 
-#: .\core\forms\widgets\base_json_key_value_widget.py:40
+#: .\core\forms\widgets\base_json_key_value_widget.py:41
 msgid "Add row"
 msgstr "Agregar fila"
 
-#: .\core\forms\widgets\base_json_key_value_widget.py:41
+#: .\core\forms\widgets\base_json_key_value_widget.py:42
 msgid "Remove row"
 msgstr "Eliminar fila"
 
@@ -1541,17 +1546,29 @@ msgstr "Ítem de cotización"
 msgid "Quote items"
 msgstr "Ítems de cotización"
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:22
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:17
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:35
+#: .\quotation\models\quote_item_model.py:57
+msgid "Attribute snapshot"
+msgstr "Instantánea de atributos"
+
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:18
+#: .\quotation\models\quote_item_model.py:58
+msgid "Variant attributes captured when this quote item was created."
+msgstr ""
+"Atributos de la variante capturados cuando se creó este ítem de cotización."
+
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:34
 #: .\quotation\models\quote_item_model.py:77
 msgid "Item notes"
 msgstr "Notas del ítem"
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:25
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:38
 msgid "Choose the catalog product this quote item refers to."
 msgstr ""
 "Elige el producto del catálogo al que corresponde este ítem de cotización."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:27
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:40
 msgid ""
 "Optional. If left empty, the default variant for the selected product will "
 "be used."
@@ -1559,15 +1576,15 @@ msgstr ""
 "Opcional. Si se deja vacío, se usará la variante predeterminada del producto "
 "seleccionado."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:29
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:42
 msgid "How many units this quote item should include."
 msgstr "Cuántas unidades debe incluir este ítem de cotización."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:30
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:43
 msgid "Optional private note for this item."
 msgstr "Nota privada opcional para este ítem."
 
-#: .\quotation\admin\owner\quote_item_model_inline_form.py:63
+#: .\quotation\admin\owner\quote_item_model_inline_form.py:77
 msgid ""
 "Choose a variant or configure one default variant for the selected product."
 msgstr ""
@@ -1709,7 +1726,7 @@ msgid "Cancelled"
 msgstr "Cancelada"
 
 #: .\quotation\models\quote_item_model.py:21
-#: .\quotation\models\quote_model.py:131
+#: .\quotation\models\quote_model.py:131 .\quotation\models\quote_model.py:140
 msgid "Quote"
 msgstr "Cotización"
 
@@ -1744,15 +1761,6 @@ msgstr "Instantánea del SKU"
 #: .\quotation\models\quote_item_model.py:52
 msgid "SKU captured when this quote item was created."
 msgstr "SKU capturado cuando se creó este ítem de cotización."
-
-#: .\quotation\models\quote_item_model.py:57
-msgid "Attribute snapshot"
-msgstr "Instantánea de atributos"
-
-#: .\quotation\models\quote_item_model.py:58
-msgid "Variant attributes captured when this quote item was created."
-msgstr ""
-"Atributos de la variante capturados cuando se creó este ítem de cotización."
 
 #: .\quotation\models\quote_item_model.py:65
 msgid "Unit price snapshot"
