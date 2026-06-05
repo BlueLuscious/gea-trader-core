@@ -51,8 +51,9 @@ class TestQuotationModel(LoggedTestCase):
         quote = QuoteModel.objects.create(tenant=tenant, customer_email='cliente@example.com')
         item = QuoteItemModel.objects.create(quote=quote, product_name_snapshot='Bomba', quantity=1)
 
-        self.assertEqual(str(quote), f'Quote {quote.pk}')
-        self.assertEqual(str(item), 'Bomba')
+        with override("en"):
+            self.assertEqual(str(quote), f'Quote {quote.pk}')
+            self.assertEqual(str(item), 'Bomba')
 
     def test_quote_item_quantity_must_be_positive(self) -> None:
         """ Verify quote items reject zero quantity at the model layer. """

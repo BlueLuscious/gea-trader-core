@@ -116,6 +116,7 @@ Current intent:
 - quote items should preserve the commercial state used by the quote even if catalog data changes later
 - quote items stay tenant-scoped through their parent `QuoteModel`
 - SKU snapshots use the catalog variant effective SKU, so a variant without its own SKU snapshots the parent product base SKU
+- attribute snapshots render in owner admin through the shared `core.forms.JsonKeyValueField` and Unfold's readonly widget delegation, so captured attributes keep the same key-value layout inside `readonly_fields` without becoming editable and empty snapshots show `-` placeholders
 
 Related files:
 

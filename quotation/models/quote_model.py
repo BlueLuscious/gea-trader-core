@@ -137,7 +137,7 @@ class QuoteModel(models.Model):
         Returns:
             str: Quote label.
         """
-        return f"Quote {self.pk}"
+        return f"{_('Quote')} {self.pk}"
 
     def clean(self) -> None:
         """ Validate source-cart scope and workflow progression before persistence.

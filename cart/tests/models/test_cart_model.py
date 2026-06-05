@@ -32,8 +32,9 @@ class TestCartModel(LoggedTestCase):
 
         self.assertEqual(cart.tenant, tenant)
         self.assertEqual(item.cart, cart)
-        self.assertEqual(str(cart), f'Cart {cart.pk}')
-        self.assertEqual(str(item), f'Cart item {item.pk}')
+        with override("en"):
+            self.assertEqual(str(cart), f'Cart {cart.pk}')
+            self.assertEqual(str(item), f'Cart item {item.pk}')
 
     def test_cart_requires_user_or_session_key(self) -> None:
         """ Verify the cart constraint rejects rows without user and session key. """

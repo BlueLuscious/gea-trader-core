@@ -5,13 +5,14 @@ from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.test import RequestFactory
 from django.utils.translation import override
+from unfold.fields import UnfoldAdminReadonlyField
 from accounts.models import UserModel
 from catalog.models import ProductModel, ProductVariantModel
 from core.adminsites.site_instances import owner_admin_site
 from core.testing.base import LoggedTestCase
 from quotation.admin.owner.quote_item_model_inline import QuoteItemModelInline
 from quotation.admin.owner.quote_model_admin import QuoteModelAdmin
-from quotation.models import QuoteModel
+from quotation.models import QuoteItemModel, QuoteModel
 from tenancy.choices import TenantRole
 from tenancy.models import TenantMembershipModel, TenantModel
 
@@ -181,6 +182,77 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
             formset.save(commit=False)
 
         logger_info_mock.assert_called_once()
+
+    def test_quote_item_inline_renders_attributes_snapshot_through_readonly_key_value_widget(self) -> None:
+        """ Verify persisted quote item attributes render through Unfold readonly widget delegation. """
+        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+        QuoteItemModel.objects.create(
+            quote=self.in_scope_quote,
+            product=self.in_scope_product,
+            variant=self.in_scope_variant,
+            product_name_snapshot="Pump",
+            sku_snapshot="PUMP-001",
+            attributes_snapshot={"capacity": "20L"},
+            quantity=1,
+        )
+        request = self.build_request(self.operator, self.tenant)
+
+        fields = inline.get_fields(request, obj=self.in_scope_quote)
+        formset_class = inline.get_formset(request, obj=self.in_scope_quote)
+        formset = formset_class(instance=self.in_scope_quote)
+        form = formset.forms[0]
+        readonly_field = UnfoldAdminReadonlyField(
+            form,
+            "attributes_snapshot",
+            is_first=False,
+            model_admin=inline,
+        )
+        rendered_attributes = readonly_field.contents()
+
+        self.assertIn("attributes_snapshot", fields)
+        self.assertIn("attributes_snapshot", inline.get_readonly_fields(request, obj=self.in_scope_quote))
+        self.assertTrue(form.fields["attributes_snapshot"].disabled)
+        self.assertTrue(form.fields["attributes_snapshot"].widget.read_only)
+        self.assertIn("capacity", rendered_attributes)
+        self.assertIn("20L", rendered_attributes)
+        self.assertIn("core-json-key-value", rendered_attributes)
+        self.assertIn("core-json-key-value--readonly", rendered_attributes)
+        self.assertIn("core-json-key-value__display", rendered_attributes)
+        self.assertNotIn('name="items-0-attributes_snapshot__key"', rendered_attributes)
+        self.assertNotIn('name="items-0-attributes_snapshot__value"', rendered_attributes)
+        self.assertIn("core/forms/widgets/json_key_value_widget.css", str(form.media))
+
+    def test_quote_item_inline_renders_empty_attributes_snapshot_with_dash_placeholders(self) -> None:
+        """ Verify empty quote item attributes render as locked key-value dash placeholders. """
+        inline = QuoteItemModelInline(QuoteModel, owner_admin_site)
+        QuoteItemModel.objects.create(
+            quote=self.in_scope_quote,
+            product=self.in_scope_product,
+            variant=self.in_scope_variant,
+            product_name_snapshot="Pump",
+            sku_snapshot="PUMP-001",
+            attributes_snapshot={},
+            quantity=1,
+        )
+        request = self.build_request(self.operator, self.tenant)
+
+        formset_class = inline.get_formset(request, obj=self.in_scope_quote)
+        formset = formset_class(instance=self.in_scope_quote)
+        form = formset.forms[0]
+        readonly_field = UnfoldAdminReadonlyField(
+            form,
+            "attributes_snapshot",
+            is_first=False,
+            model_admin=inline,
+        )
+        rendered_attributes = readonly_field.contents()
+
+        self.assertEqual(rendered_attributes.count("core-json-key-value__display"), 2)
+        self.assertIn("-", rendered_attributes)
+        self.assertIn("core-json-key-value--readonly", rendered_attributes)
+        self.assertIn("core-json-key-value__display", rendered_attributes)
+        self.assertNotIn('name="items-0-attributes_snapshot__key"', rendered_attributes)
+        self.assertNotIn('name="items-0-attributes_snapshot__value"', rendered_attributes)
 
     def test_quote_item_inline_uses_the_default_variant_when_none_is_selected(self) -> None:
         """ Verify quote items fall back to the product default variant when the inline leaves variant empty. """

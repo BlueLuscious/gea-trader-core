@@ -5,6 +5,7 @@ from django import forms
 from django.forms import ModelChoiceField
 from django.utils.translation import gettext_lazy as _
 from catalog.models import ProductModel, ProductVariantModel
+from core.forms import JsonKeyValueField
 from quotation.models import QuoteItemModel
 from tenancy.models import TenantModel
 
@@ -12,14 +13,26 @@ from tenancy.models import TenantModel
 class QuoteItemModelInlineForm(forms.ModelForm):
     """ Owner-facing form for manually composing quote items before they become snapshots. """
 
+    attributes_snapshot = JsonKeyValueField(
+        label=_("Attribute snapshot"),
+        help_text=_("Variant attributes captured when this quote item was created."),
+        key_label=_("Attribute key"),
+        value_label=_("Attribute value"),
+        add_label=_("Add attribute"),
+        remove_label=_("Remove attribute"),
+        required=False,
+        disabled=True,
+    )
+
     class Meta:
         model = QuoteItemModel
-        fields = ("product", "variant", "quantity", "notes")
+        fields = ("product", "variant", "quantity", "notes", "attributes_snapshot")
         labels = {
             "product": _("Product"),
             "variant": _("Variant"),
             "quantity": _("Quantity"),
             "notes": _("Item notes"),
+            "attributes_snapshot": _("Attribute snapshot"),
         }
         help_texts = {
             "product": _("Choose the catalog product this quote item refers to."),
@@ -39,6 +52,7 @@ class QuoteItemModelInlineForm(forms.ModelForm):
         """
         tenant: TenantModel | None = kwargs.pop("tenant", None)
         super().__init__(*args, **kwargs)
+        self.fields["attributes_snapshot"].widget.read_only = True
         self._configure_product_field(tenant)
         self._configure_variant_field(tenant)
 

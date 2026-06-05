@@ -89,4 +89,4 @@ class CartModel(models.Model):
         Returns:
             str: Cart label.
         """
-        return f"Cart {self.pk}"
+        return f"{_('Cart')} {self.pk}"
