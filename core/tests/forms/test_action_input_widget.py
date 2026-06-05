@@ -3,6 +3,7 @@
 from django import forms
 from django.utils.translation import override
 from core.forms import ActionInputWidget
+from core.forms.widgets import UNFOLD_READONLY_VALUE_CLASSES
 from core.testing.base import LoggedSimpleTestCase
 
 
@@ -69,6 +70,42 @@ class TestActionInputWidget(LoggedSimpleTestCase):
         self.assertIn('class="border cursor-pointer font-medium', rendered_form)
         self.assertIn('value="current-slug"', rendered_form)
         self.assertIn("Suggest", rendered_form)
+
+    def test_readonly_render_outputs_display_without_action_controls(self) -> None:
+        """ Verify locked action inputs render display text without interactive controls. """
+        widget = ActionInputWidget(
+            action_url="/admin/example/suggest/",
+            action_label="Suggest",
+            response_value_key="slug",
+        )
+
+        rendered = widget.render("slug", "current-slug", attrs={"readonly": True})
+
+        for class_name in ("readonly", "bg-base-50", "dark:bg-base-800", "rounded-default", "shadow-xs"):
+            self.assertIn(class_name, UNFOLD_READONLY_VALUE_CLASSES)
+            self.assertIn(class_name, rendered)
+
+        self.assertIn("core-action-input__display", rendered)
+        self.assertIn("readonly", rendered)
+        self.assertIn("current-slug", rendered)
+        self.assertNotIn("data-action-input-widget", rendered)
+        self.assertNotIn("data-action-input-url", rendered)
+        self.assertNotIn("data-action-input-control", rendered)
+        self.assertNotIn("data-action-input-button", rendered)
+
+    def test_readonly_empty_render_outputs_dash_placeholder(self) -> None:
+        """ Verify locked empty action inputs render a dash placeholder. """
+        widget = ActionInputWidget(
+            action_url="/admin/example/suggest/",
+            action_label="Suggest",
+        )
+
+        rendered = widget.render("slug", "", attrs={"disabled": True})
+
+        self.assertIn("core-action-input__display", rendered)
+        self.assertIn("-", rendered)
+        self.assertNotIn("data-action-input-control", rendered)
+        self.assertNotIn("data-action-input-button", rendered)
 
     def test_media_includes_generic_assets(self) -> None:
         """ Verify the widget loads its reusable CSS and JavaScript assets. """

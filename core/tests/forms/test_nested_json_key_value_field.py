@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.http import QueryDict
 from django.utils.translation import override
 from core.forms import NestedJsonKeyValueField, NestedJsonKeyValueWidget
+from core.forms.widgets import UNFOLD_READONLY_VALUE_CLASSES
 from core.testing.base import LoggedSimpleTestCase
 
 
@@ -272,3 +273,49 @@ class TestNestedJsonKeyValueField(LoggedSimpleTestCase):
         self.assertIn("core/forms/widgets/json_key_value_base.css", rendered_media)
         self.assertIn("core/forms/widgets/nested_json_key_value_widget.css", rendered_media)
         self.assertIn("core/forms/widgets/nested_json_key_value_widget.js", rendered_media)
+
+    def test_disabled_widget_renders_display_blocks_without_actions(self) -> None:
+        """ Verify disabled nested widgets keep layout with display blocks only. """
+        field = NestedJsonKeyValueField(required=False, disabled=True, max_depth=2)
+
+        rendered = field.widget.render(
+            "metadata",
+            {"packaging": {"type": "drum"}, "capacity": "20L"},
+            attrs={"disabled": True},
+        )
+
+        for class_name in ("readonly", "bg-base-50", "dark:bg-base-800", "rounded-default", "shadow-xs"):
+            self.assertIn(class_name, UNFOLD_READONLY_VALUE_CLASSES)
+            self.assertIn(class_name, rendered)
+
+        self.assertIn("core-nested-json-key-value__display", rendered)
+        self.assertIn("core-nested-json-key-value--readonly", rendered)
+        self.assertIn("packaging", rendered)
+        self.assertIn("type", rendered)
+        self.assertIn("drum", rendered)
+        self.assertIn("capacity", rendered)
+        self.assertIn("20L", rendered)
+        self.assertIn("readonly", rendered)
+        self.assertNotIn("data-nested-json-key-value-widget", rendered)
+        self.assertNotIn("data-nested-json-key-value-row", rendered)
+        self.assertNotIn("data-nested-json-key-value-add-root", rendered)
+        self.assertNotIn("data-nested-json-key-value-add-child", rendered)
+        self.assertNotIn("data-nested-json-key-value-remove", rendered)
+        self.assertNotIn('name="metadata__present"', rendered)
+        self.assertNotIn('name="metadata__row_id"', rendered)
+        self.assertNotIn('name="metadata__parent_id"', rendered)
+        self.assertNotIn('name="metadata__key"', rendered)
+        self.assertNotIn('name="metadata__value"', rendered)
+
+    def test_disabled_empty_widget_renders_dash_placeholders(self) -> None:
+        """ Verify disabled empty nested widgets render stable dash placeholders. """
+        field = NestedJsonKeyValueField(required=False, disabled=True)
+
+        rendered = field.widget.render("metadata", {}, attrs={"disabled": True})
+
+        self.assertIn("core-nested-json-key-value__display", rendered)
+        self.assertIn("core-nested-json-key-value--readonly", rendered)
+        self.assertEqual(rendered.count("core-nested-json-key-value__display"), 2)
+        self.assertIn("-", rendered)
+        self.assertNotIn("data-nested-json-key-value-add-root", rendered)
+        self.assertNotIn("data-nested-json-key-value-remove", rendered)

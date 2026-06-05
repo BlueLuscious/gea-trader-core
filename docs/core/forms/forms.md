@@ -43,6 +43,22 @@ Widget static assets live in:
 `BaseJsonKeyValueWidget` is an internal extension point for shared widget labels, Unfold-compatible classes, submitted-data helpers, and shared CSS.
 Public consumers should import the concrete fields or widgets from `core.forms`, not from internal modules.
 
+## Native Styling Contract
+
+Core form widgets should reuse Django and Unfold styling contracts before adding project-specific classes.
+
+Current rules:
+
+- editable text-like controls use Unfold editable input classes
+- action buttons use Unfold button classes
+- readonly text-like displays mirror the class contract from Unfold's `field_readonly_value.html` through one shared Python constant because Unfold does not expose that template class list as a public widget constant
+- `core-*` classes are reserved for layout, JavaScript hooks, or testable widget boundaries
+- widget CSS should only handle local layout concerns such as grids, indentation, flex behavior, and minimum widths
+- readonly widgets render display-only `<div>` blocks instead of disabled `<input>` controls when the value should not be submitted
+- readonly key-value widgets flatten Unfold's outer readonly value wrapper only when the widget is rendered as a composite value inside admin `readonly_fields`
+
+This keeps custom widgets visually aligned with the owner admin theme while keeping the copied readonly template contract centralized and out of individual templates or CSS files.
+
 ## `ActionInputWidget`
 
 `ActionInputWidget` renders a normal text input with one inline action button.
@@ -58,6 +74,7 @@ Current contract:
 - supports dynamic request params through `source_params`
 - uses Unfold-compatible input and button classes, keeping custom CSS limited to inline layout
 - keeps domain-specific generation logic outside `core/forms/`
+- renders a display-only `<div>` with Unfold readonly value classes and without the action button when the widget receives `readonly` or `disabled`
 
 `source_params` entries are dictionaries with:
 
@@ -183,6 +200,7 @@ Current behavior:
 
 - renders one row per existing key or nested key
 - renders one empty root row for empty values
+- renders display-only `<div>` values with Unfold readonly value classes and without add, child, remove, or input controls when the widget receives `readonly` or `disabled`
 - submits repeated inputs through `<field_name>__row_id`, `<field_name>__parent_id`, `<field_name>__key`, and `<field_name>__value`
 - submits a `<field_name>__present` marker so an intentionally empty editor clears the JSON value
 - uses row IDs and parent IDs instead of path delimiters, so keys may contain characters such as `.`
@@ -207,6 +225,7 @@ Current behavior:
 
 - renders one row per existing key-value pair
 - renders one empty row for empty values
+- renders display-only `<div>` values with Unfold readonly value classes and without add, remove, or input controls when the widget receives `readonly` or `disabled`
 - submits repeated inputs through `<field_name>__key` and `<field_name>__value`
 - submits a `<field_name>__present` marker so an intentionally empty editor clears the JSON value
 - supports Django admin inline prefixes
@@ -243,10 +262,14 @@ class ExampleForm(forms.ModelForm):
 
 ## Read-Only JSON Display
 
-Do not use `JsonKeyValueField` or `JsonKeyValueWidget` for read-only snapshots.
-Do not use `NestedJsonKeyValueField` for read-only snapshots either.
+Use the same JSON key-value fields and widgets for read-only snapshots by configuring the form field with `disabled=True`, the widget with `readonly`, or the widget with `read_only=True` when it must render through Unfold admin `readonly_fields`.
+The widgets keep the same key-value layout, render display-only `<div>` values with native Unfold readonly styling and without add or remove controls, and show `-` placeholders when the locked value is empty.
 
-For read-only admin display, prefer a separate display helper or readonly admin method that formats the dictionary without inputs or JavaScript.
+Readonly mode does not render owned input names, hidden submit markers, or JavaScript initialization hooks.
+That avoids accidentally submitting locked snapshot data while preserving the same visual structure as the editable widget.
+
+In Unfold admin, a field listed in `readonly_fields` can still delegate its value rendering to the form widget when the field remains declared on the form and the widget exposes `read_only=True`.
+Use that path for owner-admin snapshots that should keep Django admin readonly semantics while preserving the key-value widget presentation.
 
 This keeps editable form behavior separate from snapshot presentation.
 

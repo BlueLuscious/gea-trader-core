@@ -1,10 +1,14 @@
 <div
-  class="core-nested-json-key-value"
+  class="core-nested-json-key-value{% if widget.is_readonly %} core-nested-json-key-value--readonly{% endif %}"
+  {% if not widget.is_readonly %}
   data-nested-json-key-value-widget
   data-nested-json-key-value-max-depth="{{ widget.max_depth }}"
+  {% endif %}
   {% if widget.attrs.id %}id="{{ widget.attrs.id }}"{% endif %}
 >
+  {% if not widget.is_readonly %}
   <input type="hidden" name="{{ widget.name }}__present" value="1">
+  {% endif %}
 
   <div class="core-nested-json-key-value__header">
     <span>{{ widget.key_label }}</span>
@@ -12,17 +16,32 @@
     <span aria-hidden="true"></span>
   </div>
 
-  <div class="core-nested-json-key-value__rows" data-nested-json-key-value-rows>
+  <div class="core-nested-json-key-value__rows" {% if not widget.is_readonly %}data-nested-json-key-value-rows{% endif %}>
     {% for row in widget.rows %}
       <div
         class="core-nested-json-key-value__row"
+        {% if not widget.is_readonly %}
         data-nested-json-key-value-row
         data-nested-json-key-value-row-id="{{ row.row_id }}"
         data-nested-json-key-value-parent-id="{{ row.parent_id }}"
         data-nested-json-key-value-depth="{{ row.depth }}"
         data-nested-json-key-value-has-children="{{ row.has_children|yesno:'true,false' }}"
+        {% endif %}
         style="--nested-json-key-value-depth: {{ row.depth }};"
       >
+        {% if widget.is_readonly %}
+        <div
+          class="{{ widget.display_classes }}"
+        >
+          {{ row.key }}
+        </div>
+        <div
+          class="{{ widget.display_classes }}"
+        >
+          {% if row.has_children %}-{% else %}{{ row.value }}{% endif %}
+        </div>
+        <span aria-hidden="true"></span>
+        {% else %}
         <input
           type="hidden"
           name="{{ widget.name }}__row_id"
@@ -73,10 +92,12 @@
             <span class="material-symbols-outlined text-sm" aria-hidden="true">close</span>
           </button>
         </div>
+        {% endif %}
       </div>
     {% endfor %}
   </div>
 
+  {% if not widget.is_readonly %}
   <button
     type="button"
     class="{{ widget.add_button_classes }} core-nested-json-key-value__add"
@@ -143,4 +164,5 @@
       </div>
     </div>
   </template>
+  {% endif %}
 </div>

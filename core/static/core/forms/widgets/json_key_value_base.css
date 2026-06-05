@@ -3,6 +3,15 @@
   min-width: 20rem;
 }
 
+.readonly:has(> .core-json-key-value--readonly),
+.readonly:has(> .core-nested-json-key-value--readonly) {
+  max-width: none;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
 .core-json-key-value__header,
 .core-nested-json-key-value__header {
   margin-bottom: 0.375rem;
@@ -28,6 +37,12 @@
 .core-nested-json-key-value__input {
   width: 100%;
   min-width: 0;
+}
+
+.core-json-key-value__display,
+.core-nested-json-key-value__display {
+  min-width: 0;
+  width: 100%;
 }
 
 .core-json-key-value__add,

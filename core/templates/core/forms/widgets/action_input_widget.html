@@ -1,11 +1,18 @@
 <div
   class="core-action-input"
+  {% if not widget.is_readonly %}
   data-action-input-widget
   data-action-input-url="{{ widget.action_url }}"
   data-action-input-response-key="{{ widget.response_value_key }}"
   data-action-input-source-params="{{ widget.source_params_json }}"
   data-action-input-static-params="{{ widget.static_params_json }}"
+  {% endif %}
 >
+  {% if widget.is_readonly %}
+  <div class="{{ widget.display_classes }}">
+    {{ widget.display_value }}
+  </div>
+  {% else %}
   <input
     type="{{ widget.type }}"
     name="{{ widget.name }}"
@@ -21,4 +28,5 @@
   >
     {{ widget.action_label }}
   </button>
+  {% endif %}
 </div>

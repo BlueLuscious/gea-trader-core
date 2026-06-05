@@ -1,9 +1,13 @@
 <div
-  class="core-json-key-value"
+  class="core-json-key-value{% if widget.is_readonly %} core-json-key-value--readonly{% endif %}"
+  {% if not widget.is_readonly %}
   data-json-key-value-widget
+  {% endif %}
   {% if widget.attrs.id %}id="{{ widget.attrs.id }}"{% endif %}
 >
+  {% if not widget.is_readonly %}
   <input type="hidden" name="{{ widget.name }}__present" value="1">
+  {% endif %}
 
   <div class="core-json-key-value__header">
     <span>{{ widget.key_label }}</span>
@@ -11,9 +15,22 @@
     <span aria-hidden="true"></span>
   </div>
 
-  <div class="core-json-key-value__rows" data-json-key-value-rows>
+  <div class="core-json-key-value__rows" {% if not widget.is_readonly %}data-json-key-value-rows{% endif %}>
     {% for row in widget.rows %}
-      <div class="core-json-key-value__row" data-json-key-value-row>
+      <div class="core-json-key-value__row" {% if not widget.is_readonly %}data-json-key-value-row{% endif %}>
+        {% if widget.is_readonly %}
+        <div
+          class="{{ widget.display_classes }}"
+        >
+          {{ row.key }}
+        </div>
+        <div
+          class="{{ widget.display_classes }}"
+        >
+          {{ row.value }}
+        </div>
+        <span aria-hidden="true"></span>
+        {% else %}
         <input
           type="text"
           name="{{ widget.name }}__key"
@@ -39,10 +56,12 @@
         >
           <span class="material-symbols-outlined text-sm" aria-hidden="true">close</span>
         </button>
+        {% endif %}
       </div>
     {% endfor %}
   </div>
 
+  {% if not widget.is_readonly %}
   <button
     type="button"
     class="{{ widget.add_button_classes }} core-json-key-value__add"
@@ -78,4 +97,5 @@
       </button>
     </div>
   </template>
+  {% endif %}
 </div>

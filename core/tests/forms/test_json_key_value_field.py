@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.http import QueryDict
 from django.utils.translation import override
 from core.forms import JsonKeyValueField
+from core.forms.widgets import UNFOLD_READONLY_VALUE_CLASSES
 from core.testing.base import LoggedSimpleTestCase
 
 
@@ -103,3 +104,54 @@ class TestJsonKeyValueField(LoggedSimpleTestCase):
                 {"key": "", "value": "Tambor"},
             ],
         )
+
+    def test_editable_widget_renders_without_disabled_attribute(self) -> None:
+        """ Verify editable widgets do not require disabled or readonly attrs. """
+        field = JsonKeyValueField(required=False)
+
+        rendered = field.widget.render("variant-attributes_json", {"capacity": "20L"}, attrs={"id": "attributes"})
+
+        self.assertIn("core-json-key-value", rendered)
+        self.assertIn("capacity", rendered)
+        self.assertIn("20L", rendered)
+        self.assertIn("data-json-key-value-add", rendered)
+        self.assertIn("data-json-key-value-remove", rendered)
+        self.assertNotIn("core-json-key-value--readonly", rendered)
+        self.assertNotIn("readonly disabled", rendered)
+
+    def test_disabled_widget_renders_display_blocks_without_actions(self) -> None:
+        """ Verify disabled key-value fields keep layout with display blocks only. """
+        field = JsonKeyValueField(required=False, disabled=True)
+
+        rendered = field.widget.render("variant-attributes_json", {"capacity": "20L"}, attrs={"disabled": True})
+
+        for class_name in ("readonly", "bg-base-50", "dark:bg-base-800", "rounded-default", "shadow-xs"):
+            self.assertIn(class_name, UNFOLD_READONLY_VALUE_CLASSES)
+            self.assertIn(class_name, rendered)
+
+        self.assertIn("core-json-key-value", rendered)
+        self.assertIn("capacity", rendered)
+        self.assertIn("20L", rendered)
+        self.assertIn("core-json-key-value__display", rendered)
+        self.assertIn("core-json-key-value--readonly", rendered)
+        self.assertIn("readonly", rendered)
+        self.assertNotIn("data-json-key-value-widget", rendered)
+        self.assertNotIn("data-json-key-value-row", rendered)
+        self.assertNotIn("data-json-key-value-add", rendered)
+        self.assertNotIn("data-json-key-value-remove", rendered)
+        self.assertNotIn('name="variant-attributes_json__present"', rendered)
+        self.assertNotIn('name="variant-attributes_json__key"', rendered)
+        self.assertNotIn('name="variant-attributes_json__value"', rendered)
+
+    def test_disabled_empty_widget_renders_dash_placeholders(self) -> None:
+        """ Verify disabled empty key-value fields render stable dash placeholders. """
+        field = JsonKeyValueField(required=False, disabled=True)
+
+        rendered = field.widget.render("variant-attributes_json", {}, attrs={"disabled": True})
+
+        self.assertIn("core-json-key-value__display", rendered)
+        self.assertIn("core-json-key-value--readonly", rendered)
+        self.assertEqual(rendered.count("core-json-key-value__display"), 2)
+        self.assertIn("-", rendered)
+        self.assertNotIn("data-json-key-value-add", rendered)
+        self.assertNotIn("data-json-key-value-remove", rendered)
