@@ -30,13 +30,18 @@ class TestActiveTenantMiddleware(LoggedTestCase):
         )
         self.middleware = ActiveTenantMiddleware(lambda request: HttpResponse("ok"))
 
-    def _build_request(self) -> HttpRequest:
+    def _build_request(self, path: str = "/owner-admin/") -> HttpRequest:
         """ Build a request with an attached session.
+
+        Args:
+            path: Request path.
 
         Returns:
             HttpRequest: Request ready for middleware execution.
         """
         request = HttpRequest()
+        request.path = path
+        request.path_info = path
         SessionMiddleware(lambda req: HttpResponse("ok")).process_request(request)
         request.session.save()
         return request
@@ -91,3 +96,24 @@ class TestActiveTenantMiddleware(LoggedTestCase):
 
         self.assertEqual(["GEA Center"], captured_tenant_names)
         self.assertIsNone(ActiveTenantContext.get())
+
+    def test_middleware_skips_resolution_outside_owner_admin(self) -> None:
+        """ Verify global requests do not invoke the admin tenant resolver. """
+        request = self._build_request("/serviceworker.js")
+        request.user = self.user
+
+        with patch("tenancy.middleware.active_tenant_middleware.ActiveTenantResolver.resolve") as resolve_mock:
+            self.middleware(request)
+
+        resolve_mock.assert_not_called()
+        self.assertIsNone(request.tenant)
+        self.assertNotIn("active_tenant_id", request.session)
+
+    def test_middleware_resolves_for_localized_owner_admin_paths(self) -> None:
+        """ Verify localized owner-admin URLs remain tenant-aware. """
+        request = self._build_request("/en/owner-admin/")
+        request.user = self.user
+
+        self.middleware(request)
+
+        self.assertEqual(self.primary_tenant, request.tenant)

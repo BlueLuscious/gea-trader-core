@@ -66,6 +66,8 @@ Today the middleware uses:
 
 - `ActiveTenantResolver`
 
+The middleware invokes this resolver only for the owner-admin URL surface. Other request paths receive `request.tenant = None` without trying session or membership strategies.
+
 That class currently delegates to:
 
 - `AdminActiveTenantResolver`

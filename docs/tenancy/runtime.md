@@ -31,6 +31,8 @@ The base structure resolves an active tenant during the request cycle.
 Current behavior:
 
 - resolution happens through `ActiveTenantMiddleware`
+- resolution currently runs only for the owner-admin URL surface
+- non-tenant-aware paths attach `request.tenant = None` without running the active-tenant resolver
 - middleware lives in `tenancy/middleware/`
 - resolution rules live in `tenancy/resolution/`
 - session persistence lives in `tenancy/session/`
@@ -44,7 +46,7 @@ Current request contract:
 
 - `request.tenant` contains the resolved tenant or `None`
 
-This keeps tenant-aware admin and future tenant-aware web flows grounded in one shared base mechanism.
+This keeps tenant-aware admin behavior explicit while leaving global frontend requests outside membership-backed resolution.
 
 Request-aware storage behavior that consumes the runtime active tenant is documented in:
 
