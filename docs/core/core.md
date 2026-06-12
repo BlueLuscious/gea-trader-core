@@ -35,6 +35,7 @@ Current contents:
 - `asgi.py`
 - `wsgi.py`
 - `celery.py`
+- `beat/`
 - `adminsites/`
 - `config/`
 - `mail/`
@@ -62,6 +63,7 @@ The `core/` package is responsible for:
 - hosting reusable project-wide configuration code
 - hosting reusable project-wide logging configuration code
 - hosting reusable project-wide asynchronous task runtime wiring
+- hosting reusable project-wide periodic schedule wiring
 - hosting reusable project-wide outbound mail infrastructure
 - hosting reusable project-wide form fields and widgets
 - hosting reusable testing infrastructure and project-level tests
@@ -74,6 +76,7 @@ Examples:
 
 - environment-driven settings resolution
 - Celery bootstrap shared by the whole project
+- Celery Beat schedule wiring shared by the whole project
 - storage configuration shared by the whole project
 - outbound mail infrastructure shared by the whole project
 - reusable form fields or widgets that are not owned by one domain app
@@ -116,6 +119,16 @@ See:
 ### `core/celery.py`
 
 Contains the project-wide Celery bootstrap used for reusable asynchronous task execution.
+
+See:
+
+- `docs/core/celery/celery.md`
+
+### `core/beat/`
+
+Contains the code-based Celery Beat schedule entrypoint shared by the project.
+
+The package should wire periodic tasks into Beat, while the task implementation itself should stay in `core/tasks/` for project-wide workflows or in the app-owned task package for business workflows.
 
 See:
 

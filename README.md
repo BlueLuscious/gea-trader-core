@@ -143,6 +143,18 @@ If you want to run a local Celery worker after Redis is available, use:
 
 On Windows local development, prefer `--pool=solo` to avoid the `billiard` multiprocessing permission errors that commonly appear with the default worker pool.
 
+If you want to run local periodic tasks after Redis is available, run Celery Beat in a separate terminal:
+
+```bash
+# Windows
+.venv\Scripts\celery.exe -A core.celery beat --loglevel=info
+
+# Unix/macOS
+.venv/bin/celery -A core.celery beat --loglevel=info
+```
+
+Beat only enqueues scheduled tasks. Keep one Celery worker running separately to execute them.
+
 ## Translations
 
 The project uses Django's internationalization framework. To work with

@@ -326,6 +326,20 @@
             ],
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}\\.env"
+        },
+        {
+            "name": "Celery: Beat",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "celery",
+            "args": [
+                "-A",
+                "core.celery",
+                "beat",
+                "--loglevel=info"
+            ],
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}\\.env"
         }
     ]
 }

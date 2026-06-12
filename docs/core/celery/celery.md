@@ -27,6 +27,7 @@ The current implementation provides:
 - one project Celery app in `core/celery.py`
 - Django-settings-based Celery configuration
 - Redis-backed broker and result backend settings
+- code-based Celery Beat schedule wiring through `core/beat/`
 - autodiscovery for installed app `tasks.py` modules
 - one first shared task implementation for outbound mail under `core/tasks/mail/tasks.py`
 
@@ -37,6 +38,7 @@ The first real async use case is outbound mail, but the stack remains intentiona
 Current files:
 
 - `core/celery.py`
+- `core/beat/`
 - `core/tasks/`
 
 ## Current Settings Direction
@@ -49,6 +51,10 @@ Current environment-driven settings:
 - `CELERY_BROKER_URL`
 - `CELERY_RESULT_BACKEND`
 - `CELERY_TASK_ALWAYS_EAGER`
+
+Current code-driven settings:
+
+- `CELERY_BEAT_SCHEDULE`
 
 Current default behavior:
 
@@ -80,15 +86,28 @@ On Windows local development, prefer `--pool=solo`.
 
 This avoids the `billiard` multiprocessing permission errors that commonly appear with the default worker pool on Windows.
 
+Example Beat command:
+
+```powershell
+.\.venv\Scripts\celery.exe -A core.celery beat --loglevel=info
+```
+
+Run Beat as a separate process from the worker.
+
+Beat decides when a periodic task should be enqueued. A worker still has to be running to execute the task.
+
 ## Ownership Rule
 
 Keep the Celery bootstrap in `core/`.
+
+Keep the project-wide Beat schedule entrypoint in `core/beat/`.
 
 Keep future domain task definitions close to the app that owns the business flow unless they are truly project-wide.
 
 Examples:
 
 - project-wide async infrastructure belongs in `core/`
+- schedule definitions that connect periodic app tasks to Beat belong in `core/beat/`
 - app-owned business tasks should prefer living in the app that owns that workflow
 
 For shared task placement and payload conventions, see:
@@ -104,36 +123,32 @@ The current direction on top of this wiring is:
 3. keep outbound mail as the first real async use case, not as the only one
 4. validate worker-backed flows through opt-in integration tests when one runtime crosses Redis, Celery, and external services
 
-## Deferred Base Improvements
+## Beat Schedule Direction
 
-The current branch already covers the base Celery runtime needed for asynchronous mail.
+The current branch uses Celery Beat as the shared project scheduler for scheduled or periodic asynchronous work.
 
-The next base-structure improvement for the shared Celery layer is:
-
-- add Celery Beat when the project needs scheduled or periodic asynchronous work
-
-Recommended first model:
+Current model:
 
 - keep Beat as one generic scheduler for the whole project, not as one mail-specific runtime detail
 - keep schedule definitions in `core/beat/`
 - keep periodic task implementations in `core/tasks/` or the app-owned `tasks/` package that owns the workflow
 - let Beat enqueue existing thin tasks instead of moving domain logic into the schedule layer
 
-Suggested initial layout:
+Current layout:
 
 ```text
 core/
   celery.py
   beat/
     __init__.py
-    schedules.py
+    celery_beat_schedule_builder.py
 ```
 
-Suggested first direction:
+Current direction:
 
 - keep schedule definitions in code
 - use the default Celery Beat scheduler first
-- add one local development command or launcher for Beat
+- let app-owned schedule modules define task-specific intervals in code
 - avoid extra persistence or admin wiring until the project has a real periodic workload
 
 Future evolution:

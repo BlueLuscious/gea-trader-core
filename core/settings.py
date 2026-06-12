@@ -6,6 +6,7 @@ from django_components import ComponentsSettings
 from django.utils.translation import gettext_lazy as _
 from core.adminsites.admin_namespace import AdminNamespace
 from core.adminsites.unfold import AdminSiteUnfoldSettings
+from core.beat import CeleryBeatScheduleBuilder
 from core.config.logging import LoggingConfigBuilder
 from core.config.storage import MediaStorageAdapterResolver, StaticStorageAdapterResolver
 
@@ -199,6 +200,7 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_TASK_ALWAYS_EAGER = os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False').lower() in ('1', 'true', 'yes', 'on')
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ENABLE_UTC = USE_TZ
+CELERY_BEAT_SCHEDULE = CeleryBeatScheduleBuilder.build()
 
 
 # Static files (CSS, JavaScript, Images)
