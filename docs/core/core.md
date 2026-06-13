@@ -36,6 +36,7 @@ Current contents:
 - `wsgi.py`
 - `celery.py`
 - `beat/`
+- `schedules/`
 - `adminsites/`
 - `config/`
 - `mail/`
@@ -77,6 +78,7 @@ Examples:
 - environment-driven settings resolution
 - Celery bootstrap shared by the whole project
 - Celery Beat schedule wiring shared by the whole project
+- project-wide periodic schedule definitions
 - storage configuration shared by the whole project
 - outbound mail infrastructure shared by the whole project
 - reusable form fields or widgets that are not owned by one domain app
@@ -128,7 +130,13 @@ See:
 
 Contains the code-based Celery Beat schedule entrypoint shared by the project.
 
-The package should wire periodic tasks into Beat, while the task implementation itself should stay in `core/tasks/` for project-wide workflows or in the app-owned task package for business workflows.
+The package should provide the base Beat schedule mapping consumed by Django settings.
+
+### `core/schedules/`
+
+Contains project-wide periodic schedule definitions.
+
+App-owned periodic schedules should live in the owning app's `schedules/` package instead of being centralized here.
 
 See:
 

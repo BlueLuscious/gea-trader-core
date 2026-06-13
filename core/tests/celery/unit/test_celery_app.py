@@ -22,3 +22,9 @@ class TestCeleryApp(LoggedSimpleTestCase):
 
         self.assertIn("core.tasks.mail.send_mail_message_task", celery_app.tasks)
         self.assertIn("core.tasks.mail.send_templated_mail_task", celery_app.tasks)
+
+    def test_celery_app_autodiscovers_schedule_packages(self) -> None:
+        """ Verify the Celery app imports installed app schedule packages. """
+        celery_app.autodiscover_tasks(related_name="schedules", force=True)
+
+        self.assertIn("core.schedules", celery_app.loader.task_modules)

@@ -29,6 +29,7 @@ The current implementation provides:
 - Redis-backed broker and result backend settings
 - code-based Celery Beat schedule wiring through `core/beat/`
 - autodiscovery for installed app `tasks.py` modules
+- autodiscovery for installed app `schedules` packages
 - one first shared task implementation for outbound mail under `core/tasks/mail/tasks.py`
 
 The first real async use case is outbound mail, but the stack remains intentionally general-purpose.
@@ -39,6 +40,7 @@ Current files:
 
 - `core/celery.py`
 - `core/beat/`
+- `core/schedules/`
 - `core/tasks/`
 
 ## Current Settings Direction
@@ -102,13 +104,14 @@ Keep the Celery bootstrap in `core/`.
 
 Keep the project-wide Beat schedule entrypoint in `core/beat/`.
 
-Keep future domain task definitions close to the app that owns the business flow unless they are truly project-wide.
+Keep future domain task and schedule definitions close to the app that owns the business flow unless they are truly project-wide.
 
 Examples:
 
 - project-wide async infrastructure belongs in `core/`
-- schedule definitions that connect periodic app tasks to Beat belong in `core/beat/`
+- project-wide periodic schedules belong in `core/schedules/`
 - app-owned business tasks should prefer living in the app that owns that workflow
+- app-owned periodic schedules should prefer living in that app's `schedules/` package
 
 For shared task placement and payload conventions, see:
 
@@ -130,7 +133,8 @@ The current branch uses Celery Beat as the shared project scheduler for schedule
 Current model:
 
 - keep Beat as one generic scheduler for the whole project, not as one mail-specific runtime detail
-- keep schedule definitions in `core/beat/`
+- keep project-wide schedule definitions in `core/schedules/`
+- keep app-owned schedule definitions in each owning app's `schedules/` package
 - keep periodic task implementations in `core/tasks/` or the app-owned `tasks/` package that owns the workflow
 - let Beat enqueue existing thin tasks instead of moving domain logic into the schedule layer
 
@@ -142,12 +146,15 @@ core/
   beat/
     __init__.py
     celery_beat_schedule_builder.py
+  schedules/
+    __init__.py
 ```
 
 Current direction:
 
 - keep schedule definitions in code
 - use the default Celery Beat scheduler first
+- use Celery autodiscovery for installed app `schedules` packages
 - let app-owned schedule modules define task-specific intervals in code
 - avoid extra persistence or admin wiring until the project has a real periodic workload
 
