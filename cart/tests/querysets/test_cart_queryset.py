@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from core.testing.base import LoggedTestCase
 from cart.choices import CartStatus
 from cart.models import CartItemModel, CartModel
@@ -38,6 +39,26 @@ class TestCartQuerySet(LoggedTestCase):
             [active_cart],
             transform=lambda instance: instance,
         )
+
+    def test_cart_queryset_filters_expired_carts(self) -> None:
+        """ Verify CartModelQuerySet returns carts whose expiration has passed. """
+        now = timezone.now()
+        tenant = self._create_tenant("cart-queryset-expired")
+        expired_cart = CartModel.objects.create(
+            tenant=tenant,
+            session_key="expired-session",
+            expires_at=now - timezone.timedelta(minutes=1),
+        )
+        CartModel.objects.create(
+            tenant=tenant,
+            session_key="future-session",
+            expires_at=now + timezone.timedelta(minutes=1),
+        )
+        CartModel.objects.create(tenant=tenant, session_key="no-expiration")
+
+        queryset = CartModel.objects.get_queryset().expired(reference_time=now)
+
+        self.assertQuerySetEqual(queryset, [expired_cart], transform=lambda instance: instance)
 
     def test_cart_item_queryset_filters_by_cart_and_selects_catalog(self) -> None:
         """ Verify CartItemModelQuerySet filters by cart and eager loads catalog relations. """

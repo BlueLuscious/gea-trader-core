@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 from django.db import models
 from cart.models.querysets.cart_model_queryset import CartModelQuerySet
@@ -53,6 +54,17 @@ class CartModelManager(models.Manager["CartModel"]):
             CartModelQuerySet: Abandoned carts queryset.
         """
         return self.get_queryset().abandoned()
+
+    def expired(self, reference_time: datetime | None = None) -> "CartModelQuerySet":
+        """ Return expired carts.
+
+        Args:
+            reference_time: Optional timestamp used as the expiration boundary.
+
+        Returns:
+            CartModelQuerySet: Expired carts queryset.
+        """
+        return self.get_queryset().expired(reference_time=reference_time)
 
     def for_session(self, session_key: str) -> "CartModelQuerySet":
         """ Return carts for a session key.

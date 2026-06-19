@@ -1,8 +1,11 @@
 ﻿from django.core import mail
 from django.test import override_settings
+from django.utils import timezone
 
 from core.testing.base import LoggedTestCase
+from cart.choices import CartStatus
 from cart.models import CartItemModel, CartModel
+from cart.settings import CART_RUNTIME_EXPIRATION_HOURS
 from catalog.models import ProductModel, ProductVariantModel
 from masterdata.models import CategoryModel
 from quotation.models import QuoteItemModel, QuoteModel
@@ -307,6 +310,12 @@ class TestFrontViews(LoggedTestCase):
         cart = CartModel.objects.get()
         cart_item = CartItemModel.objects.get()
         self.assertEqual(cart.tenant, self.tenant)
+        self.assertIsNotNone(cart.expires_at)
+        self.assertGreater(cart.expires_at, timezone.now() + timezone.timedelta(hours=CART_RUNTIME_EXPIRATION_HOURS - 1))
+        self.assertLessEqual(
+            cart.expires_at,
+            timezone.now() + timezone.timedelta(hours=CART_RUNTIME_EXPIRATION_HOURS, seconds=5),
+        )
         self.assertEqual(cart_item.product, self.subcategory_product)
         self.assertEqual(cart_item.variant.sku, "HYD-46-205L")
         payload = response.json()
@@ -354,6 +363,51 @@ class TestFrontViews(LoggedTestCase):
         payload = response.json()
         self.assertEqual(payload["items"][0]["sku"], "FALLBACK-SKU")
         self.assertIn("FALLBACK-SKU", payload["items_html"])
+
+    def test_cart_state_ignores_abandoned_cart_for_the_current_session(self) -> None:
+        """ Verify abandoned carts are not exposed as the current public cart state. """
+        self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+        cart = CartModel.objects.get()
+        cart.status = CartStatus.ABANDONED
+        cart.save(update_fields=["status", "updated_at"])
+
+        response = self.client.get("/carrito/estado/")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertIsNone(payload["cart_id"])
+        self.assertEqual("", payload["status"])
+        self.assertEqual([], payload["items"])
+        self.assertEqual(0, payload["count"])
+
+    def test_cart_add_item_creates_new_cart_when_previous_session_cart_is_abandoned(self) -> None:
+        """ Verify adding after expiration does not reuse an abandoned cart. """
+        first_response = self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+        first_cart = CartModel.objects.get(id=first_response.json()["cart_id"])
+        first_cart.status = CartStatus.ABANDONED
+        first_cart.save(update_fields=["status", "updated_at"])
+
+        second_response = self.client.post(
+            "/carrito/agregar/",
+            data='{"product_id": %s, "quantity": 1}' % self.subcategory_product.id,
+            content_type="application/json",
+        )
+
+        self.assertEqual(second_response.status_code, 200)
+        payload = second_response.json()
+        self.assertNotEqual(first_cart.id, payload["cart_id"])
+        self.assertEqual("active", payload["status"])
+        self.assertEqual(2, CartModel.objects.count())
+        self.assertEqual(1, CartModel.objects.active().count())
+        self.assertEqual(1, CartModel.objects.abandoned().count())
 
     def test_cart_update_quantity_keeps_one_line_item_in_the_public_count(self) -> None:
         """ Verify quantity changes do not inflate the public cart count beyond one line item. """

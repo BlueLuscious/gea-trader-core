@@ -14,7 +14,8 @@ class TestCeleryApp(LoggedSimpleTestCase):
         self.assertEqual(settings.CELERY_BROKER_URL, celery_app.conf.broker_url)
         self.assertEqual(settings.CELERY_RESULT_BACKEND, celery_app.conf.result_backend)
         self.assertTrue(celery_app.conf.broker_connection_retry_on_startup)
-        self.assertEqual(settings.CELERY_BEAT_SCHEDULE, celery_app.conf.beat_schedule)
+        for schedule_name, schedule_entry in settings.CELERY_BEAT_SCHEDULE.items():
+            self.assertEqual(schedule_entry, celery_app.conf.beat_schedule[schedule_name])
 
     def test_celery_app_registers_the_shared_mail_tasks(self) -> None:
         """ Verify the Celery app registers discovered project task modules. """
@@ -28,3 +29,4 @@ class TestCeleryApp(LoggedSimpleTestCase):
         celery_app.autodiscover_tasks(related_name="schedules", force=True)
 
         self.assertIn("core.schedules", celery_app.loader.task_modules)
+        self.assertIn("cart.schedules", celery_app.loader.task_modules)

@@ -24,6 +24,9 @@ Current contents:
 - `apps.py`
 - `choices/`
 - `models/`
+- `services/`
+- `schedules/`
+- `tasks/`
 - `dtos/`
 - `admin/`
 - `migrations/`
@@ -127,6 +130,7 @@ Current queryset helpers include:
 - `CartModelQuerySet.active()`
 - `CartModelQuerySet.converted()`
 - `CartModelQuerySet.abandoned()`
+- `CartModelQuerySet.expired(...)`
 - `CartModelQuerySet.for_session(...)`
 - `CartModelQuerySet.for_user(...)`
 - `CartItemModelQuerySet.for_tenant(...)`
@@ -199,20 +203,37 @@ See also:
 
 ## Logging
 
-`cart/` does not yet apply the shared logging rollout in a meaningful way.
+`cart/` applies logging only at meaningful runtime boundaries.
 
-Current rationale:
+Current logged boundaries:
 
-- no dedicated runtime service or orchestration boundary exists yet inside the `cart/` app
-- current public cart HTTP orchestration lives in `front/`
-- adding logs only to master-admin technical surfaces would create more noise than signal
+- expired-cart closure task execution
 
 Future likely logging boundaries:
 
 - cart creation or update flows
-- abandonment or expiration processing
 - conversion from cart to quote
 - future owner dashboard metrics derived from cart runtime data
+
+## Expiration Processing
+
+`cart/` owns the business behavior for closing expired carts.
+
+Current behavior:
+
+- `CartExpirationService.close_expired_carts()` marks active carts whose `expires_at` timestamp has passed as `abandoned`
+- converted carts are not touched by expiration processing
+- carts without an expiration timestamp are not touched
+- `close_expired_carts_task` delegates to the service and logs the number of carts closed
+- `cart/schedules/` owns the Celery Beat schedule that enqueues `close_expired_carts_task`
+- public runtime carts currently receive an expiration timestamp twenty-four hours after creation
+
+The schedule interval is code-owned and currently runs every thirty minutes instead of introducing one environment variable per periodic task.
+`core` only discovers installed app schedule packages and provides the shared Beat runtime.
+
+See also:
+
+- `docs/core/celery/celery.md`
 
 ## Translation
 
@@ -235,6 +256,9 @@ Current test areas:
 - `cart/tests/models/`
 - `cart/tests/managers/`
 - `cart/tests/querysets/`
+- `cart/tests/services/`
+- `cart/tests/schedules/`
+- `cart/tests/tasks/`
 - `cart/tests/dtos/`
 - `cart/tests/factories/`
 

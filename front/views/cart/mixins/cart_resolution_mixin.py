@@ -1,13 +1,26 @@
 """ Active-cart resolution helpers for public cart runtime views. """
 
+from datetime import datetime
 from django.http import HttpRequest
+from django.utils import timezone
 from cart.models import CartModel
+from cart.settings import CART_RUNTIME_EXPIRATION_HOURS
 from front.views.mixins.base import BaseTenantAwareMixin
 from tenancy.models import TenantModel
 
 
 class CartResolutionMixin(BaseTenantAwareMixin):
     """ Resolve or create the active cart for one public request. """
+
+    cart_expiration_hours = CART_RUNTIME_EXPIRATION_HOURS
+
+    def get_new_cart_expiration_time(self) -> datetime:
+        """ Return the expiration timestamp assigned to newly created carts.
+
+        Returns:
+            datetime: Expiration timestamp for a new runtime cart.
+        """
+        return timezone.now() + timezone.timedelta(hours=self.cart_expiration_hours)
 
     def get_active_cart(self, request: HttpRequest, tenant: TenantModel) -> CartModel | None:
         """ Return the current active cart for the request context.
@@ -44,4 +57,5 @@ class CartResolutionMixin(BaseTenantAwareMixin):
             tenant=tenant,
             user=request.user if request.user.is_authenticated else None,
             session_key=session_key,
+            expires_at=self.get_new_cart_expiration_time(),
         )

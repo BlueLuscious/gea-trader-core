@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from core.testing.base import LoggedTestCase
 from cart.choices import CartStatus
 from cart.models import CartItemModel, CartModel
@@ -35,6 +36,27 @@ class TestCartManager(LoggedTestCase):
         self.assertQuerySetEqual(CartModel.objects.for_tenant(tenant).abandoned(), [abandoned_cart], transform=lambda instance: instance)
         self.assertQuerySetEqual(CartModel.objects.for_tenant(tenant).for_session('session-1'), [active_cart], transform=lambda instance: instance)
         self.assertQuerySetEqual(CartModel.objects.for_tenant(tenant).for_user(user), [abandoned_cart], transform=lambda instance: instance)
+
+    def test_cart_manager_filters_expired_carts(self) -> None:
+        """ Verify the cart manager exposes the expired cart queryset helper. """
+        now = timezone.now()
+        tenant = self._create_tenant("cart-manager-expired")
+        expired_cart = CartModel.objects.create(
+            tenant=tenant,
+            session_key="expired-session",
+            expires_at=now - timezone.timedelta(minutes=1),
+        )
+        CartModel.objects.create(
+            tenant=tenant,
+            session_key="future-session",
+            expires_at=now + timezone.timedelta(minutes=1),
+        )
+
+        self.assertQuerySetEqual(
+            CartModel.objects.expired(reference_time=now),
+            [expired_cart],
+            transform=lambda instance: instance,
+        )
 
     def test_cart_item_manager_helpers_filter_and_select_related(self) -> None:
         """ Verify cart item manager helpers return cart subsets with catalog data. """

@@ -156,6 +156,11 @@ The current JSON cart-state contract includes:
 `items_html` and `summary_html` are intentionally server-rendered fragments.
 This keeps cart item and summary markup in Django templates while the JavaScript controller stays focused on transport and DOM replacement.
 
+New carts created by the public runtime receive an expiration timestamp twenty-four hours after creation.
+The public runtime does not close expired carts during request handling; scheduled cart lifecycle processing owns that transition.
+Once a cart is marked `abandoned`, public cart endpoints ignore it as the active runtime cart.
+The next add-item request creates a new active cart for the same session or user context.
+
 ## Quote-Request Modal Strategy
 
 The quote-request modal shell and initial form are rendered by Django in the shared base layout.
