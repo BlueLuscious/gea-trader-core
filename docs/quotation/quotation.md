@@ -15,6 +15,7 @@ It currently defines:
 - DTOs and DTO factories for higher layers
 - factories for domain snapshot assembly
 - services for cart-origin quote conversion and tenant notifications
+- services for internal workflow transitions
 - master admin registrations for technical visibility
 - an owner-facing quotes flow for manual creation and follow-up
 
@@ -59,6 +60,7 @@ Current service boundaries:
 - `CartQuoteRequestNotificationDispatcher`: resolves tenant recipients and dispatches the notification through the shared mail service.
 - `CartQuoteRequestNotificationBuilder`: builds the mail request and context for one quote notification.
 - `QuoteAdminUrlBuilder`: builds the owner-admin quote URL used in notifications.
+- `QuoteWorkflowTransitionService`: transitions quotes through internal workflow actions and keeps the future event hook outside admin code.
 
 Current factory boundary:
 
@@ -189,6 +191,8 @@ Current behavior:
 - quote items appear as a top-level inline tab beside the general quote form
 - the add flow supports manual quote creation with items
 - the change flow freezes quote items as snapshots
+- the change flow exposes terminal workflow buttons for completion and cancellation
+- the changelist exposes bulk workflow actions for completion and cancellation
 - destructive delete is disabled for quotes
 
 Current owner-specific pieces:
@@ -198,6 +202,7 @@ Current owner-specific pieces:
 - `QuoteItemModelInlineForm`
 - `QuoteItemModelInlineFormSet`
 - `QuotationAccessPolicy`
+- `QuoteWorkflowTransitionService`
 
 Current owner workflow:
 
@@ -211,6 +216,10 @@ Current owner workflow:
 - on change:
   - quote items become read-only snapshots
   - origin and timeline information become visible
+  - the owner can mark the quote as completed or cancelled from submit-line actions
+- on changelist:
+  - the owner can mark selected quotes as completed or cancelled through bulk actions
+  - quotes that cannot transition are reported instead of being force-updated
 
 ### Access Policy
 
@@ -258,21 +267,23 @@ Current translation-ready pieces:
 
 ## Status and Timestamp Direction
 
-The current owner admin allows the workflow field to be edited directly while workflow timestamps remain read-only.
+The current owner admin exposes explicit terminal workflow actions while workflow timestamps remain read-only.
 
 Current behavior:
 
-- `workflow_status` is owner-editable
+- complete and cancel actions route through `QuoteWorkflowTransitionService`
 - `requested_at` and `resolved_at` are read-only
 - `requested_at` is derived the first time the workflow reaches `requested` or beyond
 - `resolved_at` is derived the first time the workflow reaches `completed` or `cancelled`
 - workflow transitions cannot move backward once the quote progresses
+- terminal quotes no longer show complete or cancel submit-line actions
 
 Future direction:
 
 - keep the internal workflow focused on `draft`, `requested`, `in_progress`, `completed`, and `cancelled`
 - keep any future `customer_status` as a second later dimension instead of overloading `workflow_status`
 - only add customer-facing timestamps such as `sent_at` or `answered_at` once a real customer-facing quote flow exists
+- attach future customer notifications or domain events to the workflow transition service rather than to owner-admin button code
 
 For the target lifecycle design, see:
 
@@ -302,6 +313,7 @@ Project-level admin behavior tied to `quotation` currently lives in:
 Good candidates:
 
 - quote lifecycle rules
+- quote workflow transition services
 - quote snapshot rules
 - quote query helpers
 - quote DTOs and DTO factories

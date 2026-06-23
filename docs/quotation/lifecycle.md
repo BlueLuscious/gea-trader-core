@@ -63,6 +63,7 @@ This keeps the current implementation aligned with today's real flow:
 - the quote is requested
 - the owner or operator works it manually
 - the final closure may happen outside the system in a person-to-person process
+- the owner can explicitly complete or cancel the internal workflow from owner admin actions
 
 ### Step 2: Customer-Facing Status Later
 
@@ -181,6 +182,7 @@ This implemented step:
 
 - matches today's real manual owner or operator workflow
 - avoids pretending that the customer is already participating in the system
+- centralizes terminal owner actions behind a quotation service so later notifications or events can be attached there
 - keeps the future extension path open without forcing that complexity into the first redesign
 
 ## Open Questions

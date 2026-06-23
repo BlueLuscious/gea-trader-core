@@ -1,3 +1,8 @@
 #quotemodel_form .tab-wrapper fieldset.module > .leading-relaxed {
     padding-inline: 0.75rem;
 }
+
+#submit-row button[name="quotation_quotemodel_complete_quote"],
+#submit-row button[name="quotation_quotemodel_cancel_quote"] {
+    order: 10;
+}

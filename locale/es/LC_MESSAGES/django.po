@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gea-trader-core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 01:28-0300\n"
+"POT-Creation-Date: 2026-06-19 19:23-0300\n"
 "PO-Revision-Date: 2026-04-02 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1262,33 +1262,33 @@ msgstr ""
 msgid "Reset filters"
 msgstr "Restablecer filtros"
 
-#: .\core\settings.py:166
+#: .\core\settings.py:167
 msgid "Spanish"
 msgstr "Español"
 
-#: .\core\settings.py:167
+#: .\core\settings.py:168
 msgid "English"
 msgstr "Inglés"
 
 #: .\core\tests\adminsites\test_owner_admin_registrations.py:343
 #: .\core\tests\adminsites\test_owner_admin_registrations.py:344
-#: .\quotation\admin\owner\quote_model_admin.py:44
+#: .\quotation\admin\owner\quote_model_admin.py:52
 msgid "Customer"
 msgstr "Cliente"
 
 #: .\core\tests\adminsites\test_owner_admin_registrations.py:343
 #: .\core\tests\adminsites\test_owner_admin_registrations.py:344
-#: .\quotation\admin\owner\quote_model_admin.py:56
+#: .\quotation\admin\owner\quote_model_admin.py:64
 msgid "Quote details"
 msgstr "Detalles de la cotización"
 
 #: .\core\tests\adminsites\test_owner_admin_registrations.py:344
-#: .\quotation\admin\owner\quote_model_admin.py:69
+#: .\quotation\admin\owner\quote_model_admin.py:77
 msgid "Origin"
 msgstr "Origen"
 
 #: .\core\tests\adminsites\test_owner_admin_registrations.py:344
-#: .\quotation\admin\owner\quote_model_admin.py:79
+#: .\quotation\admin\owner\quote_model_admin.py:87
 msgid "Timeline"
 msgstr "Cronología"
 
@@ -1602,26 +1602,82 @@ msgstr ""
 "Los ítems de cotización requieren una variante o una variante predeterminada "
 "en el producto seleccionado."
 
-#: .\quotation\admin\owner\quote_model_admin.py:47
+#: .\quotation\admin\owner\quote_model_admin.py:55
 msgid "Fill in who requested the quote and how to contact them."
 msgstr "Completa quién solicitó la cotización y cómo contactarlo."
 
-#: .\quotation\admin\owner\quote_model_admin.py:59
+#: .\quotation\admin\owner\quote_model_admin.py:67
 msgid ""
 "Start the quote with one workflow stage and any notes needed for follow-up."
 msgstr ""
 "Inicia la cotización con una etapa del flujo de trabajo y las notas "
 "necesarias para el seguimiento."
 
-#: .\quotation\admin\owner\quote_model_admin.py:72
+#: .\quotation\admin\owner\quote_model_admin.py:80
 msgid "Reference information about where this quote came from."
 msgstr "Información de referencia sobre el origen de esta cotización."
 
-#: .\quotation\admin\owner\quote_model_admin.py:82
+#: .\quotation\admin\owner\quote_model_admin.py:90
 msgid "Read-only timestamps that describe the quote lifecycle."
 msgstr ""
 "Marcas de tiempo de solo lectura que describen el ciclo de vida de la "
 "cotización."
+
+#: .\quotation\admin\owner\quote_model_admin.py:249
+msgid "Complete quote"
+msgstr "Completar cotización"
+
+#: .\quotation\admin\owner\quote_model_admin.py:264
+msgid "Quote marked as completed."
+msgstr "Cotización marcada como completada."
+
+#: .\quotation\admin\owner\quote_model_admin.py:268
+msgid "Cancel quote"
+msgstr "Cancelar cotización"
+
+#: .\quotation\admin\owner\quote_model_admin.py:283
+msgid "Quote marked as cancelled."
+msgstr "Cotización marcada como cancelada."
+
+#: .\quotation\admin\owner\quote_model_admin.py:286
+msgid "Mark selected quotes as completed"
+msgstr "Marcar cotizaciones seleccionadas como completadas"
+
+#: .\quotation\admin\owner\quote_model_admin.py:298
+#, python-format
+msgid "%(count)s quote(s) marked as completed."
+msgstr "%(count)s cotización(es) marcada(s) como completada(s)."
+
+#: .\quotation\admin\owner\quote_model_admin.py:301
+msgid "Mark selected quotes as cancelled"
+msgstr "Marcar cotizaciones seleccionadas como canceladas"
+
+#: .\quotation\admin\owner\quote_model_admin.py:313
+#, python-format
+msgid "%(count)s quote(s) marked as cancelled."
+msgstr "%(count)s cotización(es) marcada(s) como cancelada(s)."
+
+#: .\quotation\admin\owner\quote_model_admin.py:337
+msgid ""
+"Quote workflow status could not be updated because this transition is not "
+"allowed."
+msgstr ""
+"No se pudo actualizar el estado del flujo de trabajo de la cotización porque "
+"esta transición no está permitida."
+
+#: .\quotation\admin\owner\quote_model_admin.py:368
+#, python-format
+msgid "%(count)s quote(s) already had the selected workflow status."
+msgstr "%(count)s cotización(es) ya tenían el estado de flujo de trabajo seleccionado."
+
+#: .\quotation\admin\owner\quote_model_admin.py:375
+#, python-format
+msgid ""
+"%(count)s quote(s) could not be updated because their workflow transition is "
+"not allowed."
+msgstr ""
+"No se pudo actualizar %(count)s cotización(es) porque su transición de flujo "
+"de trabajo no está permitida."
 
 #: .\quotation\admin\owner\quote_model_admin_form.py:28
 #: .\quotation\models\quote_model.py:53

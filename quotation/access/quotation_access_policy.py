@@ -42,6 +42,18 @@ class QuotationAccessPolicy:
         return cls._can_access_with_permission(request, cls.add_permission)
 
     @classmethod
+    def can_change_quotation(cls, request: HttpRequest) -> bool:
+        """ Return whether the current request may change quotation records.
+
+        Args:
+            request: Current HTTP request.
+
+        Returns:
+            bool: ``True`` when the actor may change quotes in the active tenant.
+        """
+        return cls._can_access_with_permission(request, cls.change_permission)
+
+    @classmethod
     def can_view_quote(cls, request: HttpRequest, quote: "QuoteModel | None") -> bool:
         """ Return whether one quote should be visible inside the active tenant.
 

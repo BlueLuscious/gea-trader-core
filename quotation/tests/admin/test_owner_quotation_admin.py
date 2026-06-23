@@ -10,6 +10,7 @@ from accounts.models import UserModel
 from catalog.models import ProductModel, ProductVariantModel
 from core.adminsites.site_instances import owner_admin_site
 from core.testing.base import LoggedTestCase
+from quotation.choices import QuoteWorkflowStatus
 from quotation.admin.owner.quote_item_model_inline import QuoteItemModelInline
 from quotation.admin.owner.quote_model_admin import QuoteModelAdmin
 from quotation.models import QuoteItemModel, QuoteModel
@@ -116,7 +117,12 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
             self.admin.save_model(request, quote, form, change=False)
 
         self.assertEqual(self.tenant, quote.tenant)
-        logger_info_mock.assert_called_once()
+        logger_info_mock.assert_any_call(
+            "Saved owner quote tenant_id=%s quote_id=%s change=%s",
+            self.tenant.pk,
+            quote.pk,
+            False,
+        )
 
     def test_view_and_change_permissions_reject_quotes_from_other_tenants(self) -> None:
         """ Verify quote object permissions stay scoped to the active tenant. """
@@ -136,6 +142,92 @@ class TestOwnerQuotationAdmin(LoggedTestCase):
         self.assertTrue(self.admin.has_add_permission(member_request))
         self.assertFalse(self.admin.has_module_permission(outsider_request))
         self.assertFalse(self.admin.has_add_permission(outsider_request))
+
+    def test_bulk_workflow_actions_require_change_permission(self) -> None:
+        """ Verify view-only operators cannot access bulk quote workflow actions. """
+        request = self.build_request(self.operator, self.tenant)
+        self.operator.user_permissions.remove(
+            Permission.objects.get(codename="change_quotemodel", content_type__app_label="quotation")
+        )
+        self.operator = UserModel.objects.get(pk=self.operator.pk)
+        request.user = self.operator
+
+        available_actions = self.admin.get_actions(request)
+
+        self.assertFalse(self.admin.has_change_permission(request))
+        self.assertNotIn("complete_selected_quotes", available_actions)
+        self.assertNotIn("cancel_selected_quotes", available_actions)
+
+    def test_submit_line_actions_are_available_only_for_open_quotes(self) -> None:
+        """ Verify owner quote submit-line actions disappear after terminal resolution. """
+        request = self.build_request(self.operator, self.tenant)
+        open_actions = self.admin.get_actions_submit_line(request, self.in_scope_quote.pk)
+        self.in_scope_quote.workflow_status = QuoteWorkflowStatus.COMPLETED
+        self.in_scope_quote.save()
+
+        terminal_actions = self.admin.get_actions_submit_line(request, self.in_scope_quote.pk)
+
+        self.assertEqual(
+            ["quotation_quotemodel_complete_quote", "quotation_quotemodel_cancel_quote"],
+            [action.action_name for action in open_actions],
+        )
+        self.assertEqual([], terminal_actions)
+
+    def test_submit_line_complete_action_marks_one_quote_completed(self) -> None:
+        """ Verify the owner change-form complete button uses the workflow service path. """
+        request = self.build_request(self.operator, self.tenant)
+
+        with patch.object(self.admin, "message_user") as message_user_mock:
+            self.admin.complete_quote(request, self.in_scope_quote)
+
+        self.in_scope_quote.refresh_from_db()
+
+        self.assertEqual(QuoteWorkflowStatus.COMPLETED, self.in_scope_quote.workflow_status)
+        self.assertIsNotNone(self.in_scope_quote.resolved_at)
+        message_user_mock.assert_called_once()
+
+    def test_submit_line_cancel_action_marks_one_quote_cancelled(self) -> None:
+        """ Verify the owner change-form cancel button uses the workflow service path. """
+        request = self.build_request(self.operator, self.tenant)
+
+        with patch.object(self.admin, "message_user") as message_user_mock:
+            self.admin.cancel_quote(request, self.in_scope_quote)
+
+        self.in_scope_quote.refresh_from_db()
+
+        self.assertEqual(QuoteWorkflowStatus.CANCELLED, self.in_scope_quote.workflow_status)
+        self.assertIsNotNone(self.in_scope_quote.resolved_at)
+        message_user_mock.assert_called_once()
+
+    def test_changelist_complete_action_marks_selected_quotes_completed(self) -> None:
+        """ Verify the bulk complete admin action transitions selected quotes. """
+        request = self.build_request(self.operator, self.tenant)
+
+        with patch.object(self.admin, "message_user") as message_user_mock:
+            self.admin.complete_selected_quotes(
+                request,
+                QuoteModel.objects.filter(pk=self.in_scope_quote.pk),
+            )
+
+        self.in_scope_quote.refresh_from_db()
+
+        self.assertEqual(QuoteWorkflowStatus.COMPLETED, self.in_scope_quote.workflow_status)
+        message_user_mock.assert_called_once()
+
+    def test_changelist_cancel_action_marks_selected_quotes_cancelled(self) -> None:
+        """ Verify the bulk cancel admin action transitions selected quotes. """
+        request = self.build_request(self.operator, self.tenant)
+
+        with patch.object(self.admin, "message_user") as message_user_mock:
+            self.admin.cancel_selected_quotes(
+                request,
+                QuoteModel.objects.filter(pk=self.in_scope_quote.pk),
+            )
+
+        self.in_scope_quote.refresh_from_db()
+
+        self.assertEqual(QuoteWorkflowStatus.CANCELLED, self.in_scope_quote.workflow_status)
+        message_user_mock.assert_called_once()
 
     def test_quote_item_inline_limits_catalog_choices_to_the_active_tenant(self) -> None:
         """ Verify add-time quote item choices expose only products and variants from the active tenant. """

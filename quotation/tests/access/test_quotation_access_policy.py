@@ -97,6 +97,19 @@ class TestQuotationAccessPolicy(LoggedTestCase):
 
         self.assertFalse(QuotationAccessPolicy.can_add_quote(request))
 
+    def test_can_change_quotation_requires_change_permission(self) -> None:
+        """ Verify quotation changes require the change permission in the active tenant. """
+        request = self.build_request(self.operator, self.tenant)
+
+        self.assertTrue(QuotationAccessPolicy.can_change_quotation(request))
+        self.operator.user_permissions.remove(
+            Permission.objects.get(codename="change_quotemodel", content_type__app_label="quotation")
+        )
+        self.operator = UserModel.objects.get(pk=self.operator.pk)
+        request.user = self.operator
+
+        self.assertFalse(QuotationAccessPolicy.can_change_quotation(request))
+
     def test_can_view_and_change_quote_reject_cross_tenant_objects(self) -> None:
         """ Verify quote object access stays scoped to the active tenant. """
         request = self.build_request(self.operator, self.tenant)
