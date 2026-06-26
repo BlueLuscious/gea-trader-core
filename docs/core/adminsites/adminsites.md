@@ -111,6 +111,27 @@ This package should keep two responsibilities clearly separated:
 
 It should not become a second source of truth for site identity.
 
+### Import/Export Integration
+
+The project uses `django-import-export` through Unfold's integration package for owner-admin data import and export flows.
+
+Base integration lives in project settings:
+
+- `unfold.contrib.import_export`
+- `import_export`
+
+Rules:
+
+- keep the dependency and installed-app wiring in the base project layer
+- keep model-specific resources inside the app that owns the model
+- prefer app-owned resources such as `<app>/resources/`
+- base-owned examples should use base apps such as `accounts/resources/` or `tenancy/resources/`
+- use Unfold's import/export forms when an admin class enables import/export
+- do not create project-wide custom import/export templates unless the Unfold integration has a real gap
+- keep imports tenant-scoped in owner admin and never trust tenant identifiers from uploaded files
+- start with synchronous admin preview/dry-run imports before introducing asynchronous import jobs
+- use asynchronous imports only when file size, image downloads, progress reporting, or retry behavior justify the extra runtime state
+
 ## Design Rules
 
 The source of truth for site identity should remain the site classes themselves.

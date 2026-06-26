@@ -60,6 +60,8 @@ PROJECT_EXTRA_APPS = list(dict.fromkeys(MEDIA_STORAGE_CONFIG.extra_apps + STATIC
 
 INSTALLED_APPS = [
     'unfold',
+    'unfold.contrib.import_export',
+    'import_export',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
